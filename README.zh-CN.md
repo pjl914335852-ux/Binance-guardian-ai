@@ -6,7 +6,7 @@
 [![Node.js](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen)](https://nodejs.org/)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-Powered-blue)](https://openclaw.ai)
 
-**龙虾交易侦察兵** - 基于 OpenClaw 的智能交易监控 Agent，为币安生态打造的实用工具。
+**AI 驱动的交易监控工具** - 基于 OpenClaw 的智能交易监控 Agent，为币安生态打造的实用工具。
 
 ## 🎉 全新 Pro 版本！
 
@@ -37,15 +37,15 @@
 
 ## 🎯 为什么选择 Trading Scout？
 
-传统交易痛点：
-- ❌ 人工盯盘累死累活
-- ❌ 错过最佳交易时机
-- ❌ 情绪化交易导致亏损
+**挑战：**
+- 加密市场 24/7 运行，人工监控难以持续
+- 交易机会稍纵即逝，容易错过最佳时机
+- 情绪化决策影响交易表现
 
-Trading Scout 解决方案：
-- ✅ AI 24/7 自动监控
-- ✅ 毫秒级发现机会
-- ✅ 理性分析，稳定盈利
+**解决方案：**
+- ✅ AI 全天候自动监控
+- ✅ 实时发现交易机会
+- ✅ 数据驱动的理性分析
 
 ## 🚀 快速开始
 
