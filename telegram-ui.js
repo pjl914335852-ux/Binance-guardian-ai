@@ -628,7 +628,6 @@ GitHub: github.com/pjl914335852-ux/openclaw-trading-scout
       this.handleHistory({ chat: { id: chatId } });
     } else if (data === 'help') {
       // Delete old message and send help
-      this.bot.answerCallbackQuery(query.id);
       this.bot.deleteMessage(chatId, messageId).catch(() => {});
       this.handleHelp({ chat: { id: chatId } });
     } else if (data === 'lang_en') {
@@ -721,7 +720,38 @@ Send /cancel to cancel
         '❌ 没有自定义交易对可以删除' :
         '❌ No custom pairs to remove';
       
-      this.bot.answerCallbackQuery(queryId, { text, show_alert: true });
+      // Answer callback and delete old message
+      this.bot.answerCallbackQuery(queryId, { text, show_alert: false });
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
+      
+      // Send a proper message with back button
+      const noCustomText = this.lang === 'zh' ? `
+➖ *删除交易对*
+
+❌ 暂无自定义交易对
+
+你还没有添加任何自定义交易对。点击下方按钮添加或返回。
+      ` : `
+➖ *Remove Trading Pair*
+
+❌ No Custom Pairs
+
+You haven't added any custom pairs yet. Click below to add or go back.
+      `;
+      
+      const keyboard = {
+        inline_keyboard: [
+          [
+            { text: this.lang === 'zh' ? '➕ 添加币种' : '➕ Add Pair', callback_data: 'add_pair' },
+            { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'pairs' }
+          ]
+        ]
+      };
+      
+      this.bot.sendMessage(chatId, noCustomText, {
+        parse_mode: 'Markdown',
+        reply_markup: keyboard
+      });
       return;
     }
     
