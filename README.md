@@ -66,9 +66,7 @@ An AI-powered trading assistant built with OpenClaw that:
 
 ### Prerequisites
 - Node.js 18+
-- OpenClaw account
 - Telegram Bot Token
-- Binance API Key (optional, for live trading)
 
 ### Installation
 

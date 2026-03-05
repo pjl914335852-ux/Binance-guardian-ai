@@ -53,7 +53,7 @@
 
 ```bash
 # 克隆项目
-git clone https://github.com/your-repo/openclaw-trading-scout
+git clone https://github.com/pjl914335852-ux/openclaw-trading-scout
 cd openclaw-trading-scout
 
 # 安装依赖
@@ -70,15 +70,10 @@ cp config.example.json config.json
 nano config.json
 ```
 
-配置示例：
+最小配置示例：
 
 ```json
 {
-  "cryptoex": {
-    "apiKey": "your_cryptoex_api_key",
-    "apiSecret": "your_cryptoex_api_secret",
-    "testnet": false
-  },
   "telegram": {
     "botToken": "your_telegram_bot_token",
     "chatId": "your_telegram_chat_id"
@@ -86,7 +81,7 @@ nano config.json
   "trading": {
     "pairs": ["BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT"],
     "threshold": 0.5,
-    "checkInterval": 5000,
+    "checkInterval": 30000,
     "minVolume": 1000000
   }
 }
