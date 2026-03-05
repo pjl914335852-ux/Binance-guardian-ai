@@ -1,181 +1,115 @@
 # OpenClaw Trading Scout 🦞
 
-> 让 AI 帮你盯盘 - 24/7 自动监控币安交易机会
+> Let AI Monitor the Market for You - 24/7 Automated Binance Trading Opportunity Detection
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen)](https://nodejs.org/)
-[![OpenClaw](https://img.shields.io/badge/OpenClaw-Powered-blue)](https://openclaw.ai)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
+[![OpenClaw](https://img.shields.io/badge/OpenClaw-Powered-blue.svg)](https://openclaw.ai)
 
-**龙虾交易侦察兵** - 基于 OpenClaw 的智能交易监控 Agent，为币安生态打造的实用工具。
-
-## 🎉 全新 Pro 版本！
-
-**🚀 Pro 版本 - 6 大全新功能：**
-- 📊 **市场情绪分析** - AI 判断看涨/震荡/看跌
-- 🔔 **智能价格提醒** - 触发时 AI 自动分析
-- 💰 **资金流向分析** - 识别大户动向
-- 🎯 **支撑/阻力位** - 订单簿深度分析
-- ⚠️ **异常波动监控** - 实时检测暴涨暴跌
-- 📈 **历史回测报告** - 统计策略有效性
-
-👉 **[查看 Pro 版本文档](./README-PRO.md)** | **[使用 Pro 版本](./crypto-scout-pro.js)** 🔥
-
-**AI 增强版本：**
-- 🤖 AI 深度分析 + 💬 自然语言交互
-- 👉 **[查看 AI 版本文档](./README-AI.md)** | **[使用 AI 版本](./crypto-scout-ai.js)**
+[中文文档](./README.zh-CN.md) | [AI Enhanced Version](./README-AI.md) | [Pro Version](./README-PRO.md)
 
 ---
 
-## ✨ 特性
+## 🎯 What is Trading Scout?
 
-- 🔍 **实时监控** - 24/7 不间断监控多个交易对价格
-- 💰 **智能套利** - 自动发现价差机会，计算最佳交易策略
-- 📱 **即时推送** - Telegram Bot 实时推送交易信号
-- 📊 **数据统计** - 历史机会记录和收益分析
-- ⚙️ **灵活配置** - 自定义监控对、阈值、频率
-- 🚀 **开箱即用** - 简单配置即可运行
+An AI-powered trading assistant built with OpenClaw that:
+- 📊 **Real-time Monitoring** - Tracks multiple Binance trading pairs (BTC/ETH/BNB/SOL)
+- 🎯 **Smart Detection** - Identifies arbitrage opportunities (spread > 0.5%)
+- 📱 **Instant Alerts** - Sends trading signals via Telegram Bot
+- 📈 **Historical Analysis** - Statistics and performance tracking
 
-## 🎯 为什么选择 Trading Scout？
+**The Problem**: Crypto markets run 24/7, but humans need sleep.
 
-传统交易痛点：
-- ❌ 人工盯盘累死累活
-- ❌ 错过最佳交易时机
-- ❌ 情绪化交易导致亏损
+**The Solution**: Let AI be your eyes on the market.
 
-Trading Scout 解决方案：
-- ✅ AI 24/7 自动监控
-- ✅ 毫秒级发现机会
-- ✅ 理性分析，稳定盈利
+---
 
-## 🚀 快速开始
+## ✨ Key Features
 
-### 1. 安装
+### 1. Multi-Pair Monitoring
+- Simultaneous tracking of BTC, ETH, BNB, SOL
+- Real-time price updates every 30 seconds
+- Volume and volatility analysis
+
+### 2. Arbitrage Detection
+- Cross-pair spread analysis
+- Configurable threshold (default 0.5%)
+- Risk-adjusted opportunity scoring
+
+### 3. Telegram Integration
+- Instant push notifications
+- Trading signal details
+- Historical performance stats
+
+### 4. Data Analytics
+- Price trend visualization
+- Opportunity frequency tracking
+- Success rate statistics
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+
+- OpenClaw account
+- Telegram Bot Token
+- Binance API Key (optional, for live trading)
+
+### Installation
 
 ```bash
-# 克隆项目
-git clone https://github.com/your-repo/openclaw-trading-scout
+# Clone repository
+git clone https://github.com/pjl914335852-ux/openclaw-trading-scout
 cd openclaw-trading-scout
 
-# 安装依赖
+# Install dependencies
 npm install
-```
 
-### 2. 配置
-
-```bash
-# 复制配置模板
+# Configure (edit config.json)
 cp config.example.json config.json
 
-# 编辑配置文件
-nano config.json
-```
-
-配置示例：
-
-```json
-{
-  "cryptoex": {
-    "apiKey": "your_cryptoex_api_key",
-    "apiSecret": "your_cryptoex_api_secret",
-    "testnet": false
-  },
-  "telegram": {
-    "botToken": "your_telegram_bot_token",
-    "chatId": "your_telegram_chat_id"
-  },
-  "trading": {
-    "pairs": ["BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT"],
-    "threshold": 0.5,
-    "checkInterval": 5000,
-    "minVolume": 1000000
-  }
-}
-```
-
-### 3. 运行
-
-```bash
-# 演示模式（无需 API，模拟数据）
+# Run demo
 npm test
 
-# 正式运行（需要配置 API）
+# Start monitoring
 npm start
 ```
 
-## 📊 运行效果
+---
+
+## 📊 How It Works
+
+### Architecture
 
 ```
-🦞 OpenClaw Trading Scout 启动
-
-监控交易对: BTCUSDT, ETHUSDT, BNBUSDT, SOLUSDT
-检查间隔: 5 秒
-价差阈值: 0.5%
-
-──────────────────────────────────────────────────
-
-[2026-03-05 04:27:26] 🦞 Trading Scout 正在检查...
-
-📊 当前价格:
-  BTCUSDT: $96,513.89
-  ETHUSDT: $2,857.98
-  BNBUSDT: $623.23
-  SOLUSDT: $144.65
-
-🎯 发现 1 个套利机会:
-
-  BNBUSDT / ETHUSDT
-  价差: 0.62%
-  BNBUSDT 变化: 0.38%
-  ETHUSDT 变化: -0.38%
-  建议: 买入 ETHUSDT, 卖出 BNBUSDT
-
-✅ Telegram 通知已发送
-
-📈 历史机会数: 1
-──────────────────────────────────────────────────
+CryptoExchange API → Trading Scout (OpenClaw) → Telegram Bot
+    ↓                    ↓                         ↓
+Price Data         Arbitrage Analysis        Push Notifications
 ```
 
-## 🏗️ 技术架构
-
-```
-┌─────────────────┐
-│  CryptoExchange API    │  ← 获取实时价格和交易量
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│  Trading Scout  │  ← OpenClaw Agent 核心
-│  (Node.js)      │     - 价格分析
-└────────┬────────┘     - 套利计算
-         │              - 信号生成
-         ▼
-┌─────────────────┐
-│  Telegram Bot   │  ← 推送通知给用户
-└─────────────────┘
-```
-
-## 💡 核心算法
+### Detection Algorithm
 
 ```javascript
-// 套利机会发现
+// Simplified arbitrage detection
 function findArbitrageOpportunities(prices, volumes) {
   const opportunities = [];
   
-  // 遍历所有交易对组合
+  // Compare all trading pair combinations
   for (let i = 0; i < pairs.length; i++) {
     for (let j = i + 1; j < pairs.length; j++) {
-      // 计算价格变化率
+      // Calculate price change rates
       const change1 = (prices[pair1] - priceCache[pair1]) / priceCache[pair1] * 100;
       const change2 = (prices[pair2] - priceCache[pair2]) / priceCache[pair2] * 100;
       const spread = Math.abs(change1 - change2);
       
-      // 超过阈值则记录
+      // Alert if spread exceeds threshold
       if (spread > threshold) {
         opportunities.push({
           pair1, pair2, spread,
           suggestion: change1 > change2 
-            ? `买入 ${pair2}, 卖出 ${pair1}` 
-            : `买入 ${pair1}, 卖出 ${pair2}`
+            ? `Buy ${pair2}, Sell ${pair1}` 
+            : `Buy ${pair1}, Sell ${pair2}`
         });
       }
     }
@@ -185,89 +119,131 @@ function findArbitrageOpportunities(prices, volumes) {
 }
 ```
 
-## 📱 Telegram 推送示例
+---
+
+## 📱 Example Output
 
 ```
-🚨 套利机会发现！
+🦞 Trading Scout Checking...
 
-交易对: BNBUSDT / ETHUSDT
-价差: 0.62%
-BNBUSDT 变化: 0.38%
-ETHUSDT 变化: -0.38%
+📊 Current Prices:
+  BTCUSDT: $96,513.89
+  ETHUSDT: $2,857.98
+  BNBUSDT: $623.23
 
-💡 建议: 买入 ETHUSDT, 卖出 BNBUSDT
+🎯 Arbitrage Opportunity Found:
+  BNBUSDT / ETHUSDT
+  Spread: 0.62%
+  Suggestion: Buy ETHUSDT, Sell BNBUSDT
 
-⏰ 时间: 2026-03-05 04:27:26
+✅ Telegram notification sent
 ```
 
-## 🎯 为币安生态创造的价值
+---
 
-### 1. 提高交易效率
-- 24/7 不间断监控
-- 毫秒级响应
-- 多市场覆盖
+## ⚙️ Configuration
 
-### 2. 降低交易门槛
-- 新手友好，AI 给建议
-- 风险控制，过滤噪音
-- 学习工具，提升认知
+Edit `config.json`:
 
-### 3. 增强用户粘性
-- 真正帮用户赚钱
-- 可扩展更多策略
-- 社区分享配置
+```json
+{
+  "telegram": {
+    "botToken": "YOUR_BOT_TOKEN",
+    "chatId": "YOUR_CHAT_ID"
+  },
+  "trading": {
+    "pairs": ["BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT"],
+    "threshold": 0.5,
+    "checkInterval": 30000
+  },
+  "binance": {
+    "apiKey": "YOUR_API_KEY",
+    "apiSecret": "YOUR_API_SECRET"
+  }
+}
+```
 
-### 4. 推广 OpenClaw
-- 展示技术能力
-- 开源代码贡献
-- 教育开发者
+---
 
-## 🗺️ 未来规划
+## 🎓 Use Cases
 
-### 短期（1-2 周）
-- [ ] 添加更多交易策略（网格、趋势）
-- [ ] 支持更多交易所（OKX、Bybit）
-- [ ] Web 控制面板
+### For Beginners
+- Learn market dynamics
+- Understand arbitrage opportunities
+- Practice risk management
 
-### 中期（1-2 月）
-- [ ] 回测系统
-- [ ] 策略优化算法
-- [ ] 风险管理模块
+### For Traders
+- 24/7 market monitoring
+- Never miss opportunities
+- Reduce emotional trading
 
-### 长期（3-6 月）
-- [ ] 自动执行交易（需用户授权）
-- [ ] 社区策略市场
-- [ ] 移动端 App
+### For Developers
+- OpenClaw integration example
+- Trading bot architecture reference
+- Extensible strategy framework
 
-## 🤝 贡献
+---
 
-欢迎提交 Issue 和 Pull Request！
+## 🛠️ Tech Stack
 
-## 📄 许可证
+- **Framework**: OpenClaw AI Agent
+- **Runtime**: Node.js 18+
+- **APIs**: Binance/CryptoExchange, Telegram
+- **Data**: Real-time price feeds
+- **Deployment**: Local/Cloud/Docker
 
-MIT License - 开源免费使用
+---
 
-## 🔗 相关链接
+## 📈 Roadmap
 
-- [OpenClaw 官网](https://openclaw.ai)
-- [OpenClaw 文档](https://docs.openclaw.ai)
+**Phase 1** (Current)
+- ✅ Multi-pair monitoring
+- ✅ Arbitrage detection
+- ✅ Telegram alerts
+
+**Phase 2** (Next)
+- 🔄 Web dashboard
+- 🔄 More strategies (grid, trend)
+- 🔄 Backtesting system
+
+**Phase 3** (Future)
+- 📋 Auto-execution
+- 📋 Strategy marketplace
+- 📋 Mobile app
+
+---
+
+## 📄 License
+
+MIT License - Free to use and modify
+
+---
+
+## 🔗 Links
+
+- [OpenClaw Official](https://openclaw.ai)
+- [OpenClaw Docs](https://docs.openclaw.ai)
 - [OpenClaw Discord](https://discord.com/invite/clawd)
-- [币安 API 文档](https://cryptoex-docs.github.io/apidocs/)
+- [Binance API Docs](https://cryptoex-docs.github.io/apidocs/)
 
-## 👤 作者
+---
+
+## 👤 Author
 
 **Brart**
 - Telegram: [@Ee_7t](https://t.me/Ee_7t)
 
-## 🙏 鸣谢
+---
 
-- OpenClaw 团队提供强大的 AI Agent 框架
-- 币安提供优质的交易 API
-- NOFX 提供强大的数据
-- 社区提供灵感和反馈
+## 🙏 Acknowledgments
+
+- OpenClaw team for the powerful AI Agent framework
+- Binance for excellent trading APIs
+- NOFX for robust data infrastructure
+- Community for inspiration and feedback
 
 ---
 
-⭐ 如果这个项目对你有帮助，请给个 Star！
+⭐ If this project helps you, please give it a Star!
 
-_Built with ❤️ using OpenClaw_
+**Built with ❤️ using OpenClaw**
