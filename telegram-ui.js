@@ -562,8 +562,11 @@ We are an intelligent assistant focused on cryptocurrency arbitrage monitoring, 
       ]
     };
     
-    // Send first part
-    this.bot.sendMessage(chatId, helpText1, { parse_mode: 'Markdown' });
+    // Send first part with back button
+    this.bot.sendMessage(chatId, helpText1, { 
+      parse_mode: 'Markdown',
+      reply_markup: keyboard
+    });
     
     // Send second part with keyboard after a short delay
     setTimeout(() => {
