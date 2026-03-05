@@ -5,8 +5,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-Powered-blue.svg)](https://openclaw.ai)
+[![Version](https://img.shields.io/badge/version-2.1.0-brightgreen.svg)](https://github.com/pjl914335852-ux/openclaw-trading-scout/releases)
 
-[中文文档](./README.zh-CN.md) | [AI Enhanced Version](./README-AI.md) | [Pro Version](./README-PRO.md)
+[中文文档](./README.zh-CN.md) | [AI Enhanced Version](./README-AI.md) | [Pro Version](./README-PRO.md) | [Changelog](./CHANGELOG.md)
 
 ---
 
@@ -17,6 +18,8 @@ An AI-powered trading assistant built with OpenClaw that:
 - 🎯 **Smart Detection** - Identifies arbitrage opportunities (spread > 0.5%)
 - 📱 **Instant Alerts** - Sends trading signals via Telegram Bot
 - 📈 **Historical Analysis** - Statistics and performance tracking
+- 💓 **Heartbeat Reports** - Status updates every 2 hours
+- 💰 **NOFX Integration** - Professional market data and signal quality scoring
 
 **The Problem**: Crypto markets run 24/7, but humans need sleep.
 

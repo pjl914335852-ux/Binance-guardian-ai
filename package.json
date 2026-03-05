@@ -1,6 +1,6 @@
 {
   "name": "crypto-trading-scout",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "description": "Crypto Trading Scout - Multi-exchange arbitrage monitoring agent",
   "main": "crypto-scout.js",
   "scripts": {
