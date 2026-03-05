@@ -9,8 +9,47 @@ class TelegramUI {
     this.config = config;
     this.state = state;
     this.lang = config.language || 'en';
+    this.pollingErrorCount = 0;
+    this.lastPollingError = 0;
     
+    this.setupErrorHandlers();
     this.setupCommands();
+  }
+  
+  setupErrorHandlers() {
+    // Handle polling errors without spamming logs
+    this.bot.on('polling_error', (error) => {
+      // Skip logging if suppressPollingErrors is enabled
+      if (this.config.logging?.suppressPollingErrors) {
+        return;
+      }
+      
+      const now = Date.now();
+      
+      // Only log once per minute to avoid log spam
+      if (now - this.lastPollingError > 60000) {
+        console.error(`⚠️ Telegram polling error: ${error.code || error.message}`);
+        
+        if (error.code === 'ETELEGRAM' && error.message.includes('409 Conflict')) {
+          console.error('💡 Tip: Make sure only one bot instance is running');
+          console.error('💡 Waiting for Telegram to release the connection...');
+        }
+        
+        this.lastPollingError = now;
+        this.pollingErrorCount++;
+        
+        // If too many errors, suggest restart
+        if (this.pollingErrorCount > 10) {
+          console.error('❌ Too many polling errors. Consider restarting the bot.');
+          this.pollingErrorCount = 0; // Reset counter
+        }
+      }
+    });
+    
+    // Handle webhook errors
+    this.bot.on('webhook_error', (error) => {
+      console.error('⚠️ Telegram webhook error:', error.message);
+    });
   }
   
   setupCommands() {

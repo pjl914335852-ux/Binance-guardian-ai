@@ -23,6 +23,8 @@
   },
   "logging": {
     "enabled": true,
-    "file": "scout.log"
+    "file": "scout.log",
+    "level": "info",
+    "suppressPollingErrors": true
   }
 }
