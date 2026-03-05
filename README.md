@@ -278,7 +278,6 @@ Edit `config.json`:
 - 📋 Live trading (mainnet)
 - 📋 Strategy marketplace
 - 📋 Mobile app
-- 📋 Multi-exchange support
 - 📋 Advanced analytics
 
 ---
