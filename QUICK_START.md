@@ -69,9 +69,9 @@
 
 代码已开源，可立即使用！
 
-#OpenClaw #Binance #TradingBot #AI
+#OpenClaw #CryptoExchange #TradingBot #AI
 
-@BinanceChain @OpenClaw
+@CryptoExchangeChain @OpenClaw
 ```
 
 **记得 RT 活动原推文！**

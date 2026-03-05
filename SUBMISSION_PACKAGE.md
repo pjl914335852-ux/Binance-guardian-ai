@@ -108,9 +108,9 @@ OpenClaw Agent + 币安 API + Telegram Bot
 🔗 GitHub: [你的仓库链接]
 📊 演示: [图片/视频]
 
-#OpenClaw #Binance #TradingBot #AI #Crypto
+#OpenClaw #CryptoExchange #TradingBot #AI #Crypto
 
-@BinanceChain @OpenClaw
+@CryptoExchangeChain @OpenClaw
 ```
 
 **记得**：
@@ -238,7 +238,7 @@ X: @[你的 X 用户名]
 
 1. **创建 GitHub 仓库**
    ```bash
-   cd binance-trading-scout
+   cd cryptoex-trading-scout
    git init
    git add .
    git commit -m "OpenClaw Trading Scout"

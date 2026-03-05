@@ -6,8 +6,8 @@
 ## 📦 项目结构
 
 ```
-binance-trading-scout/
-├── scout.js                    # 主程序（真实 API 版本）
+cryptoex-trading-scout/
+├── crypto-scout.js                    # 主程序（真实 API 版本）
 ├── test.js                     # 演示程序（模拟数据）
 ├── package.json                # 依赖配置
 ├── config.example.json         # 配置模板
@@ -72,7 +72,7 @@ binance-trading-scout/
 
 ```bash
 # 1. 进入项目目录
-cd binance-trading-scout
+cd cryptoex-trading-scout
 
 # 2. 运行演示（无需 API）
 node test.js
@@ -98,7 +98,7 @@ node test.js
 ### 第3步：发布
 1. 将内容发布到币安活动页面
 2. 附上 GitHub 仓库链接
-3. 添加标签：#OpenClaw #Binance #TradingBot
+3. 添加标签：#OpenClaw #CryptoExchange #TradingBot
 
 ---
 
@@ -219,4 +219,4 @@ MIT License - 开源免费使用
 ---
 
 _Built with ❤️ using OpenClaw_
-_Powered by Binance API_
+_Powered by CryptoExchange API_

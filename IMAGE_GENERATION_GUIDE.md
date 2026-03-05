@@ -94,7 +94,7 @@ Epic movie poster style: Giant cartoon lobster character in the center wearing a
 直接截取终端运行效果：
 
 ```bash
-cd binance-trading-scout
+cd cryptoex-trading-scout
 npm test
 # 截图保存为 images/05-demo-output.png
 ```
@@ -107,7 +107,7 @@ npm test
 
 ```
 ┌─────────────────┐
-│  Binance API    │  ← 获取实时价格
+│  CryptoExchange API    │  ← 获取实时价格
 └────────┬────────┘
          │
          ▼

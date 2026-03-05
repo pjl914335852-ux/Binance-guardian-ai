@@ -1,13 +1,16 @@
 {
-  "name": "openclaw-trading-scout",
+  "name": "crypto-trading-scout",
   "version": "1.0.0",
-  "description": "OpenClaw Trading Scout - Binance arbitrage monitoring agent",
-  "main": "scout.js",
+  "description": "Crypto Trading Scout - Multi-exchange arbitrage monitoring agent",
+  "main": "crypto-scout.js",
   "scripts": {
-    "start": "node scout.js",
-    "test": "node test.js"
+    "start": "node crypto-scout.js",
+    "start:ai": "node crypto-scout-ai.js",
+    "start:pro": "node crypto-scout-pro.js",
+    "test": "node test.js",
+    "demo": "node demo-crypto-ai.js"
   },
-  "keywords": ["openclaw", "binance", "trading", "arbitrage", "agent"],
+  "keywords": ["openclaw", "crypto", "trading", "arbitrage", "agent", "ai"],
   "author": "发财猫",
   "license": "MIT",
   "dependencies": {

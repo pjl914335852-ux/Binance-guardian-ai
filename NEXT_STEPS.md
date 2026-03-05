@@ -3,7 +3,7 @@
 ## ✅ 已完成
 
 1. **核心代码**
-   - ✅ `scout.js` - 真实 API 版本
+   - ✅ `crypto-scout.js` - 真实 API 版本
    - ✅ `test.js` - 演示版本（已测试运行）
    - ✅ `package.json` - 依赖配置
    - ✅ `config.example.json` - 配置模板
@@ -59,12 +59,12 @@
    ```bash
    # 在 GitHub 上创建新仓库
    # 名称：openclaw-trading-scout
-   # 描述：AI-powered Binance trading monitor built with OpenClaw
+   # 描述：AI-powered CryptoExchange trading monitor built with OpenClaw
    ```
 
 2. **上传代码**
    ```bash
-   cd binance-trading-scout
+   cd cryptoex-trading-scout
    git init
    git add .
    git commit -m "Initial commit: OpenClaw Trading Scout"
@@ -109,7 +109,7 @@
 
 2. **发布到币安活动页面**
    - 按照活动要求提交
-   - 添加标签：#OpenClaw #Binance #TradingBot
+   - 添加标签：#OpenClaw #CryptoExchange #TradingBot
    - 附上 GitHub 链接
 
 3. **分享到社区**
@@ -158,7 +158,7 @@
 
 ### 标题
 - 简洁有力
-- 包含关键词（OpenClaw、Binance、AI）
+- 包含关键词（OpenClaw、CryptoExchange、AI）
 - 吸引眼球
 
 ### 内容

@@ -18,11 +18,11 @@
 - ⚠️ **异常波动监控** - 实时检测暴涨暴跌
 - 📈 **历史回测报告** - 统计策略有效性
 
-👉 **[查看 Pro 版本文档](./README-PRO.md)** | **[使用 Pro 版本](./scout-pro.js)** 🔥
+👉 **[查看 Pro 版本文档](./README-PRO.md)** | **[使用 Pro 版本](./crypto-scout-pro.js)** 🔥
 
 **AI 增强版本：**
 - 🤖 AI 深度分析 + 💬 自然语言交互
-- 👉 **[查看 AI 版本文档](./README-AI.md)** | **[使用 AI 版本](./scout-ai.js)**
+- 👉 **[查看 AI 版本文档](./README-AI.md)** | **[使用 AI 版本](./crypto-scout-ai.js)**
 
 ---
 
@@ -74,9 +74,9 @@ nano config.json
 
 ```json
 {
-  "binance": {
-    "apiKey": "your_binance_api_key",
-    "apiSecret": "your_binance_api_secret",
+  "cryptoex": {
+    "apiKey": "your_cryptoex_api_key",
+    "apiSecret": "your_cryptoex_api_secret",
     "testnet": false
   },
   "telegram": {
@@ -139,7 +139,7 @@ npm start
 
 ```
 ┌─────────────────┐
-│  Binance API    │  ← 获取实时价格和交易量
+│  CryptoExchange API    │  ← 获取实时价格和交易量
 └────────┬────────┘
          │
          ▼
@@ -252,7 +252,7 @@ MIT License - 开源免费使用
 - [OpenClaw 官网](https://openclaw.ai)
 - [OpenClaw 文档](https://docs.openclaw.ai)
 - [OpenClaw Discord](https://discord.com/invite/clawd)
-- [币安 API 文档](https://binance-docs.github.io/apidocs/)
+- [币安 API 文档](https://cryptoex-docs.github.io/apidocs/)
 
 ## 👤 作者
 

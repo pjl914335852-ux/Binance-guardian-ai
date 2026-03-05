@@ -144,10 +144,10 @@ nano config.json
 ### 运行
 ```bash
 # Pro 版本（推荐）
-node scout-pro.js
+node crypto-scout-pro.js
 
 # 或使用 PM2
-pm2 start scout-pro.js --name trading-scout-pro
+pm2 start crypto-scout-pro.js --name trading-scout-pro
 ```
 
 ## 💬 Telegram 命令
@@ -186,7 +186,7 @@ pm2 start scout-pro.js --name trading-scout-pro
 
 ```
 ┌─────────────────┐
-│  Binance API    │  ← 价格、交易量、订单簿、成交记录
+│  CryptoExchange API    │  ← 价格、交易量、订单簿、成交记录
 └────────┬────────┘
          │
          ▼

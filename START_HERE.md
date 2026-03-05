@@ -30,10 +30,10 @@
 ## 📁 所有文件位置
 
 ```
-binance-trading-scout/
+cryptoex-trading-scout/
 ├── QUICK_START.md          ← 👈 从这里开始！
 ├── SUBMISSION_PACKAGE.md   ← 完整版指南
-├── scout.js                ← 核心代码
+├── crypto-scout.js                ← 核心代码
 ├── test.js                 ← 演示程序
 ├── README.md               ← GitHub 说明
 └── 其他文档...

@@ -124,10 +124,10 @@ nano config.json
 
 ```bash
 # AI 增强版（推荐）
-node scout-ai.js
+node crypto-scout-ai.js
 
 # 或使用 PM2 后台运行
-pm2 start scout-ai.js --name trading-scout-ai
+pm2 start crypto-scout-ai.js --name trading-scout-ai
 ```
 
 ## 💬 使用 Telegram 交互
@@ -174,7 +174,7 @@ AI: ETH 当前处于震荡区间...
 
 ```
 ┌─────────────────┐
-│  Binance API    │  ← 实时价格数据
+│  CryptoExchange API    │  ← 实时价格数据
 └────────┬────────┘
          │
          ▼

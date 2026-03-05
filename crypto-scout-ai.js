@@ -21,9 +21,9 @@ if (config.telegram.botToken) {
 }
 
 // 币安 API 基础 URL
-const BINANCE_API = config.binance.testnet 
-  ? 'https://testnet.binance.vision/api/v3'
-  : 'https://api.binance.com/api/v3';
+const BINANCE_API = config.cryptoex.testnet 
+  ? 'https://testnet.cryptoex.vision/api/v3'
+  : 'https://api.cryptoex.com/api/v3';
 
 // 价格缓存
 const priceCache = {};

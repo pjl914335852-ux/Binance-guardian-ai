@@ -30,7 +30,7 @@
 
 ### 技术架构
 ```
-Binance API → Trading Scout (OpenClaw) → Telegram Bot
+CryptoExchange API → Trading Scout (OpenClaw) → Telegram Bot
     ↓              ↓                         ↓
   价格数据      套利计算                  推送通知
 ```
