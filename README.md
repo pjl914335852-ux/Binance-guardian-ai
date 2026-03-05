@@ -96,16 +96,19 @@ npm start
 - ✅ For future auto-trading features (Phase 2)
 - ❌ NOT needed for price monitoring and alerts
 
+**💰 Cost: FREE - No API quota consumed for price data (public endpoint)**
+
 **How to get Binance API Key:**
 
 1. Log in to [Binance](https://www.binance.com)
 2. Go to Profile → API Management
 3. Create a new API Key
-4. **Important Security Settings:**
-   - ✅ Enable "Enable Reading" (required)
-   - ✅ Enable "Enable Spot & Margin Trading" (for future trading)
-   - ❌ Disable "Enable Withdrawals" (for safety)
-   - ✅ Restrict access to trusted IPs (recommended)
+4. **🔒 CRITICAL Security Settings:**
+   - ✅ **Enable "Enable Reading" ONLY** (this is all you need)
+   - ❌ **Disable "Enable Spot & Margin Trading"** (keep it OFF for safety)
+   - ❌ **Disable "Enable Futures"** (keep it OFF)
+   - ❌ **Disable "Enable Withdrawals"** (NEVER enable this)
+   - ✅ **Restrict access to trusted IPs** (highly recommended)
 
 5. Copy API Key and Secret Key
 6. Add to `config.json`:
@@ -120,11 +123,20 @@ npm start
 }
 ```
 
-**Security Tips:**
-- 🔒 Never share your API Secret
-- 🔒 Always disable withdrawal permissions
-- 🔒 Use IP whitelist when possible
-- 🔒 Start with testnet first (`"testnet": true`)
+**🛡️ Security Best Practices:**
+- 🔒 **Only enable "Enable Reading" permission** - this prevents any trading or withdrawals
+- 🔒 Never share your API Secret with anyone
+- 🔒 Use IP whitelist to restrict access to your server only
+- 🔒 Start with testnet first (`"testnet": true`) to test safely
+- 🔒 Regularly rotate your API keys (every 3-6 months)
+
+**Why "Enable Reading" is enough:**
+- ✅ Can check account balance
+- ✅ Can view order history
+- ✅ Can monitor positions
+- ❌ Cannot place trades (safe!)
+- ❌ Cannot withdraw funds (safe!)
+- ❌ Cannot transfer assets (safe!)
 
 ---
 
