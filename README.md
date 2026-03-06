@@ -359,6 +359,28 @@ sudo systemctl enable trading-scout
 
 ## 🎯 Roadmap
 
+### 🚀 v3.0 - Smart Upgrade (2026 Q2)
+
+**AI Enhancements:**
+- [ ] OpenClaw voice interaction (TTS/STT)
+- [ ] AI-generated safety courses
+- [ ] Smart risk assessment (behavior-based)
+- [ ] Personalized investment advice
+
+**Feature Expansion:**
+- [ ] Launchpool monitoring
+- [ ] Earn products query
+- [ ] New coin listing alerts
+- [ ] Multi-platform support (WhatsApp, Discord)
+- [ ] Video tutorial library
+- [ ] Community Q&A
+- [ ] User growth system
+
+**Internationalization:**
+- [ ] Japanese, Korean, Spanish support
+- [ ] Localized safety courses
+- [ ] Multi-timezone support
+
 ### ✅ v2.7 - All-in-One Guardian (2026-03-07)
 
 **Account Management:**
@@ -410,27 +432,66 @@ sudo systemctl enable trading-scout
 - [x] Password verification mechanism
 - [x] Risk warning prompts
 
-### 🚀 v3.0 - Smart Upgrade (2026 Q2)
+### ✅ v2.5 - Binance Ecosystem Integration (2026-03-06)
 
-**AI Enhancements:**
-- [ ] OpenClaw voice interaction (TTS/STT)
-- [ ] AI-generated safety courses
-- [ ] Smart risk assessment (behavior-based)
-- [ ] Personalized investment advice
+**Completed Features:**
+- [x] Binance account integration
+  - [x] Spot holdings query (pagination support)
+  - [x] Futures positions query (pagination support)
+  - [x] Real-time P&L calculation
+- [x] AI500 hot coin rankings
+  - [x] NOFX data integration
+  - [x] Auto-push high-score coins
+- [x] Language switching (Chinese/English)
+- [x] System monitoring
+- [x] Log rotation management
 
-**Feature Expansion:**
-- [ ] Launchpool monitoring
-- [ ] Earn products query
-- [ ] New coin listing alerts
-- [ ] Multi-platform support (WhatsApp, Discord)
-- [ ] Video tutorial library
-- [ ] Community Q&A
-- [ ] User growth system
+**Technical Improvements:**
+- [x] Read-only API (secure)
+- [x] Error handling optimization
+- [x] Performance optimization
+- [x] Code refactoring
 
-**Internationalization:**
-- [ ] Japanese, Korean, Spanish support
-- [ ] Localized safety courses
-- [ ] Multi-timezone support
+### 📊 v2.4 - Market Analysis (2026-03-06)
+
+- [x] Market overview feature
+- [x] Daily market summary
+- [x] Arbitrage threshold adjustment
+- [x] Test reminder feature
+
+### 🎨 v2.3 - UI Optimization (2026-03-06)
+
+- [x] Main menu reorganization
+- [x] System monitoring integration
+- [x] Language synchronization
+- [x] Button layout optimization
+
+### 🔥 v2.2 - Feature Expansion (2026-03-05)
+
+- [x] Custom trading pairs
+- [x] Refresh interval settings
+- [x] Auto-push toggle
+- [x] Heartbeat reports
+
+### 🎯 v2.1 - Stability Fixes (2026-03-04)
+
+- [x] Fixed duplicate message bug
+- [x] Systemd service management
+- [x] Help page optimization
+- [x] Back button additions
+
+### 🚀 v2.0 - NOFX Integration (2026-03-03)
+
+- [x] NOFX data source integration
+- [x] AI500 scoring system
+- [x] Professional market analysis
+
+### 🎉 v1.0 - Initial Release (2026-03-01)
+
+- [x] Basic arbitrage monitoring
+- [x] Telegram notifications
+- [x] Multi-pair support
+- [x] Historical records
 
 ---
 
