@@ -28,11 +28,11 @@ class ScamDetector {
       warnings: [
         'Pi Network 已在部分交易所上线，但币安、Coinbase 等主流交易所尚未上线',
         '项目从 2019 年开始，主网于 2024 年底才开放',
-        '大量用户持有 Pi 币，但流动性有限',
+        '交易所的 Pi 币（IOU）与手机挖矿的 Pi 可能无法直接互换',
         '警惕私下交易和场外交易的风险'
       ],
       risks: [
-        '流动性风险：大量持币者可能同时抛售',
+        '兑换困难：手机挖的币可能换不成钱',
         '价格波动：新上线币种价格极不稳定',
         '场外骗局：很多骗子冒充 Pi 官方进行诈骗'
       ]
@@ -128,7 +128,7 @@ class ScamDetector {
       result.warnings.push(...this.piNetworkInfo.warnings);
       result.risks = this.piNetworkInfo.risks;
       result.advice.push('Pi 币已在部分交易所上线，但币安尚未上线');
-      result.advice.push('如果要交易，只在正规交易所（OKX、Huobi 等）');
+      result.advice.push('如果要交易，优先选择大平台（OKX、Huobi 等）');
       result.advice.push('警惕场外交易和私下购买，极易被骗');
       result.advice.push('不要相信"内部渠道"、"提前购买"等说法');
     }
@@ -165,10 +165,11 @@ class ScamDetector {
           message += `• 不再是完全的骗局项目\n\n`;
           message += `⚠️ *但是要注意：*\n`;
           message += `• 币安、Coinbase 等主流交易所还没上线\n`;
+          message += `• 交易所的币跟手机挖的可能不能直接换\n`;
           message += `• 价格波动极大，风险很高\n`;
           message += `• 很多骗子冒充 Pi 官方进行诈骗\n\n`;
         } else {
-          message += `这个币目前还没在币安上线，要小心。\n\n`;
+          message += `这个币目前还没在大平台上线，要小心。\n\n`;
         }
       } else if (detection.riskLevel === 'medium') {
         message += `💡 *关于 ${coin}*\n\n`;
@@ -202,7 +203,7 @@ class ScamDetector {
       message += `\n🛡️ *记住三不原则：*\n`;
       message += `1. 不相信私聊推荐\n`;
       message += `2. 不转账到私人账户\n`;
-      message += `3. 不在不正规的地方买币\n\n`;
+      message += `3. 优先选择大平台交易\n\n`;
       message += `有问题随时问我！`;
       
       return message;
@@ -232,10 +233,11 @@ class ScamDetector {
           message += `• Not a complete scam anymore\n\n`;
           message += `⚠️ *But be careful:*\n`;
           message += `• Not listed on major exchanges (Binance, Coinbase)\n`;
+          message += `• Exchange Pi (IOU) may not be directly convertible with mined Pi\n`;
           message += `• Extremely volatile, high risk\n`;
           message += `• Many scammers impersonate Pi official\n\n`;
         } else {
-          message += `This coin is not listed on Binance yet. Be careful.\n\n`;
+          message += `This coin is not listed on major platforms yet. Be careful.\n\n`;
         }
       }
       
@@ -266,7 +268,7 @@ class ScamDetector {
       message += `\n🛡️ *Remember:*\n`;
       message += `1. Don't trust private messages\n`;
       message += `2. Don't transfer to personal accounts\n`;
-      message += `3. Only trade on legitimate exchanges\n\n`;
+      message += `3. Prefer major platforms for trading\n\n`;
       message += `Ask me if you have questions!`;
       
       return message;
