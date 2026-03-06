@@ -610,44 +610,126 @@ sudo systemctl start binance-guardian
 
 ---
 
-## 🙏 致谢
+## 🙏 鸣谢
 
-- [OpenClaw](https://openclaw.ai) - 强大的 AI 框架
-- [Binance](https://www.binance.com) - 数据支持
-- [NOFX Community](https://nofx.io) - 专业数据源
-- 所有贡献者和用户
-
----
-
-## 📞 联系我们
-
-- GitHub: [openclaw-trading-scout](https://github.com/pjl914335852-ux/openclaw-trading-scout)
-- Telegram: [@BinanceGuardianBot](https://t.me/BinanceGuardianBot)
-- Email: support@example.com
+- [OpenClaw](https://openclaw.ai) - 提供强大的 AI 框架和技术支持
+- [Binance](https://www.binance.com) - 提供可靠的 API 和数据支持
+- [NOFX Community](https://nofx.io) - 提供专业的市场数据和 AI500 评分系统
+- 所有为加密货币安全教育做出贡献的开发者和用户
 
 ---
 
-## 🎯 路线图
+## 📞 联系方式
 
-### v3.0（计划中）
+- **GitHub 仓库**: [binance-guardian-ai](https://github.com/pjl914335852-ux/binance-guardian-ai)
+- **问题反馈**: [GitHub Issues](https://github.com/pjl914335852-ux/binance-guardian-ai/issues)
+- **Telegram 群组**: 加入我们的社区讨论
+- **开发者**: [@pjl914335852-ux](https://github.com/pjl914335852-ux)
 
-- [ ] 多平台支持（WhatsApp、微信）
-- [ ] 更多语言（日语、韩语）
-- [ ] 视频教程
-- [ ] 社区功能
+---
 
-### v2.6（开发中）
+## 🎯 开发路线图
 
-- [ ] 语音交互优化
-- [ ] 更多安全课程
-- [ ] UI/UX 改进
+### 🚀 v3.0 - 智能升级（2026 Q2）
 
-### v2.5（当前版本）
+**AI 增强：**
+- [ ] 集成 OpenClaw 语音交互（TTS/STT）
+- [ ] AI 动态生成安全课程
+- [ ] 智能风险评估（基于用户行为）
+- [ ] 个性化投资建议
 
+**功能扩展：**
+- [ ] 多平台支持（WhatsApp、Discord）
+- [ ] 视频教程库
+- [ ] 社区问答功能
+- [ ] 用户成长体系
+
+**国际化：**
+- [ ] 日语、韩语、西班牙语支持
+- [ ] 本地化安全课程
+- [ ] 多时区支持
+
+### 🔧 v2.6 - 守护者模式完善（开发中）
+
+**核心功能：**
+- [x] 骗局识别系统（Pi 币等）
+- [x] 人话翻译器（10+ 术语）
+- [x] 每日安全课堂（30 节课程）
+- [ ] 语音交互集成
+- [ ] 智能消息识别
+
+**用户体验：**
+- [ ] 长辈模式 UI 优化
+- [ ] 大字体显示选项
+- [ ] 简化操作流程
+- [ ] 快捷回复按钮
+
+**安全增强：**
+- [ ] 实时账户异常检测
+- [ ] 可疑交易预警
+- [ ] API 权限监控
+- [ ] 登录设备追踪
+
+### ✅ v2.5 - 币安生态集成（当前版本）
+
+**已完成功能：**
 - [x] 币安账户集成
-- [x] AI500 排行榜
-- [x] 语言切换
-- [x] 日志轮转
+  - [x] 现货持仓查询（翻页支持）
+  - [x] 合约持仓查询（翻页支持）
+  - [x] 实时盈亏计算
+- [x] AI500 热点币排行榜
+  - [x] NOFX 数据集成
+  - [x] 自动推送高分币
+- [x] 语言切换（中英文）
+- [x] 系统监控
+- [x] 日志轮转管理
+
+**技术改进：**
+- [x] 只读 API（安全）
+- [x] 错误处理优化
+- [x] 性能优化
+- [x] 代码重构
+
+### 📊 v2.4 - 市场分析（2026-03-06）
+
+- [x] 市场概览功能
+- [x] 每日市场摘要
+- [x] 套利阈值调整
+- [x] 测试提醒功能
+
+### 🎨 v2.3 - UI 优化（2026-03-06）
+
+- [x] 主菜单重组
+- [x] 系统监控集成
+- [x] 语言同步
+- [x] 按钮布局优化
+
+### 🔥 v2.2 - 功能扩展（2026-03-05）
+
+- [x] 自定义交易对
+- [x] 刷新间隔设置
+- [x] 自动推送开关
+- [x] 心跳报告
+
+### 🎯 v2.1 - 稳定性修复（2026-03-04）
+
+- [x] 修复重复消息 bug
+- [x] Systemd 服务管理
+- [x] 帮助页面优化
+- [x] 回退按钮添加
+
+### 🚀 v2.0 - NOFX 集成（2026-03-03）
+
+- [x] NOFX 数据源集成
+- [x] AI500 评分系统
+- [x] 专业市场分析
+
+### 🎉 v1.0 - 初始版本（2026-03-01）
+
+- [x] 基础套利监控
+- [x] Telegram 通知
+- [x] 多交易对支持
+- [x] 历史记录
 
 ---
 
@@ -655,8 +737,8 @@ sudo systemctl start binance-guardian
 
 **让加密货币投资更安全 🛡️**
 
-Made with ❤️ by OpenClaw Community
+Made with ❤️ for Binance Ecosystem
 
-[开始使用](https://github.com/pjl914335852-ux/openclaw-trading-scout) • [文档](./docs) • [社区](https://discord.gg/openclaw)
+[⭐ Star on GitHub](https://github.com/pjl914335852-ux/binance-guardian-ai) • [📖 Documentation](./docs) • [💬 Community](https://t.me/BinanceGuardianBot)
 
 </div>

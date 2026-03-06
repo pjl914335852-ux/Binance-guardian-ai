@@ -1,7 +1,10 @@
 // Telegram Bot Commands Handler
-// 交易侦察员 Telegram 命令处理
+// 币安守护者 AI Telegram 命令处理
 
 const { t } = require('./i18n');
+const ScamDetector = require('./scam-detector');
+const PlainTranslator = require('./plain-translator');
+const SafetyLessons = require('./safety-lessons');
 
 class TelegramUI {
   constructor(bot, config, state) {
@@ -11,6 +14,14 @@ class TelegramUI {
     this.lang = config.language || 'en';
     this.pollingErrorCount = 0;
     this.lastPollingError = 0;
+    
+    // 初始化守护者功能模块
+    this.scamDetector = new ScamDetector();
+    this.plainTranslator = new PlainTranslator();
+    this.safetyLessons = new SafetyLessons();
+    
+    // 守护者模式（长辈模式）
+    this.guardianMode = config.guardianMode !== false; // 默认开启
     
     this.setupErrorHandlers();
     this.setupCommands();
@@ -86,6 +97,37 @@ class TelegramUI {
       this.handleHelp(msg);
     });
     
+    // /guardian command - 切换守护者模式
+    this.bot.onText(/\/guardian/, (msg) => {
+      this.handleGuardianMode(msg);
+    });
+    
+    // /check command - 检查币种安全性
+    this.bot.onText(/\/check (.+)/, (msg, match) => {
+      this.handleCheckCoin(msg, match[1]);
+    });
+    
+    // /translate command - 翻译术语
+    this.bot.onText(/\/translate (.+)/, (msg, match) => {
+      this.handleTranslate(msg, match[1]);
+    });
+    
+    // /lesson command - 查看今日课程
+    this.bot.onText(/\/lesson/, (msg) => {
+      this.handleLesson(msg);
+    });
+    
+    // 监听所有文本消息（智能识别）
+    this.bot.on('message', (msg) => {
+      // 跳过命令消息
+      if (msg.text && msg.text.startsWith('/')) {
+        return;
+      }
+      
+      // 智能识别用户意图
+      this.handleSmartMessage(msg);
+    });
+    
     // /system command
     this.bot.onText(/\/system/, (msg) => {
       this.handleSystem(msg);
@@ -110,84 +152,74 @@ class TelegramUI {
     const chatId = msg.chat.id;
     
     const welcomeText = this.lang === 'zh' ? `
-🦞 *欢迎使用 OpenClaw 交易侦察员！*
+🛡️ *欢迎使用 Binance Guardian AI！*
 
-💰 *由 NOFX 社区精准数据支持*
+我是你的加密货币安全助手，专为新手和长辈设计。
 
-我是你的 24/7 加密货币套利监控助手。我会实时监控币安交易对，当发现套利机会时立即通知你！
+*🎯 我能帮你：*
 
-*🎯 我能做什么？*
+• 🛡️ 识别诈骗币（如 Pi 币）
+• 🗣️ 翻译专业术语成大白话
+• 📚 每日安全课堂
+• 💼 监控账户安全
+• 🔔 市场异动提醒
 
-• 📊 实时监控多个交易对
-• 🔍 发现价差套利机会
-• ⚠️ 评估风险等级
-• 📈 追踪历史机会
-• 🤖 AI 智能推荐
+*💡 快速开始：*
 
-*💓 心跳功能：*
+• 问我："Pi 币能买吗？"
+• 问我："什么是 Launchpool？"
+• 发送 /lesson 查看今日课程
 
-每 2 小时自动发送运行状态报告，让你知道我一直在工作！
+*🛡️ 守护者模式：*
 
-*📋 可用命令：*
+当前状态: ${this.guardianMode ? '✅ 已开启' : '❌ 已关闭'}
+发送 /guardian 切换模式
 
-/status - 查看运行状态
-/pairs - 管理交易对
-/history - 查看历史机会
-/lang - 切换语言
-/help - 帮助信息
-
-*🚀 开始使用：*
-
-我已经在后台运行了！当发现套利机会时，我会立即通知你。
-
-💡 提示：点击下方按钮快速访问功能
+点击下方按钮快速访问功能 👇
     ` : `
-🦞 *Welcome to OpenClaw Trading Scout!*
+🛡️ *Welcome to Binance Guardian AI!*
 
-💰 *Powered by NOFX Community Data*
+I'm your crypto safety assistant, designed for beginners and elderly users.
 
-I'm your 24/7 cryptocurrency arbitrage monitoring assistant. I monitor Binance trading pairs in real-time and notify you immediately when arbitrage opportunities are found!
+*🎯 I can help you:*
 
-*🎯 What can I do?*
+• 🛡️ Identify scam coins (like Pi coin)
+• 🗣️ Translate technical terms to plain language
+• 📚 Daily safety lessons
+• 💼 Monitor account security
+• 🔔 Market alerts
 
-• 📊 Real-time monitoring of multiple pairs
-• 🔍 Discover price spread arbitrage opportunities
-• ⚠️ Assess risk levels
-• 📈 Track historical opportunities
-• 🤖 AI-powered recommendations
+*💡 Quick Start:*
 
-*💓 Heartbeat Feature:*
+• Ask me: "Is Pi coin safe?"
+• Ask me: "What is Launchpool?"
+• Send /lesson for today's lesson
 
-Sends status report every 2 hours to let you know I'm working!
+*🛡️ Guardian Mode:*
 
-*📋 Available Commands:*
+Current Status: ${this.guardianMode ? '✅ Enabled' : '❌ Disabled'}
+Send /guardian to toggle
 
-/status - View running status
-/pairs - Manage trading pairs
-/history - View historical opportunities
-/lang - Switch language
-/help - Help information
-
-*🚀 Get Started:*
-
-I'm already running in the background! I'll notify you immediately when arbitrage opportunities are found.
-
-💡 Tip: Click the buttons below for quick access
+Click buttons below for quick access 👇
     `;
     
     const keyboard = {
       inline_keyboard: [
         [
-          { text: this.lang === 'zh' ? '📊 运行状态' : '📊 Status', callback_data: 'status' },
-          { text: this.lang === 'zh' ? '📈 交易对修改' : '📈 Modify Pairs', callback_data: 'pairs' }
+          { text: this.lang === 'zh' ? '🛡️ 检查币种' : '🛡️ Check Coin', callback_data: 'check_coin' },
+          { text: this.lang === 'zh' ? '📚 今日课程' : '📚 Today\'s Lesson', callback_data: 'today_lesson' }
         ],
         [
-          { text: this.lang === 'zh' ? '📝 历史记录' : '📝 History', callback_data: 'history' },
-          { text: this.lang === 'zh' ? '📅 上次摘要' : '📅 Last Summary', callback_data: 'last_summary' }
+          { text: this.lang === 'zh' ? '💼 币安账户' : '💼 Binance Account', callback_data: 'binance_account' },
+          { text: this.lang === 'zh' ? '📊 市场概览' : '📊 Market Overview', callback_data: 'market_overview' }
         ],
         [
-          { text: this.lang === 'zh' ? '💻 系统监控' : '💻 System Monitor', callback_data: 'system' },
-          { text: this.lang === 'zh' ? '💼 币安账户' : '💼 Binance Account', callback_data: 'binance_account' }
+          { text: this.lang === 'zh' ? '📈 交易对' : '📈 Pairs', callback_data: 'pairs' },
+          { text: this.lang === 'zh' ? '📝 历史记录' : '📝 History', callback_data: 'history' }
+        ],
+        [
+          { text: this.lang === 'zh' ? '💻 系统监控' : '💻 System', callback_data: 'system' },
+          { text: this.guardianMode ? (this.lang === 'zh' ? '🛡️ 守护模式' : '🛡️ Guardian') : (this.lang === 'zh' ? '⚙️ 专业模式' : '⚙️ Pro'), callback_data: 'toggle_guardian' }
         ],
         [
           { text: this.lang === 'zh' ? '🇬🇧 English' : '🇨🇳 中文', callback_data: this.lang === 'zh' ? 'lang_en' : 'lang_zh' },
@@ -801,6 +833,144 @@ We are an intelligent assistant focused on cryptocurrency arbitrage monitoring, 
       // Delete old message and send new start message in Chinese
       this.bot.deleteMessage(chatId, messageId).catch(() => {});
       this.handleStart({ chat: { id: chatId } });
+    } else if (data === 'check_coin') {
+      // Check coin safety
+      this.bot.answerCallbackQuery(query.id);
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
+      
+      const promptText = this.lang === 'zh' ? 
+        '🛡️ *检查币种安全性*\n\n请输入币种名称（如：PI、BTC、ETH）：' :
+        '🛡️ *Check Coin Safety*\n\nPlease enter coin name (e.g., PI, BTC, ETH):';
+      
+      this.bot.sendMessage(chatId, promptText, { parse_mode: 'Markdown' });
+      
+      // 等待用户输入
+      const listener = async (msg) => {
+        if (msg.chat.id === chatId && msg.text && !msg.text.startsWith('/')) {
+          this.bot.removeListener('message', listener);
+          await this.handleCheckCoin(msg, msg.text);
+        }
+      };
+      this.bot.on('message', listener);
+      
+    } else if (data === 'today_lesson') {
+      // Today's lesson
+      this.bot.answerCallbackQuery(query.id);
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
+      this.handleLesson({ chat: { id: chatId } });
+      
+    } else if (data === 'toggle_guardian') {
+      // Toggle guardian mode
+      this.bot.answerCallbackQuery(query.id);
+      this.guardianMode = !this.guardianMode;
+      
+      const text = this.lang === 'zh' ? 
+        `${this.guardianMode ? '✅ 已开启守护者模式' : '❌ 已关闭守护者模式'}` :
+        `${this.guardianMode ? '✅ Guardian mode enabled' : '❌ Guardian mode disabled'}`;
+      
+      this.bot.answerCallbackQuery(query.id, { text, show_alert: true });
+      
+      // 刷新主菜单
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
+      this.handleStart({ chat: { id: chatId } });
+      
+    } else if (data === 'past_lessons') {
+      // Past lessons menu
+      this.bot.answerCallbackQuery(query.id);
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
+      
+      const text = this.lang === 'zh' ? `
+📚 *往期课程*
+
+选择你想查看的课程：
+
+*第 1-7 天：基础安全知识*
+• 第 1 课：如何识别诈骗币？
+• 第 2 课：如何设置安全的密码？
+• 第 3 课：什么是双重验证（2FA）？
+• 第 4 课：如何识别钓鱼网站？
+• 第 5 课：什么是私钥？为什么重要？
+• 第 6 课：如何安全存储加密货币？
+• 第 7 课：什么是助记词？
+
+*第 8-14 天：交易基础*
+• 第 8 课：什么是现货交易？
+• 第 9 课：什么是合约交易？（警告）
+• 第 10 课：如何设置止损？
+
+发送课程编号（1-10）查看详细内容
+      `.trim() : `
+📚 *Past Lessons*
+
+Choose the lesson you want to view:
+
+*Day 1-7: Basic Safety*
+• Lesson 1: How to Identify Scam Coins?
+• Lesson 2: How to Set a Secure Password?
+• Lesson 3: What is 2FA?
+• Lesson 4: How to Identify Phishing Sites?
+• Lesson 5: What is Private Key?
+• Lesson 6: How to Store Crypto Safely?
+• Lesson 7: What is Seed Phrase?
+
+*Day 8-14: Trading Basics*
+• Lesson 8: What is Spot Trading?
+• Lesson 9: What is Futures Trading? (Warning)
+• Lesson 10: How to Set Stop Loss?
+
+Send lesson number (1-10) to view details
+      `.trim();
+      
+      const keyboard = {
+        inline_keyboard: [
+          [
+            { text: '1', callback_data: 'lesson_1' },
+            { text: '2', callback_data: 'lesson_2' },
+            { text: '3', callback_data: 'lesson_3' },
+            { text: '4', callback_data: 'lesson_4' },
+            { text: '5', callback_data: 'lesson_5' }
+          ],
+          [
+            { text: '6', callback_data: 'lesson_6' },
+            { text: '7', callback_data: 'lesson_7' },
+            { text: '8', callback_data: 'lesson_8' },
+            { text: '9', callback_data: 'lesson_9' },
+            { text: '10', callback_data: 'lesson_10' }
+          ],
+          [
+            { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'start' }
+          ]
+        ]
+      };
+      
+      this.bot.sendMessage(chatId, text, {
+        parse_mode: 'Markdown',
+        reply_markup: keyboard
+      });
+      
+    } else if (data.startsWith('lesson_')) {
+      // View specific lesson
+      const lessonNum = parseInt(data.split('_')[1]);
+      this.bot.answerCallbackQuery(query.id);
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
+      
+      const lesson = this.safetyLessons.getLesson(lessonNum, this.lang);
+      const message = this.safetyLessons.generateLessonMessage(lesson, this.lang);
+      
+      const keyboard = {
+        inline_keyboard: [
+          [
+            { text: this.lang === 'zh' ? '📚 查看其他课程' : '📚 Other Lessons', callback_data: 'past_lessons' },
+            { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'start' }
+          ]
+        ]
+      };
+      
+      this.bot.sendMessage(chatId, message, {
+        parse_mode: 'Markdown',
+        reply_markup: keyboard
+      });
+      
     } else if (data === 'binance_account') {
       // Binance account menu
       this.handleBinanceAccount(chatId, messageId, query.id);
@@ -2031,7 +2201,186 @@ _Page ${page + 1}/${totalPages} (Total ${positions.length} positions)_
     }
   }
   
-  // Handle earn products
+  // ==================== Guardian Mode Functions ====================
+  
+  // 切换守护者模式
+  handleGuardianMode(msg) {
+    const chatId = msg.chat.id;
+    this.guardianMode = !this.guardianMode;
+    
+    const text = this.lang === 'zh' ? `
+🛡️ *守护者模式*
+
+当前状态: ${this.guardianMode ? '✅ 已开启' : '❌ 已关闭'}
+
+*守护者模式功能：*
+• 🛡️ 自动识别诈骗币
+• 🗣️ 专业术语翻译成大白话
+• 📚 每日安全课堂
+• 💡 智能消息识别
+
+${this.guardianMode ? '现在我会用更简单的方式和你交流！' : '已切换到专业模式。'}
+    `.trim() : `
+🛡️ *Guardian Mode*
+
+Current Status: ${this.guardianMode ? '✅ Enabled' : '❌ Disabled'}
+
+*Guardian Mode Features:*
+• 🛡️ Auto-detect scam coins
+• 🗣️ Translate technical terms to plain language
+• 📚 Daily safety lessons
+• 💡 Smart message recognition
+
+${this.guardianMode ? 'I will now communicate in a simpler way!' : 'Switched to professional mode.'}
+    `.trim();
+    
+    this.bot.sendMessage(chatId, text, { parse_mode: 'Markdown' });
+  }
+  
+  // 检查币种安全性
+  async handleCheckCoin(msg, coinName) {
+    const chatId = msg.chat.id;
+    
+    try {
+      const detection = await this.scamDetector.detectScam(coinName, msg.text);
+      const warning = this.scamDetector.generateElderlyWarning(coinName, detection, this.lang);
+      
+      this.bot.sendMessage(chatId, warning, { parse_mode: 'Markdown' });
+    } catch (error) {
+      console.error('❌ Failed to check coin:', error.message);
+      
+      const errorText = this.lang === 'zh' ? 
+        `❌ 检查失败\n\n错误: ${error.message}` :
+        `❌ Check failed\n\nError: ${error.message}`;
+      
+      this.bot.sendMessage(chatId, errorText);
+    }
+  }
+  
+  // 翻译术语
+  handleTranslate(msg, term) {
+    const chatId = msg.chat.id;
+    
+    const explanation = this.plainTranslator.generateExplanation(term, this.lang);
+    this.bot.sendMessage(chatId, explanation, { parse_mode: 'Markdown' });
+  }
+  
+  // 查看今日课程
+  handleLesson(msg) {
+    const chatId = msg.chat.id;
+    
+    const lesson = this.safetyLessons.getTodayLesson(this.lang);
+    const message = this.safetyLessons.generateLessonMessage(lesson, this.lang);
+    
+    const keyboard = {
+      inline_keyboard: [
+        [
+          { text: this.lang === 'zh' ? '📚 查看往期课程' : '📚 View Past Lessons', callback_data: 'past_lessons' },
+          { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'start' }
+        ]
+      ]
+    };
+    
+    this.bot.sendMessage(chatId, message, {
+      parse_mode: 'Markdown',
+      reply_markup: keyboard
+    });
+  }
+  
+  // 智能消息识别
+  async handleSmartMessage(msg) {
+    if (!msg.text || !this.guardianMode) {
+      return;
+    }
+    
+    const chatId = msg.chat.id;
+    const text = msg.text.toLowerCase();
+    
+    // 1. 检测是否询问币种
+    const coinPatterns = [
+      /(.+)(币|coin)\s*(能买|可以买|怎么样|安全吗|是什么|靠谱吗)/i,
+      /(pi|picoin|pi币|派币)/i,
+      /(.+)(usdt|btc|eth|bnb)/i
+    ];
+    
+    for (const pattern of coinPatterns) {
+      const match = text.match(pattern);
+      if (match) {
+        const coinName = match[1] || match[0];
+        await this.handleCheckCoin(msg, coinName);
+        return;
+      }
+    }
+    
+    // 2. 检测是否询问术语
+    const detectedTerms = this.plainTranslator.detectTerms(text);
+    if (detectedTerms.length > 0) {
+      // 如果检测到术语，自动翻译第一个
+      this.handleTranslate(msg, detectedTerms[0]);
+      return;
+    }
+    
+    // 3. 检测是否询问课程
+    if (text.includes('课程') || text.includes('学习') || text.includes('教') || 
+        text.includes('lesson') || text.includes('learn') || text.includes('teach')) {
+      this.handleLesson(msg);
+      return;
+    }
+    
+    // 4. 检测是否询问安全
+    if (text.includes('安全') || text.includes('骗') || text.includes('风险') ||
+        text.includes('safe') || text.includes('scam') || text.includes('risk')) {
+      const safetyTip = this.lang === 'zh' ? `
+🛡️ *安全提示*
+
+想了解什么安全知识？
+
+你可以问我：
+• "Pi 币能买吗？" - 检查币种安全性
+• "什么是 Launchpool？" - 翻译专业术语
+• "今天的课程" - 查看每日安全课堂
+
+或者直接发送 /help 查看所有功能。
+      `.trim() : `
+🛡️ *Safety Tips*
+
+What would you like to know about safety?
+
+You can ask me:
+• "Is Pi coin safe?" - Check coin safety
+• "What is Launchpool?" - Translate terms
+• "Today's lesson" - View daily safety lesson
+
+Or send /help to see all features.
+      `.trim();
+      
+      this.bot.sendMessage(chatId, safetyTip, { parse_mode: 'Markdown' });
+      return;
+    }
+    
+    // 5. 如果都不匹配，提供帮助
+    if (this.guardianMode) {
+      const helpText = this.lang === 'zh' ? `
+💡 *我可以帮你：*
+
+• 检查币种安全性（如："Pi 币能买吗？"）
+• 翻译专业术语（如："什么是 Launchpool？"）
+• 每日安全课堂（发送 /lesson）
+
+或者点击 /help 查看所有功能。
+      `.trim() : `
+💡 *I can help you with:*
+
+• Check coin safety (e.g., "Is Pi coin safe?")
+• Translate technical terms (e.g., "What is Launchpool?")
+• Daily safety lessons (send /lesson)
+
+Or click /help to see all features.
+      `.trim();
+      
+      this.bot.sendMessage(chatId, helpText, { parse_mode: 'Markdown' });
+    }
+  }
 }
 
 module.exports = TelegramUI;
