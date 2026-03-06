@@ -86,6 +86,11 @@ class TelegramUI {
       this.handleHelp(msg);
     });
     
+    // /system command
+    this.bot.onText(/\/system/, (msg) => {
+      this.handleSystem(msg);
+    });
+    
     // Inline keyboard callbacks
     this.bot.on('callback_query', (query) => {
       this.handleCallback(query);
@@ -181,6 +186,7 @@ I'm already running in the background! I'll notify you immediately when arbitrag
           { text: this.lang === 'zh' ? '📅 上次摘要' : '📅 Last Summary', callback_data: 'last_summary' }
         ],
         [
+          { text: this.lang === 'zh' ? '💻 系统监控' : '💻 System Monitor', callback_data: 'system' },
           { text: this.lang === 'zh' ? '❓ 帮助' : '❓ Help', callback_data: 'help' }
         ],
         [
@@ -605,6 +611,127 @@ We are an intelligent assistant focused on cryptocurrency arbitrage monitoring, 
     this.bot.sendMessage(chatId, successText);
   }
   
+  // /system - Show system monitor
+  async handleSystem(msg) {
+    const chatId = msg.chat.id;
+    
+    try {
+      const { execSync } = require('child_process');
+      
+      // Get system info
+      const memInfo = execSync('free -h | grep Mem').toString().trim().split(/\s+/);
+      const diskInfo = execSync('df -h / | tail -1').toString().trim().split(/\s+/);
+      const uptimeInfo = execSync('uptime').toString().trim();
+      const cpuInfo = execSync('top -bn1 | grep "Cpu(s)"').toString().trim();
+      
+      // Parse data
+      const memTotal = memInfo[1];
+      const memUsed = memInfo[2];
+      const memFree = memInfo[3];
+      const memAvail = memInfo[6];
+      
+      const diskSize = diskInfo[1];
+      const diskUsed = diskInfo[2];
+      const diskAvail = diskInfo[3];
+      const diskUse = diskInfo[4];
+      
+      // Parse uptime
+      const uptimeMatch = uptimeInfo.match(/up\s+(.+?),\s+\d+\s+user/);
+      const uptime = uptimeMatch ? uptimeMatch[1] : 'unknown';
+      
+      // Parse load average
+      const loadMatch = uptimeInfo.match(/load average:\s+([\d.]+),\s+([\d.]+),\s+([\d.]+)/);
+      const load1 = loadMatch ? loadMatch[1] : '0';
+      const load5 = loadMatch ? loadMatch[2] : '0';
+      const load15 = loadMatch ? loadMatch[3] : '0';
+      
+      // Parse CPU
+      const cpuMatch = cpuInfo.match(/([\d.]+)\s+us,\s+([\d.]+)\s+sy/);
+      const cpuUser = cpuMatch ? cpuMatch[1] : '0';
+      const cpuSys = cpuMatch ? cpuMatch[2] : '0';
+      const cpuTotal = (parseFloat(cpuUser) + parseFloat(cpuSys)).toFixed(1);
+      
+      // Get bot process info
+      const botPid = process.pid;
+      const botMem = (process.memoryUsage().rss / 1024 / 1024).toFixed(1);
+      
+      const systemText = this.lang === 'zh' ? `
+💻 *系统监控*
+
+⏰ *运行时间:* ${uptime}
+
+*📊 CPU 使用率:*
+• 总计: ${cpuTotal}%
+• 用户: ${cpuUser}%
+• 系统: ${cpuSys}%
+• 负载: ${load1} / ${load5} / ${load15}
+
+*🧠 内存使用:*
+• 总计: ${memTotal}
+• 已用: ${memUsed}
+• 可用: ${memAvail}
+• 空闲: ${memFree}
+
+*💾 磁盘使用:*
+• 总计: ${diskSize}
+• 已用: ${diskUsed} (${diskUse})
+• 可用: ${diskAvail}
+
+*🤖 机器人进程:*
+• PID: ${botPid}
+• 内存: ${botMem} MB
+
+💡 系统运行正常
+      `.trim() : `
+💻 *System Monitor*
+
+⏰ *Uptime:* ${uptime}
+
+*📊 CPU Usage:*
+• Total: ${cpuTotal}%
+• User: ${cpuUser}%
+• System: ${cpuSys}%
+• Load: ${load1} / ${load5} / ${load15}
+
+*🧠 Memory Usage:*
+• Total: ${memTotal}
+• Used: ${memUsed}
+• Available: ${memAvail}
+• Free: ${memFree}
+
+*💾 Disk Usage:*
+• Total: ${diskSize}
+• Used: ${diskUsed} (${diskUse})
+• Available: ${diskAvail}
+
+*🤖 Bot Process:*
+• PID: ${botPid}
+• Memory: ${botMem} MB
+
+💡 System running normally
+      `.trim();
+      
+      const keyboard = {
+        inline_keyboard: [
+          [
+            { text: this.lang === 'zh' ? '🔄 刷新' : '🔄 Refresh', callback_data: 'system' },
+            { text: this.lang === 'zh' ? '🏠 返回' : '🏠 Back', callback_data: 'start' }
+          ]
+        ]
+      };
+      
+      this.bot.sendMessage(chatId, systemText, {
+        parse_mode: 'Markdown',
+        reply_markup: keyboard
+      });
+    } catch (error) {
+      const errorText = this.lang === 'zh' ?
+        '❌ 获取系统信息失败' :
+        '❌ Failed to get system info';
+      this.bot.sendMessage(chatId, errorText);
+    }
+  }
+  
   // Handle inline keyboard callbacks
   handleCallback(query) {
     const chatId = query.message.chat.id;
@@ -635,6 +762,10 @@ We are an intelligent assistant focused on cryptocurrency arbitrage monitoring, 
       // Delete old message and send help
       this.bot.deleteMessage(chatId, messageId).catch(() => {});
       this.handleHelp({ chat: { id: chatId } });
+    } else if (data === 'system') {
+      // Delete old message and send system info
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
+      this.handleSystem({ chat: { id: chatId } });
     } else if (data === 'lang_en') {
       // Switch language and update config
       this.lang = 'en';
