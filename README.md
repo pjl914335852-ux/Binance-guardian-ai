@@ -785,7 +785,6 @@ sudo systemctl start binance-guardian
 
 - **Telegram**: [@Ee_7t](https://t.me/Ee_7t)
 - **GitHub 仓库**: [binance-guardian-ai](https://github.com/pjl914335852-ux/binance-guardian-ai)
-- **问题反馈**: [GitHub Issues](https://github.com/pjl914335852-ux/binance-guardian-ai/issues)
 
 ---
 
