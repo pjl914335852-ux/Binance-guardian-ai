@@ -187,11 +187,11 @@ I'm already running in the background! I'll notify you immediately when arbitrag
         ],
         [
           { text: this.lang === 'zh' ? '💻 系统监控' : '💻 System Monitor', callback_data: 'system' },
-          { text: this.lang === 'zh' ? '❓ 帮助' : '❓ Help', callback_data: 'help' }
+          { text: this.lang === 'zh' ? '💼 币安账户' : '💼 Binance Account', callback_data: 'binance_account' }
         ],
         [
-          { text: '🇬🇧 English', callback_data: 'lang_en' },
-          { text: '🇨🇳 中文', callback_data: 'lang_zh' }
+          { text: this.lang === 'zh' ? '🌐 语言切换' : '🌐 Language', callback_data: 'language_switch' },
+          { text: this.lang === 'zh' ? '❓ 帮助' : '❓ Help', callback_data: 'help' }
         ]
       ]
     };
@@ -801,6 +801,23 @@ We are an intelligent assistant focused on cryptocurrency arbitrage monitoring, 
       // Delete old message and send new start message in Chinese
       this.bot.deleteMessage(chatId, messageId).catch(() => {});
       this.handleStart({ chat: { id: chatId } });
+    } else if (data === 'binance_account') {
+      // Binance account menu
+      this.handleBinanceAccount(chatId, messageId, query.id);
+    } else if (data === 'language_switch') {
+      // Language switch menu
+      this.handleLanguageSwitch(chatId, messageId, query.id);
+    } else if (data.startsWith('spot_holdings')) {
+      // Spot holdings with pagination
+      const page = parseInt(data.split('_')[2]) || 0;
+      this.handleSpotHoldings(chatId, messageId, query.id, page);
+    } else if (data.startsWith('futures_positions')) {
+      // Futures positions with pagination
+      const page = parseInt(data.split('_')[2]) || 0;
+      this.handleFuturesPositions(chatId, messageId, query.id, page);
+    } else if (data === 'earn_products') {
+      // Earn products
+      this.handleEarnProducts(chatId, messageId, query.id);
     } else if (data === 'add_pair') {
       // Add custom pair
       this.handleAddPair(chatId, messageId, query.id);
@@ -1666,6 +1683,439 @@ Wait for next auto-push or check market overview.
     };
     const category = this.config.aiAgent.category || 'trending';
     return AI_AGENT_RECOMMENDATIONS[category] || AI_AGENT_RECOMMENDATIONS.trending;
+  }
+  
+  // ==================== Binance Account Functions ====================
+  
+  // Handle Binance account menu
+  handleBinanceAccount(chatId, messageId, queryId) {
+    this.bot.answerCallbackQuery(queryId);
+    this.bot.deleteMessage(chatId, messageId).catch(() => {});
+    
+    const text = this.lang === 'zh' ? `
+💼 *币安账户*
+
+查看你的币安账户信息：
+
+• 📊 现货持仓
+• 📈 合约持仓
+• 💰 理财产品
+
+请选择要查看的内容：
+    `.trim() : `
+💼 *Binance Account*
+
+View your Binance account information:
+
+• 📊 Spot Holdings
+• 📈 Futures Positions
+• 💰 Earn Products
+
+Please select what you want to view:
+    `.trim();
+    
+    const keyboard = {
+      inline_keyboard: [
+        [
+          { text: this.lang === 'zh' ? '📊 现货持仓' : '📊 Spot Holdings', callback_data: 'spot_holdings_0' }
+        ],
+        [
+          { text: this.lang === 'zh' ? '📈 合约持仓' : '📈 Futures Positions', callback_data: 'futures_positions_0' }
+        ],
+        [
+          { text: this.lang === 'zh' ? '💰 理财产品' : '💰 Earn Products', callback_data: 'earn_products' }
+        ],
+        [
+          { text: this.lang === 'zh' ? '🔙 返回主菜单' : '🔙 Back to Menu', callback_data: 'start' }
+        ]
+      ]
+    };
+    
+    this.bot.sendMessage(chatId, text, {
+      parse_mode: 'Markdown',
+      reply_markup: keyboard
+    });
+  }
+  
+  // Handle language switch menu
+  handleLanguageSwitch(chatId, messageId, queryId) {
+    this.bot.answerCallbackQuery(queryId);
+    this.bot.deleteMessage(chatId, messageId).catch(() => {});
+    
+    const text = this.lang === 'zh' ? `
+🌐 *语言切换*
+
+当前语言：🇨🇳 中文
+
+请选择你想使用的语言：
+    `.trim() : `
+🌐 *Language Switch*
+
+Current Language: 🇬🇧 English
+
+Please select your preferred language:
+    `.trim();
+    
+    const keyboard = {
+      inline_keyboard: [
+        [
+          { text: '🇬🇧 English', callback_data: 'lang_en' }
+        ],
+        [
+          { text: '🇨🇳 中文', callback_data: 'lang_zh' }
+        ],
+        [
+          { text: this.lang === 'zh' ? '🔙 返回主菜单' : '🔙 Back to Menu', callback_data: 'start' }
+        ]
+      ]
+    };
+    
+    this.bot.sendMessage(chatId, text, {
+      parse_mode: 'Markdown',
+      reply_markup: keyboard
+    });
+  }
+  
+  // Handle spot holdings
+  async handleSpotHoldings(chatId, messageId, queryId, page = 0) {
+    this.bot.answerCallbackQuery(queryId, { text: this.lang === 'zh' ? '📊 获取现货持仓...' : '📊 Fetching spot holdings...', show_alert: false });
+    this.bot.deleteMessage(chatId, messageId).catch(() => {});
+    
+    try {
+      const axios = require('axios');
+      const crypto = require('crypto');
+      
+      // Check if API keys are configured
+      if (!this.config.cryptoex || !this.config.cryptoex.apiKey || !this.config.cryptoex.apiSecret) {
+        const errorText = this.lang === 'zh' ? 
+          '❌ 币安 API 未配置\n\n请在 config.json 中添加 cryptoex.apiKey 和 cryptoex.apiSecret' :
+          '❌ Binance API not configured\n\nPlease add cryptoex.apiKey and cryptoex.apiSecret in config.json';
+        
+        const keyboard = {
+          inline_keyboard: [
+            [
+              { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'binance_account' }
+            ]
+          ]
+        };
+        
+        this.bot.sendMessage(chatId, errorText, { reply_markup: keyboard });
+        return;
+      }
+      
+      // Get account info
+      const timestamp = Date.now();
+      const queryString = `timestamp=${timestamp}`;
+      const signature = crypto
+        .createHmac('sha256', this.config.cryptoex.apiSecret)
+        .update(queryString)
+        .digest('hex');
+      
+      const response = await axios.get('https://api.binance.com/api/v3/account', {
+        params: {
+          timestamp,
+          signature
+        },
+        headers: {
+          'X-MBX-APIKEY': this.config.cryptoex.apiKey
+        }
+      });
+      
+      const balances = response.data.balances
+        .filter(b => parseFloat(b.free) > 0 || parseFloat(b.locked) > 0)
+        .map(b => ({
+          asset: b.asset,
+          free: parseFloat(b.free),
+          locked: parseFloat(b.locked),
+          total: parseFloat(b.free) + parseFloat(b.locked)
+        }))
+        .sort((a, b) => b.total - a.total);
+      
+      if (balances.length === 0) {
+        const noDataText = this.lang === 'zh' ? 
+          '😴 暂无现货持仓' :
+          '😴 No spot holdings';
+        
+        const keyboard = {
+          inline_keyboard: [
+            [
+              { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'binance_account' }
+            ]
+          ]
+        };
+        
+        this.bot.sendMessage(chatId, noDataText, { reply_markup: keyboard });
+        return;
+      }
+      
+      // Pagination
+      const ITEMS_PER_PAGE = 10;
+      const totalPages = Math.ceil(balances.length / ITEMS_PER_PAGE);
+      const startIndex = page * ITEMS_PER_PAGE;
+      const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, balances.length);
+      const pageBalances = balances.slice(startIndex, endIndex);
+      
+      let text = this.lang === 'zh' ? `
+📊 *现货持仓*
+
+_第 ${page + 1}/${totalPages} 页 (共 ${balances.length} 个币种)_
+
+` : `
+📊 *Spot Holdings*
+
+_Page ${page + 1}/${totalPages} (Total ${balances.length} assets)_
+
+`;
+      
+      pageBalances.forEach((balance, index) => {
+        text += `${startIndex + index + 1}. *${balance.asset}*\n`;
+        text += `   ${this.lang === 'zh' ? '可用' : 'Free'}: ${balance.free.toFixed(8)}\n`;
+        if (balance.locked > 0) {
+          text += `   ${this.lang === 'zh' ? '锁定' : 'Locked'}: ${balance.locked.toFixed(8)}\n`;
+        }
+        text += `   ${this.lang === 'zh' ? '总计' : 'Total'}: ${balance.total.toFixed(8)}\n\n`;
+      });
+      
+      // Pagination buttons
+      const buttons = [];
+      if (page > 0) {
+        buttons.push({ text: '⬅️ ' + (this.lang === 'zh' ? '上一页' : 'Previous'), callback_data: `spot_holdings_${page - 1}` });
+      }
+      if (page < totalPages - 1) {
+        buttons.push({ text: (this.lang === 'zh' ? '下一页' : 'Next') + ' ➡️', callback_data: `spot_holdings_${page + 1}` });
+      }
+      
+      const keyboard = {
+        inline_keyboard: [
+          buttons.length > 0 ? buttons : [],
+          [
+            { text: this.lang === 'zh' ? '🔄 刷新' : '🔄 Refresh', callback_data: `spot_holdings_${page}` },
+            { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'binance_account' }
+          ]
+        ].filter(row => row.length > 0)
+      };
+      
+      this.bot.sendMessage(chatId, text, {
+        parse_mode: 'Markdown',
+        reply_markup: keyboard
+      });
+      
+    } catch (error) {
+      console.error('❌ Failed to get spot holdings:', error.message);
+      
+      const errorText = this.lang === 'zh' ? 
+        `❌ 获取现货持仓失败\n\n错误: ${error.response?.data?.msg || error.message}` :
+        `❌ Failed to get spot holdings\n\nError: ${error.response?.data?.msg || error.message}`;
+      
+      const keyboard = {
+        inline_keyboard: [
+          [
+            { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'binance_account' }
+          ]
+        ]
+      };
+      
+      this.bot.sendMessage(chatId, errorText, { reply_markup: keyboard });
+    }
+  }
+  
+  // Handle futures positions
+  async handleFuturesPositions(chatId, messageId, queryId, page = 0) {
+    this.bot.answerCallbackQuery(queryId, { text: this.lang === 'zh' ? '📈 获取合约持仓...' : '📈 Fetching futures positions...', show_alert: false });
+    this.bot.deleteMessage(chatId, messageId).catch(() => {});
+    
+    try {
+      const axios = require('axios');
+      const crypto = require('crypto');
+      
+      // Check if API keys are configured
+      if (!this.config.cryptoex || !this.config.cryptoex.apiKey || !this.config.cryptoex.apiSecret) {
+        const errorText = this.lang === 'zh' ? 
+          '❌ 币安 API 未配置\n\n请在 config.json 中添加 cryptoex.apiKey 和 cryptoex.apiSecret' :
+          '❌ Binance API not configured\n\nPlease add cryptoex.apiKey and cryptoex.apiSecret in config.json';
+        
+        const keyboard = {
+          inline_keyboard: [
+            [
+              { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'binance_account' }
+            ]
+          ]
+        };
+        
+        this.bot.sendMessage(chatId, errorText, { reply_markup: keyboard });
+        return;
+      }
+      
+      // Get futures positions
+      const timestamp = Date.now();
+      const queryString = `timestamp=${timestamp}`;
+      const signature = crypto
+        .createHmac('sha256', this.config.cryptoex.apiSecret)
+        .update(queryString)
+        .digest('hex');
+      
+      const response = await axios.get('https://fapi.binance.com/fapi/v2/positionRisk', {
+        params: {
+          timestamp,
+          signature
+        },
+        headers: {
+          'X-MBX-APIKEY': this.config.cryptoex.apiKey
+        }
+      });
+      
+      const positions = response.data
+        .filter(p => parseFloat(p.positionAmt) !== 0)
+        .map(p => ({
+          symbol: p.symbol,
+          positionAmt: parseFloat(p.positionAmt),
+          entryPrice: parseFloat(p.entryPrice),
+          markPrice: parseFloat(p.markPrice),
+          unRealizedProfit: parseFloat(p.unRealizedProfit),
+          leverage: parseInt(p.leverage),
+          side: parseFloat(p.positionAmt) > 0 ? 'LONG' : 'SHORT'
+        }))
+        .sort((a, b) => Math.abs(b.unRealizedProfit) - Math.abs(a.unRealizedProfit));
+      
+      if (positions.length === 0) {
+        const noDataText = this.lang === 'zh' ? 
+          '😴 暂无合约持仓' :
+          '😴 No futures positions';
+        
+        const keyboard = {
+          inline_keyboard: [
+            [
+              { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'binance_account' }
+            ]
+          ]
+        };
+        
+        this.bot.sendMessage(chatId, noDataText, { reply_markup: keyboard });
+        return;
+      }
+      
+      // Pagination
+      const ITEMS_PER_PAGE = 5;
+      const totalPages = Math.ceil(positions.length / ITEMS_PER_PAGE);
+      const startIndex = page * ITEMS_PER_PAGE;
+      const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, positions.length);
+      const pagePositions = positions.slice(startIndex, endIndex);
+      
+      let text = this.lang === 'zh' ? `
+📈 *合约持仓*
+
+_第 ${page + 1}/${totalPages} 页 (共 ${positions.length} 个持仓)_
+
+` : `
+📈 *Futures Positions*
+
+_Page ${page + 1}/${totalPages} (Total ${positions.length} positions)_
+
+`;
+      
+      pagePositions.forEach((pos, index) => {
+        const profitEmoji = pos.unRealizedProfit > 0 ? '📈' : pos.unRealizedProfit < 0 ? '📉' : '➡️';
+        const sideEmoji = pos.side === 'LONG' ? '🟢' : '🔴';
+        
+        text += `${startIndex + index + 1}. ${sideEmoji} *${pos.symbol}* (${pos.leverage}x)\n`;
+        text += `   ${this.lang === 'zh' ? '方向' : 'Side'}: ${pos.side}\n`;
+        text += `   ${this.lang === 'zh' ? '数量' : 'Amount'}: ${Math.abs(pos.positionAmt)}\n`;
+        text += `   ${this.lang === 'zh' ? '开仓价' : 'Entry'}: $${pos.entryPrice.toFixed(4)}\n`;
+        text += `   ${this.lang === 'zh' ? '标记价' : 'Mark'}: $${pos.markPrice.toFixed(4)}\n`;
+        text += `   ${profitEmoji} ${this.lang === 'zh' ? '未实现盈亏' : 'PnL'}: $${pos.unRealizedProfit.toFixed(2)}\n\n`;
+      });
+      
+      // Calculate total PnL
+      const totalPnL = positions.reduce((sum, p) => sum + p.unRealizedProfit, 0);
+      const totalEmoji = totalPnL > 0 ? '📈' : totalPnL < 0 ? '📉' : '➡️';
+      text += `${totalEmoji} *${this.lang === 'zh' ? '总盈亏' : 'Total PnL'}:* $${totalPnL.toFixed(2)}\n`;
+      
+      // Pagination buttons
+      const buttons = [];
+      if (page > 0) {
+        buttons.push({ text: '⬅️ ' + (this.lang === 'zh' ? '上一页' : 'Previous'), callback_data: `futures_positions_${page - 1}` });
+      }
+      if (page < totalPages - 1) {
+        buttons.push({ text: (this.lang === 'zh' ? '下一页' : 'Next') + ' ➡️', callback_data: `futures_positions_${page + 1}` });
+      }
+      
+      const keyboard = {
+        inline_keyboard: [
+          buttons.length > 0 ? buttons : [],
+          [
+            { text: this.lang === 'zh' ? '🔄 刷新' : '🔄 Refresh', callback_data: `futures_positions_${page}` },
+            { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'binance_account' }
+          ]
+        ].filter(row => row.length > 0)
+      };
+      
+      this.bot.sendMessage(chatId, text, {
+        parse_mode: 'Markdown',
+        reply_markup: keyboard
+      });
+      
+    } catch (error) {
+      console.error('❌ Failed to get futures positions:', error.message);
+      
+      const errorText = this.lang === 'zh' ? 
+        `❌ 获取合约持仓失败\n\n错误: ${error.response?.data?.msg || error.message}` :
+        `❌ Failed to get futures positions\n\nError: ${error.response?.data?.msg || error.message}`;
+      
+      const keyboard = {
+        inline_keyboard: [
+          [
+            { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'binance_account' }
+          ]
+        ]
+      };
+      
+      this.bot.sendMessage(chatId, errorText, { reply_markup: keyboard });
+    }
+  }
+  
+  // Handle earn products
+  async handleEarnProducts(chatId, messageId, queryId) {
+    this.bot.answerCallbackQuery(queryId, { text: this.lang === 'zh' ? '💰 获取理财产品...' : '💰 Fetching earn products...', show_alert: false });
+    this.bot.deleteMessage(chatId, messageId).catch(() => {});
+    
+    const text = this.lang === 'zh' ? `
+💰 *理财产品*
+
+_此功能需要币安理财 API 权限_
+
+由于币安理财 API 限制，暂时无法直接获取理财产品信息。
+
+你可以：
+1. 登录币安网站查看
+2. 使用币安 App 查看
+
+或者联系开发者添加此功能。
+    `.trim() : `
+💰 *Earn Products*
+
+_This feature requires Binance Earn API permission_
+
+Due to Binance Earn API limitations, we cannot directly fetch earn product information at this time.
+
+You can:
+1. Login to Binance website to view
+2. Use Binance App to view
+
+Or contact the developer to add this feature.
+    `.trim();
+    
+    const keyboard = {
+      inline_keyboard: [
+        [
+          { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'binance_account' }
+        ]
+      ]
+    };
+    
+    this.bot.sendMessage(chatId, text, {
+      parse_mode: 'Markdown',
+      reply_markup: keyboard
+    });
   }
 }
 
