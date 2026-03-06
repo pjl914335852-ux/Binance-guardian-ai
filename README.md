@@ -1,6 +1,6 @@
 # Binance Guardian AI 🛡️
 
-> 让加密货币投资更安全 - 基于 OpenClaw 的智能安全助手，专为新手和长辈设计
+> Making Crypto Investment Safer - An AI-powered safety assistant built on OpenClaw, designed for beginners and elderly users
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-Powered-blue.svg)](https://openclaw.ai)
@@ -8,930 +8,458 @@
 [![Binance](https://img.shields.io/badge/Binance-Ecosystem-F0B90B.svg)](https://www.binance.com)
 [![Security](https://img.shields.io/badge/API-Read--Only-green.svg)](https://github.com/pjl914335852-ux/binance-guardian-ai#security)
 
-[English](./README.en.md) | [中文文档](./README.zh-CN.md) | [更新日志](./CHANGELOG.md)
+[English](./README.md) | [中文文档](./README.zh-CN.md) | [Changelog](./CHANGELOG.md)
 
 ---
 
-## 🔒 安全声明 (Security Declaration)
+## 🔒 Security Declaration
 
 **Zero-Write Access:** Binance Guardian AI strictly requires **Read-Only API permissions**. We never ask for withdrawal or trading permissions. Your assets remain in your control, 100%.
 
-**零写入权限：** 币安守护者 AI 严格要求**只读 API 权限**。我们永远不会要求提现或交易权限。你的资产 100% 由你掌控。
+---
+
+## 🎯 Why Binance Guardian?
+
+### Real-World Scenarios
+
+**Scenario 1: Mom Asks**
+> "Son, my friend says Pi coin is listing on Binance soon and I should buy now. Is it true?"
+
+**Scenario 2: Beginner Confusion**
+> "What is Binance Launchpool? Will I lose money?"
+
+**Scenario 3: Investment Anxiety**
+> "My coin dropped 20%, should I sell?"
+
+### Our Solution
+
+**Binance Guardian AI** is an AI safety assistant designed specifically for crypto beginners and elderly users, built on the OpenClaw framework. It can:
+
+- 🛡️ **Identify Scams** - Cross-reference global scam databases, real-time risk detection
+- 🗣️ **Plain Language Translation** - Translate crypto jargon into simple terms (Senior Mode)
+- 📚 **Safety Education** - Daily lessons, master crypto basics in 30 days
+- 💼 **Asset Protection** - Real-time market structure analysis, intelligent risk alerts
+- 🔔 **Anomaly Alerts** - 24/7 monitoring, instant notification of account anomalies
 
 ---
 
-## 🎯 为什么需要 Binance Guardian？
+## 🌟 Core Value
 
-### 真实场景
+### Value to Binance Ecosystem
 
-**场景 1：妈妈问你**
-> "儿子，我朋友说 Pi 币要上币安了，让我赶紧买，是真的吗？"
+1. **User Protection** - Reduce scam victims, protect user assets
+2. **User Education** - Lower entry barriers, expand user base
+3. **Ecosystem Health** - Promote compliant projects, filter out scams
+4. **Brand Enhancement** - Demonstrate Binance's commitment to user safety
 
-**场景 2：新手困惑**
-> "币安 Launchpool 是什么？会不会亏钱？"
+### Social Value
 
-**场景 3：投资焦虑**
-> "我的币跌了 20%，要不要卖？"
-
-### 我们的解决方案
-
-**Binance Guardian AI** 是一个专为加密货币新手和长辈设计的 AI 安全助手，基于 OpenClaw 框架开发。它能：
-
-- 🛡️ **识别骗局** - 跨境诈骗数据库交叉比对，实时识别风险币种
-- 🗣️ **人话翻译** - 把专业术语翻译成大白话（长辈模式）
-- 📚 **安全教育** - 每日一课，30 天掌握加密货币基础
-- 💼 **资产守护** - 实时市场结构分析引擎，智能风险预警
-- 🔔 **异动提醒** - 24/7 监控，账户异常立即通知
+1. **Lower Crypto Barriers** - Enable non-technical people to invest safely
+2. **Help Elderly Users** - Bring seniors into the crypto world
+3. **Reduce Scam Cases** - Identify common scams (Pi coin, air coins)
+4. **Improve Industry Image** - Showcase positive value of cryptocurrency
 
 ---
 
-## 🌟 核心价值
+## ✨ Key Features
 
-### 对币安生态的价值
+### 🛡️ Guardian Mode (Default)
 
-1. **降低用户教育成本**
-   - 新手友好的交互方式
-   - 降低客服压力 50%+
-   - 提升用户留存率
+**Core Safety Features:**
 
-2. **提升平台安全性**
-   - 识别诈骗币，保护用户资产
-   - 减少用户因误操作造成的损失
-   - 增强用户对币安的信任
+#### 1. Scam Coin Detection
+- Identify known scam coins (Squid, BitConnect, OneCoin, etc.)
+- Special handling for controversial coins (Pi Network)
+- Auto-sync Binance listing status (hourly updates)
+- Risk level assessment (low/medium/high/critical)
+- Elderly-friendly warning messages
 
-3. **扩大用户群体**
-   - 吸引非技术背景用户
-   - 帮助长辈安全进入加密世界
-   - 破圈到更广泛的人群
+**Example:**
+```
+User: "Can I buy Pi coin?"
 
-### 对用户的价值
+Guardian: "Mom, Pi coin hasn't listed on Binance yet. Some small exchanges 
+have trading, but those are IOUs, not the real coins you mined on your phone.
 
-- ✅ **100% 安全** - 只读权限，永不接触私钥
-- ✅ **完全免费** - 无需任何费用
-- ✅ **极简交互** - 语音问答，像聊天一样简单
-- ✅ **实时守护** - 24/7 监控，及时预警
+🚨 Main Risks:
+1. Exchange Difficulty - Your mined coins may not be convertible
+2. High Scam Rate - Many scammers impersonate officials to steal seed phrases
+3. Compliance Gap - Not listed on Binance, Coinbase, or Kraken
+
+💡 Safety Tips:
+• Prioritize major platforms like Binance
+• Don't trust private messages
+• Don't transfer to personal accounts
+• Don't click unknown links
+
+Reminder: Coins not on major platforms carry higher risks!"
+```
+
+#### 2. Plain Language Translator
+Translate 10+ technical terms into simple language:
+
+| Technical Term | Plain Language | Example |
+|---------------|----------------|---------|
+| Launchpool | Like bank fixed deposit with gift rewards | Deposit 100 USDT, principal stays safe, get new coins daily |
+| Launchpad | Like IPO lottery with BNB | Use BNB to draw lots for new coins |
+| Staking | Like fixed deposit earning interest | Lock for a period, earn interest |
+| Spot | Direct purchase, yours immediately | Buy and own |
+| Futures | Borrowing to trade, extremely risky! | ⚠️ Beginners should avoid |
+| Market Order | Execute immediately at any price | Fast but price uncertain |
+| Limit Order | Set price, execute when reached | Controlled price |
+| Stop Loss | Set loss limit, auto-sell when reached | Protect principal |
+| Take Profit | Set profit target, auto-sell when reached | Lock in gains |
+
+#### 3. Daily Safety Lessons
+10 basic courses (expandable to 30):
+
+**Days 1-7: Basic Safety**
+1. How to identify scam coins?
+2. How to set secure passwords?
+3. What is Two-Factor Authentication (2FA)?
+4. How to identify phishing websites?
+5. What are private keys? Why are they important?
+6. How to safely store cryptocurrency?
+7. What are seed phrases?
+
+**Days 8-14: Trading Basics**
+8. What is spot trading?
+9. What is futures trading? (Warning)
+10. How to set stop-loss?
+
+**Advanced Topics (10 themes):**
+- DeFi Security
+- NFT Safety
+- Wallet Security
+- Smart Contract Risks
+- Phishing Prevention
+- Social Engineering
+- Exchange Security
+- Privacy Protection
+- Tax Compliance
+- Legal Regulations
+
+#### 4. Smart Message Recognition
+Auto-detect user intent:
+- Coin inquiry: "Can I buy Pi coin?" → Auto scam detection
+- Term inquiry: "What is Launchpool?" → Auto translation
+- Safety inquiry: "How to prevent scams?" → Safety tips
+- Course inquiry: "What's today's lesson?" → Show daily lesson
 
 ---
 
-## 💡 技术亮点
+### ⚙️ Professional Mode
 
-### Real-time Market Structure Analysis Engine
-**实时市场结构分析引擎**
+**Advanced Features:**
 
-- 多维度数据融合（价格、成交量、AI500 评分）
-- 毫秒级异常检测
-- 智能风险评估算法
+#### 5. Account Management
+- **Deposit History** - View recent 10 deposits with status
+- **Withdrawal History** - View recent 10 withdrawals with status
+- **Deposit Address** - Generate addresses for any coin (BTC, ETH, USDT, BNB, SOL, XRP)
+- **Spot Trade History** - View recent 10 trades with buy/sell indicators
+- **Futures Trade History** - Placeholder with risk warning
 
-### Cross-referencing Global Scam Databases
-**跨境诈骗数据库交叉比对**
+#### 6. Market Data Visualization
+- **K-Line Charts** - 24-hour candlestick charts as PNG images
+- **Market Depth** - Order book with top 5 bids/asks, spread calculation
+- **Recent Trades** - Last 15 trades with buy/sell direction
 
-- 实时同步币安上线币种
-- 对比全球已知诈骗项目
-- 自动标记风险等级
+#### 7. Price Alert System
+- **4 Alert Types:**
+  * Price Above - Alert when price exceeds target
+  * Price Below - Alert when price falls below target
+  * Rise Over - Alert when rise exceeds percentage
+  * Fall Over - Alert when fall exceeds percentage
+- **Auto Monitoring** - Check every 30 seconds
+- **Instant Notifications** - Telegram push when triggered
+- **Alert Management** - View active/triggered alerts, delete alerts
 
-### Natural Language Processing for Seniors
-**长辈友好的自然语言处理**
+#### 8. Spot Holdings & Futures Positions
+- View all spot balances with pagination
+- View all futures positions with PnL
+- Real-time data refresh
 
-- 专业术语自动识别
-- 上下文理解
-- 人话翻译引擎
+#### 9. Market Overview
+- Real-time prices for major pairs
+- 24h price changes
+- Trading volume
+- Price change tracking
 
----
-
-## 🚀 核心功能
-
-### 1. 🛡️ 骗局识别（长辈守护模式）
-
-#### 🚨 典型案例分析：派币 (Pi Network) 风险预警
-
-**现状核查：**
-尽管该项目声称进入主网阶段，但截至 2026 年 3 月，它仍未在币安 (Binance) 等全球主流合规交易平台开放现货交易。
-
-**OpenClaw 侦察结果：**
-
-1. **资产流通风险**
-   - 市场上流通的所谓"派币期货"多为交易所 IOU（欠条）
-   - 与手机挖矿资产可能无法直接互换
-   - 存在极高溢价风险，兑换困难
-
-2. **诈骗高发区域**
-   - 侦察员监测到大量打着"派币兑现"旗号的第三方钓鱼链接
-   - 旨在骗取用户的助记词和私钥
-   - 已有数千人上当受骗
-
-3. **合规缺位**
-   - 未在币安、Coinbase、Kraken 等主流交易所上线
-   - 仅在部分小型交易所有 IOU 交易
-   - 流动性极差，存在较大风险
-
-**守护者建议：**
-
-> "妈，没上币安等大平台交易的币，风险都比较大。那些说能帮你'换钱'的链接全是陷阱，点开钱包就空了。"
-
-**示例对话：**
-
-```
-👤 用户: "Pi 币要上币安了吗？"
-
-🤖 Guardian: 
-"⚠️ Pi 币风险预警
-
-妈，Pi 币目前还没有在币安上线。有些小交易所虽然有交易，
-但那些是'欠条'（IOU），跟你手机挖的币不一定能直接换。
-
-🚨 主要风险：
-1. 兑换困难 - 手机挖的币可能换不成钱
-2. 诈骗高发 - 很多骗子冒充官方骗助记词
-3. 合规缺位 - 币安、Coinbase 都没上线
-
-💡 安全建议：
-• 优先选择币安等大平台交易
-• 不要相信私聊推荐
-• 不要转账到私人账户
-• 不要点击陌生链接
-
-提醒：没上大平台的币，风险都比较高！"
-```
-
-**技术实现：**
-- 实时同步币安上线币种列表（每小时更新）
-- 跨境诈骗数据库交叉比对
-- 自动标记风险等级（low/medium/high/critical）
-- 提供合规交易所清单
+#### 10. System Monitoring
+- CPU usage
+- Memory usage
+- Disk space
+- System load
+- Uptime
 
 ---
 
-### 2. 🗣️ 人话翻译机（长辈模式）
+## 🎨 UI Differentiation
 
-#### 对比示例：专业术语 vs 人话翻译
-
-**示例 1：市场分析**
-
-| 专业模式 | 长辈模式 |
-|---------|---------|
-| BTC 4H EMA20 Support at 92500, RSI Overbought, MACD Bearish Divergence | 市场现在有点热，像夏天正午，建议先在树荫下（观望）歇会，别急着赶路。 |
-
-**示例 2：Launchpool**
-
+### Guardian Mode (Default) 🛡️
+**Simplified Menu (4 rows):**
 ```
-👤 用户: "Launchpool 是什么？"
-
-🤖 Guardian:
-"💡 Launchpool（新币挖矿）
-
-🗣️ 人话翻译：
-就像银行的定期存款送礼品活动
-
-📝 简单理解：
-1. 你把闲钱（BNB 或 USDT）存进去
-2. 本金不动，随时可以取出
-3. 每天送你一些新币作为奖励
-
-💰 举例：
-存 100 USDT，7 天后：
-• 本金还是 100 USDT（不会少）
-• 额外得到一些新币（白送的）
-
-✅ 安全性：很安全，本金不会亏
-⏰ 时间：通常 7-30 天
-
-就像你去银行存钱，银行送你一袋米，就这么简单！"
+[🛡️ Check Coin] [📚 Today's Lesson]
+[💼 Binance Account] [📊 Market Overview]
+[💻 System Monitor] [❓ Help]
+[🇬🇧/🇨🇳]    [🛡️ Guardian Mode: ON]
 ```
 
-**功能：** 把专业术语翻译成大白话
+**Features:**
+- Only safety functions visible
+- Hides advanced trading features
+- Password protection to disable
+- Suitable for beginners and elderly
 
-**已支持术语：**
-- Launchpool（新币挖矿）→ "银行定期存款送礼品"
-- Launchpad（新币认购）→ "新股申购抽签"
-- Staking（质押）→ "定期存款赚利息"
-- Spot（现货）→ "直接买币"
-- Futures（合约）→ "借钱炒币，风险极高！"
-- Stop Loss（止损）→ "亏损警戒线"
-- Take Profit（止盈）→ "赚钱目标线"
-
-**技术实现：**
-- 自然语言处理（NLP）
-- 上下文理解
-- 实例化解释（举例说明）
-- 风险提示
-
+### Professional Mode ⚙️
+**Full Menu (7 rows):**
 ```
-👤 用户: "Launchpool 是什么？"
-
-🤖 Guardian: "妈，Launchpool 就像银行的定期存款送礼品活动：
-              
-              📝 简单理解：
-              1. 你把闲钱（BNB 或 USDT）存进去
-              2. 本金不动，随时可以取出
-              3. 每天送你一些新币作为奖励
-              
-              💰 举例：
-              存 100 USDT，7 天后：
-              - 本金还是 100 USDT（不会少）
-              - 额外得到一些新币（白送的）
-              
-              ✅ 安全性：很安全，本金不会亏
-              ⏰ 时间：通常 7-30 天
-              
-              想参加的话，我可以教你怎么操作。"
+[🛡️ Check Coin] [📚 Today's Lesson]
+[💼 Binance Account] [📊 Market Overview]
+[📈 Pairs]   [📝 History]
+[🎯 Threshold] [⏱️ Interval]
+[🔔 Push Toggle] [💻 System Monitor]
+[🇬🇧/🇨🇳]    [❓ Help]
+[⚙️ Professional Mode: ON]
 ```
 
-**支持翻译的术语：**
-- Launchpool / Launchpad
-- Staking / 质押
-- Spot / Futures / 现货 / 合约
-- Market Order / Limit Order
-- Stop Loss / Take Profit
-- 等 50+ 常见术语
-
-### 3. 📚 每日安全课堂
-
-**功能：** 每天推送一个安全知识点
-
-**示例内容：**
-
-```
-📚 今日安全课堂 (第 1 课)
-
-主题：如何识别诈骗币？
-
-🚨 三大特征：
-1. 承诺高回报（"一个月翻 10 倍"）
-2. 让你拉人头（"推荐 3 个人送币"）
-3. 不在币安上线（"私下交易更便宜"）
-
-✅ 安全原则：
-- 只在币安官方 App 交易
-- 不相信私聊推荐
-- 不转账到私人账户
-
-💡 记住：天上不会掉馅饼，高回报必有高风险。
-
-明天的课程：如何设置安全的密码
-```
-
-**课程体系：**
-- 第 1-7 天：基础安全知识
-- 第 8-14 天：交易基础
-- 第 15-21 天：风险管理
-- 第 22-30 天：进阶技巧
-
-### 4. 💼 资产安全检查
-
-**功能：** 实时监控账户，发现异常及时预警
-
-**检查项目：**
-- ✅ 账户余额变动
-- ✅ 异常交易行为
-- ✅ API 权限检查
-- ✅ 登录设备监控
-
-**预警示例：**
-
-```
-⚠️ 安全预警
-
-检测到您的账户有异常活动：
-
-🔍 异常详情：
-- 时间：2026-03-06 22:30
-- 行为：尝试提币到未知地址
-- 金额：500 USDT
-
-🛡️ 已自动采取的措施：
-- 暂停提币功能
-- 发送验证码到手机
-
-💡 建议操作：
-1. 立即修改密码
-2. 检查 API 密钥
-3. 联系币安客服
-
-如果不是您本人操作，请立即冻结账户。
-```
-
-### 5. 🔔 市场异动提醒
-
-**功能：** 监控市场，发现异常波动及时提醒
-
-**提醒场景：**
-- 📈 持仓币种大涨/大跌（>10%）
-- 🔥 新币上线（Launchpad/Launchpool）
-- ⚠️ 市场恐慌（BTC 暴跌）
-- 💡 套利机会（跨交易所价差）
-
-**提醒示例：**
-
-```
-🔔 市场提醒
-
-您持有的 BTC 在过去 1 小时下跌了 12%
-
-📊 当前情况：
-- 当前价格：$68,500
-- 1小时前：$77,800
-- 跌幅：-12%
-
-🤔 要不要卖？
-
-💡 建议：
-- 如果是长期投资，不用慌，比特币经常波动
-- 如果是短期交易，可以考虑止损
-- 如果不确定，可以先卖一半
-
-📚 延伸阅读：什么是止损？为什么要止损？
-
-需要帮助吗？回复"帮我分析"获取详细建议。
-```
-
-### 6. 🎤 语音交互（长辈友好）
-
-**功能：** 支持语音问答，不用打字
-
-**使用方式：**
-1. 按住语音按钮说话
-2. AI 自动识别并回答
-3. 答案也可以用语音播放
-
-**示例场景：**
-
-```
-👤 用户: [语音] "我的比特币现在多少钱？"
-
-🤖 Guardian: [语音回复]
-"您好，您的比特币现在价值 68,500 美元，
- 比昨天下跌了 12%。
- 
- 您一共有 0.5 个比特币，
- 现在总价值是 34,250 美元。
- 
- 需要我帮您分析一下吗？"
-```
-
-**语音优势：**
-- 👴 长辈不用打字
-- 🚗 开车时也能用
-- 👀 不用盯着屏幕
-- 🌙 晚上不用开灯
+**Features:**
+- All advanced functions visible
+- Direct access to threshold/interval settings
+- Push notification toggle
+- Pair management
+- Trade history
 
 ---
 
-## 📱 使用方式
+## 💰 The Story of 1 BNB: From Trading to Guardian
 
-### 极简交互流程
+### Initial Intent
 
-```
-1. 打开 Telegram
-   ↓
-2. 找到 Binance Guardian Bot
-   ↓
-3. 点击"开始"
-   ↓
-4. 选择模式：
-   - 🛡️ 长辈模式（推荐新手）
-   - 📊 专业模式（适合老手）
-   ↓
-5. 开始提问或接收提醒
-```
+> "The initial intent of investing 1 BNB was not to seek 100x returns in volatility, but to build an automated sentinel that remains calm even in extreme market conditions, protecting family."
 
-### 常用命令
+### Transformation
 
-**长辈模式：**
-- 💬 直接说话 - "Pi 币能买吗？"
-- 🎤 语音提问 - 按住说话
-- 📚 每日一课 - 自动推送
-- 💼 查看资产 - "我有多少钱？"
+**Early 2024:** This project originated from a simple idea—using open-source tools and AI technology to help ordinary people participate in cryptocurrency investment more safely. The founder is not a professional developer, but an ordinary investor concerned about family asset safety.
 
-**专业模式：**
-- `/start` - 打开主菜单
-- `/account` - 查看账户
-- `/market` - 市场概览
-- `/alert` - 设置提醒
-- `/help` - 帮助文档
+**Mid 2024:** As more friends and family began asking cryptocurrency questions—"Can I buy Pi coin?" "Is this new coin reliable?"—the founder realized that helping ordinary people avoid traps is more important than pursuing profits. Thus began using the OpenClaw platform and existing open-source tools to build a safety assistant prototype.
 
----
+**2025:** The project positioning gradually became clear: rather than pursuing profit maximization, pursue risk minimization. By integrating Binance API, scam databases, AI translation and other existing resources, the project evolved from a simple "information query tool" to a "safety guardian assistant." Key features include scam coin identification, term translation, and safety education.
 
-## 🔒 安全保障
+**Early 2026:** Binance Guardian AI officially took shape. This is not a complex trading system, but a cryptocurrency guardian truly designed for ordinary people. It integrates multiple open-source projects and public APIs, allowing people without technical backgrounds to safely participate in cryptocurrency investment.
 
-### 1. 只读权限
+### Philosophy
 
-```
-✅ 可以做的：
-- 查看账户余额
-- 查看交易记录
-- 查看市场数据
+This is not a "one-person company" commercial project, but a "one-person guardian" social experiment:
 
-❌ 不能做的：
-- 不能下单交易
-- 不能提币转账
-- 不能修改设置
-```
+- **Not Pursuing Wealth** - Only pursuing safety
+- **No Fees** - Completely open-source and free
+- **No Complex Operations** - As simple as chatting
+- **Never Leaving Family** - 24/7 companionship and protection
 
-### 2. 数据加密
+### Technical Note
 
-- 🔐 API 密钥加密存储
-- 🔐 通信全程 HTTPS
-- 🔐 不保存敏感信息
+This project is mainly based on the following open-source technologies and public resources:
+- **OpenClaw** - AI assistant framework
+- **Binance API** - Market data and account queries (read-only permissions)
+- **Telegram Bot API** - User interaction interface
+- **Chart.js** - Data visualization
+- **Public Scam Databases** - Risk identification
 
-### 3. 开源透明
+The founder's role is more of an "integrator" and "product designer" rather than a traditional "developer." The core value of the project lies in integrating existing technologies into a safety tool friendly to ordinary people.
 
-- 📖 代码完全开源
-- 🔍 任何人都可以审计
-- 🛡️ 社区共同维护
+### Vision
+
+Hope every family has a "digital guardian," making cryptocurrency investment no longer exclusive to young people, allowing elderly people to safely participate in this era's transformation.
+
+**1 BNB is not much, but it's enough to protect a family's safety.**
 
 ---
 
-## 🎯 适用人群
+## 🚀 Quick Start
 
-### 1. 加密货币新手
+### Prerequisites
 
-**痛点：**
-- 专业术语看不懂
-- 不知道怎么操作
-- 担心被骗
+- Node.js 18+
+- Telegram Bot Token (from @BotFather)
+- Binance API Key (Read-Only permissions)
 
-**解决方案：**
-- 人话翻译
-- 手把手教学
-- 骗局识别
-
-### 2. 长辈用户
-
-**痛点：**
-- 不会打字
-- 看不清屏幕
-- 容易被骗
-
-**解决方案：**
-- 语音交互
-- 大字体显示
-- 安全守护
-
-### 3. 忙碌的投资者
-
-**痛点：**
-- 没时间盯盘
-- 错过重要信息
-- 决策困难
-
-**解决方案：**
-- 24/7 监控
-- 及时提醒
-- AI 建议
-
----
-
-## 💡 技术特点
-
-### 1. 基于 OpenClaw 框架
-
-- 🤖 强大的 AI 能力
-- 🗣️ 自然语言理解
-- 🎤 语音识别/合成
-- 📊 数据分析能力
-
-### 2. 专业数据支持
-
-- 📈 NOFX 社区数据
-- 🔥 AI500 热点币评分
-- 📊 实时市场数据
-- 🎯 智能过滤算法
-
-### 3. 完全免费
-
-| 服务 | 费用 | 说明 |
-|------|------|------|
-| 币安数据 | ✅ 免费 | 公开 API |
-| Telegram 通知 | ✅ 免费 | Bot API |
-| AI 分析 | ✅ 免费 | 本地运行 |
-| 服务器 | ✅ 免费 | 自己的服务器 |
-
-**总成本：$0/天 = $0/月 = $0/年**
-
----
-
-## 🚀 快速开始
-
-### 1. 安装
+### Installation
 
 ```bash
-# 克隆仓库
-git clone https://github.com/pjl914335852-ux/openclaw-trading-scout.git
-cd openclaw-trading-scout
+# Clone repository
+git clone https://github.com/pjl914335852-ux/Binance-guardian-ai.git
+cd Binance-guardian-ai
 
-# 安装依赖
+# Install dependencies
 npm install
 
-# 配置
+# Copy configuration template
 cp config.example.json config.json
+
+# Edit configuration (add your tokens)
 nano config.json
 ```
 
-### 2. 配置
+### Configuration
+
+Edit `config.json`:
 
 ```json
 {
   "telegram": {
-    "botToken": "你的 Telegram Bot Token",
-    "chatId": "你的 Chat ID"
+    "botToken": "YOUR_BOT_TOKEN",
+    "chatId": "YOUR_CHAT_ID"
   },
-  "binance": {
-    "apiKey": "你的币安 API Key（只读）",
-    "apiSecret": "你的币安 API Secret"
+  "cryptoex": {
+    "apiKey": "YOUR_BINANCE_API_KEY",
+    "apiSecret": "YOUR_BINANCE_API_SECRET"
   },
-  "mode": "guardian",  // guardian 或 professional
-  "language": "zh"     // zh 或 en
+  "guardian": {
+    "enabled": true,
+    "password": "",
+    "passwordSet": false
+  }
 }
 ```
 
-### 3. 运行
+### Run
 
 ```bash
-# 启动服务
-npm start
+# Start bot
+node crypto-scout.js
 
-# 或使用 systemd（推荐）
-sudo systemctl start binance-guardian
+# Or use systemd (recommended)
+sudo systemctl start trading-scout
+sudo systemctl enable trading-scout
 ```
 
-### 4. 使用
+---
 
-1. 打开 Telegram
-2. 搜索你的 Bot
-3. 点击"开始"
-4. 选择"长辈模式"
-5. 开始提问！
+## 📊 Features Statistics
+
+- **Total Features:** 30+
+- **New in v2.7.0:** 11 features
+- **Code Lines:** +2,016 lines
+- **Memory Usage:** ~32MB
+- **Response Time:** <500ms
+- **Supported Languages:** Chinese, English
 
 ---
 
-## 📊 功能对比
+## 🔒 Security Features
 
-| 功能 | 长辈模式 | 专业模式 |
-|------|---------|---------|
-| 语音交互 | ✅ | ✅ |
-| 人话翻译 | ✅ | ❌ |
-| 骗局识别 | ✅ | ✅ |
-| 每日课堂 | ✅ | ❌ |
-| 资产监控 | ✅ | ✅ |
-| 市场提醒 | ✅ | ✅ |
-| 套利监控 | ❌ | ✅ |
-| AI500 排行 | ❌ | ✅ |
-| 技术指标 | ❌ | ✅ |
+1. **Read-Only API** - 100% read-only permissions, cannot trade or withdraw
+2. **Password Protection** - Guardian mode requires password to disable
+3. **Risk Warnings** - Clear warnings for all high-risk operations
+4. **Data Privacy** - Sensitive information stored locally, not uploaded
+5. **Error Handling** - Comprehensive error handling, won't crash
 
 ---
 
-## 🎓 使用案例
+## 🎯 Roadmap
 
-### 案例 1：帮妈妈识别 Pi 币风险
+### ✅ v2.7 - All-in-One Guardian (2026-03-07)
 
-**背景：** 妈妈的朋友说 Pi 币要上币安了，让她赶紧买。
+**Account Management:**
+- [x] Deposit history
+- [x] Withdrawal history
+- [x] Deposit address generation
+- [x] Spot trade history
+- [x] Futures trade history
 
-**使用 Guardian：**
+**Market Data Visualization:**
+- [x] K-line chart generation (PNG)
+- [x] Market depth data
+- [x] Recent trades
 
-```
-👤 妈妈: "Pi 币是什么？能买吗？"
+**Price Alert System:**
+- [x] Price alert management (4 types)
+- [x] Alert creation wizard
+- [x] Auto monitoring (30s)
+- [x] Instant notifications
 
-🤖 Guardian: 
-"⚠️ Pi 币风险预警
+**UI Improvements:**
+- [x] Guardian vs Professional mode differentiation
+- [x] Password protection
+- [x] Complete error handling
 
-妈，Pi 币目前还没有在币安上线。有些交易所虽然有交易，
-但那些是'欠条'（IOU），跟你手机挖的币不一定能直接换。
+**Technical Improvements:**
+- [x] Chart generation (chartjs-node-canvas)
+- [x] Persistent storage
+- [x] Memory optimization
+- [x] Code quality improvements
 
-🚨 主要风险：
-1. 兑换困难 - 手机挖的币可能换不成钱
-2. 诈骗高发 - 很多骗子冒充官方骗助记词
-3. 合规缺位 - 币安、Coinbase 都没上线
+### 🔧 v2.6 - Guardian Mode (2026-03-06)
 
-💡 安全建议：
-• 优先选择币安等大平台交易
-• 不要相信私聊推荐
-• 不要转账到私人账户
-• 不要点击陌生链接
+**Core Features:**
+- [x] Scam detection system (Pi coin, etc.)
+- [x] Plain language translator (10+ terms)
+- [x] Daily safety lessons (10 basic courses)
+- [x] Advanced courses (10 topics)
+- [x] Smart message recognition
 
-提醒：没上大平台的币，风险都比较高！"
-```
+**User Experience:**
+- [x] Guardian mode UI
+- [x] Password protection system
+- [x] Simplified operation flow
+- [x] Quick reply buttons
 
-**结果：** 妈妈没有上当，避免了损失。
+**Security Enhancements:**
+- [x] Read-only API protection
+- [x] Password verification mechanism
+- [x] Risk warning prompts
 
----
+### 🚀 v3.0 - Smart Upgrade (2026 Q2)
 
-**技术实现：**
-- 实时同步币安上线币种列表（每小时更新）
-- 跨境诈骗数据库交叉比对
-- 自动标记风险等级（low/medium/high/critical）
-- 提供合规交易所清单
+**AI Enhancements:**
+- [ ] OpenClaw voice interaction (TTS/STT)
+- [ ] AI-generated safety courses
+- [ ] Smart risk assessment (behavior-based)
+- [ ] Personalized investment advice
 
-### 案例 2：帮新手理解 Launchpool
+**Feature Expansion:**
+- [ ] Launchpool monitoring
+- [ ] Earn products query
+- [ ] New coin listing alerts
+- [ ] Multi-platform support (WhatsApp, Discord)
+- [ ] Video tutorial library
+- [ ] Community Q&A
+- [ ] User growth system
 
-**背景：** 新手看到 Launchpool 活动，不知道是什么。
-
-**使用 Guardian：**
-
-```
-👤 新手: "Launchpool 是什么？会不会亏钱？"
-
-🤖 Guardian: "Launchpool 就像银行的定期存款送礼品：
-              
-              📝 怎么玩：
-              1. 把闲钱（BNB 或 USDT）存进去
-              2. 本金不动，随时可以取
-              3. 每天送你一些新币
-              
-              💰 举例：
-              存 100 USDT，7 天后：
-              - 本金：100 USDT（不会少）
-              - 奖励：价值 5-10 USDT 的新币
-              
-              ✅ 会不会亏？
-              - 本金不会亏（随时可以取）
-              - 新币可能涨也可能跌
-              - 但新币是白送的，不亏
-              
-              想参加吗？我教你怎么操作。"
-```
-
-**结果：** 新手理解了 Launchpool，成功参与活动。
-
-### 案例 3：及时预警账户异常
-
-**背景：** 用户的 API 密钥被盗，黑客尝试提币。
-
-**使用 Guardian：**
-
-```
-⚠️ 紧急预警！
-
-检测到您的账户有异常活动：
-
-🚨 异常详情：
-- 时间：2026-03-06 22:30
-- 行为：尝试提币到未知地址
-- 金额：500 USDT
-- 地址：0x1234...5678（未验证）
-
-🛡️ 已自动采取的措施：
-- 暂停提币功能
-- 发送验证码到手机
-- 记录异常 IP
-
-💡 立即操作：
-1. 修改密码（必须）
-2. 删除 API 密钥（必须）
-3. 检查登录设备
-4. 联系币安客服
-
-如果不是您本人操作，请立即点击"冻结账户"。
-
-[冻结账户] [我知道了]
-```
-
-**结果：** 用户及时发现异常，避免了资产损失。
+**Internationalization:**
+- [ ] Japanese, Korean, Spanish support
+- [ ] Localized safety courses
+- [ ] Multi-timezone support
 
 ---
 
-## 💰 1 BNB 的故事：从交易到守护
+## 🤝 Contributing
 
-### 初心
-
-> "我投入 1 BNB 的初衷，不是为了在波动中博取百倍收益，而是为了建立一个哪怕在极端行情下也能保持冷静、守护家人的自动化哨兵。"
-
-### 转变
-
-**2024 年初：** 我开发了一个套利监控工具，想通过算法在市场波动中寻找机会。最初只是个人使用的小工具，用来追踪交易对之间的价差。
-
-**2024 年中：** 身边越来越多朋友和家人开始问我加密货币的问题。有人问"Pi 币能买吗"，有人问"这个新币靠谱吗"。我意识到，比起寻找套利机会，更重要的是帮助普通人避开陷阱。
-
-**2025 年：** 我开始重新思考这个工具的定位。与其追求利润最大化，不如追求风险最小化。我添加了诈骗币识别、术语翻译、安全教育等功能，把它从"交易工具"改造成"安全助手"。
-
-**2026 年初：** Binance Guardian AI 正式成型。这不再是一个简单的套利监控器，而是一个真正为普通人设计的加密货币守护者。它能识别风险、翻译术语、教育用户，让加密货币投资变得更安全、更简单。
-
-### 理念
-
-这不是一个"一人公司"的商业项目，而是一个"一人守护"的社会实验：
-
-- **不追求暴富** - 只追求安全
-- **不收取费用** - 完全开源免费
-- **不复杂操作** - 像聊天一样简单
-- **不离开家人** - 24/7 陪伴守护
-
-### 愿景
-
-希望每个家庭都有一个"数字守护者"，让加密货币投资不再是年轻人的专利，让长辈也能安全地参与这个时代的变革。
-
-**1 BNB 不多，但足以守护一个家庭的安全。**
+Contributions are welcome! Please feel free to submit issues or pull requests.
 
 ---
 
-## 🌍 社会价值
+## 📄 License
 
-### 1. 降低加密货币门槛
-
-- 让不懂技术的人也能安全投资
-- 帮助长辈进入加密世界
-- 扩大加密货币用户群体
-
-### 2. 减少诈骗案件
-
-- 识别常见骗局（Pi 币、空气币）
-- 教育用户安全知识
-- 保护用户资产安全
-
-### 3. 提升行业形象
-
-- 展示加密货币的正面价值
-- 减少负面新闻（被骗、亏损）
-- 促进行业健康发展
+MIT License - see [LICENSE](LICENSE) file for details
 
 ---
 
-## 🤝 贡献
+## 📞 Contact
 
-欢迎贡献代码、提出建议或报告问题！
-
-### 如何贡献
-
-1. Fork 本仓库
-2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 Pull Request
-
-### 贡献方向
-
-- 🌐 多语言支持（日语、韩语、西班牙语等）
-- 🎨 UI/UX 优化
-- 📚 更多安全课程内容
-- 🤖 AI 能力增强
-- 🔧 新功能开发
+- **Telegram:** @Ee_7t
+- **GitHub:** https://github.com/pjl914335852-ux/Binance-guardian-ai
 
 ---
 
-## 📄 许可证
+## 🙏 Acknowledgments
 
-本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
-
----
-
-## 🙏 鸣谢
-
-- [OpenClaw](https://openclaw.ai) - 提供强大的 AI 框架和技术支持
-- [Binance](https://www.binance.com) - 提供可靠的 API 和数据支持
-- [NOFX 社区](https://nofx.io) - 提供专业的市场数据和 AI500 评分系统
-- 所有为加密货币安全教育做出贡献的开发者和用户
+- **OpenClaw** - AI assistant framework
+- **Binance** - API and ecosystem support
+- **NOFX Community** - Market data and insights
+- **Open Source Community** - Various tools and libraries
 
 ---
 
-## 📞 联系方式
-
-- **Telegram**: [@Ee_7t](https://t.me/Ee_7t)
-- **GitHub 仓库**: [binance-guardian-ai](https://github.com/pjl914335852-ux/binance-guardian-ai)
-
----
-
-## 🎯 开发路线图
-
-### 🚀 v3.0 - 智能升级（2026 Q2）
-
-**AI 增强：**
-- [ ] 集成 OpenClaw 语音交互（TTS/STT）
-- [ ] AI 动态生成安全课程
-- [ ] 智能风险评估（基于用户行为）
-- [ ] 个性化投资建议
-
-**功能扩展：**
-- [ ] Launchpool 监控
-- [ ] 理财产品查询
-- [ ] 新币上线提醒
-- [ ] 多平台支持（WhatsApp、Discord）
-- [ ] 视频教程库
-- [ ] 社区问答功能
-- [ ] 用户成长体系
-
-**国际化：**
-- [ ] 日语、韩语、西班牙语支持
-- [ ] 本地化安全课程
-- [ ] 多时区支持
-
-### ✅ v2.7 - 全能守护者（2026-03-07）
-
-**账户管理功能：**
-- [x] 充值记录查询
-- [x] 提现记录查询
-- [x] 充值地址生成
-- [x] 现货交易历史
-- [x] 合约交易历史
-
-**市场数据可视化：**
-- [x] K线图生成（PNG图片）
-- [x] 市场深度数据
-- [x] 最新成交记录
-
-**价格提醒系统：**
-- [x] 价格提醒管理（4种类型）
-- [x] 提醒创建向导
-- [x] 自动监控（30秒）
-- [x] 即时通知
-
-**界面优化：**
-- [x] 守护模式 vs 专业模式 UI 差异化
-- [x] 密码保护
-- [x] 完善的错误处理
-
-**技术改进：**
-- [x] 图表生成（chartjs-node-canvas）
-- [x] 持久化存储
-- [x] 内存优化
-- [x] 代码质量提升
-
-### 🔧 v2.6 - 守护者模式（2026-03-06）
-
-**核心功能：**
-- [x] 骗局识别系统（Pi 币等）
-- [x] 人话翻译器（10+ 术语）
-- [x] 每日安全课堂（10 节基础课程）
-- [x] 进阶课程（10 个主题）
-- [x] 智能消息识别
-
-**用户体验：**
-- [x] 守护模式 UI
-- [x] 密码保护系统
-- [x] 简化操作流程
-- [x] 快捷回复按钮
-
-**安全增强：**
-- [x] 只读 API 保护
-- [x] 密码验证机制
-- [x] 风险警告提示
-
-### ✅ v2.5 - 币安生态集成（2026-03-06）
-
-**已完成功能：**
-- [x] 币安账户集成
-  - [x] 现货持仓查询（翻页支持）
-  - [x] 合约持仓查询（翻页支持）
-  - [x] 实时盈亏计算
-- [x] AI500 热点币排行榜
-  - [x] NOFX 数据集成
-  - [x] 自动推送高分币
-- [x] 语言切换（中英文）
-- [x] 系统监控
-- [x] 日志轮转管理
-
-**技术改进：**
-- [x] 只读 API（安全）
-- [x] 错误处理优化
-- [x] 性能优化
-- [x] 代码重构
-
-### 📊 v2.4 - 市场分析（2026-03-06）
-
-- [x] 市场概览功能
-- [x] 每日市场摘要
-- [x] 套利阈值调整
-- [x] 测试提醒功能
-
-### 🎨 v2.3 - UI 优化（2026-03-06）
-
-- [x] 主菜单重组
-- [x] 系统监控集成
-- [x] 语言同步
-- [x] 按钮布局优化
-
-### 🔥 v2.2 - 功能扩展（2026-03-05）
-
-- [x] 自定义交易对
-- [x] 刷新间隔设置
-- [x] 自动推送开关
-- [x] 心跳报告
-
-### 🎯 v2.1 - 稳定性修复（2026-03-04）
-
-- [x] 修复重复消息 bug
-- [x] Systemd 服务管理
-- [x] 帮助页面优化
-- [x] 回退按钮添加
-
-### 🚀 v2.0 - NOFX 集成（2026-03-03）
-
-- [x] NOFX 数据源集成
-- [x] AI500 评分系统
-- [x] 专业市场分析
-
-### 🎉 v1.0 - 初始版本（2026-03-01）
-
-- [x] 基础套利监控
-- [x] Telegram 通知
-- [x] 多交易对支持
-- [x] 历史记录
-
----
-
-<div align="center">
-
-**让加密货币投资更安全 🛡️**
-
-Made with ❤️ for Binance Ecosystem
-
-[⭐ Star on GitHub](https://github.com/pjl914335852-ux/binance-guardian-ai) • [📖 Documentation](./docs) • [💬 Community](https://t.me/BinanceGuardianBot)
-
-</div>
+**Making crypto investment safer, one family at a time.** 🛡️
