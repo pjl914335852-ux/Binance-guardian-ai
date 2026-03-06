@@ -812,9 +812,6 @@ We are an intelligent assistant focused on cryptocurrency arbitrage monitoring, 
       // Futures positions with pagination
       const page = parseInt(data.split('_')[2]) || 0;
       this.handleFuturesPositions(chatId, messageId, query.id, page);
-    } else if (data === 'earn_products') {
-      // Earn products
-      this.handleEarnProducts(chatId, messageId, query.id);
     } else if (data === 'add_pair') {
       // Add custom pair
       this.handleAddPair(chatId, messageId, query.id);
@@ -1704,7 +1701,6 @@ Wait for next auto-push or check market overview.
 
 • 📊 现货持仓
 • 📈 合约持仓
-• 💰 理财产品
 
 请选择要查看的内容：
     `.trim() : `
@@ -1714,7 +1710,6 @@ View your Binance account information:
 
 • 📊 Spot Holdings
 • 📈 Futures Positions
-• 💰 Earn Products
 
 Please select what you want to view:
     `.trim();
@@ -1726,9 +1721,6 @@ Please select what you want to view:
         ],
         [
           { text: this.lang === 'zh' ? '📈 合约持仓' : '📈 Futures Positions', callback_data: 'futures_positions_0' }
-        ],
-        [
-          { text: this.lang === 'zh' ? '💰 理财产品' : '💰 Earn Products', callback_data: 'earn_products' }
         ],
         [
           { text: this.lang === 'zh' ? '🔙 返回主菜单' : '🔙 Back to Menu', callback_data: 'start' }
@@ -2040,49 +2032,6 @@ _Page ${page + 1}/${totalPages} (Total ${positions.length} positions)_
   }
   
   // Handle earn products
-  async handleEarnProducts(chatId, messageId, queryId) {
-    this.bot.answerCallbackQuery(queryId, { text: this.lang === 'zh' ? '💰 获取理财产品...' : '💰 Fetching earn products...', show_alert: false });
-    this.bot.deleteMessage(chatId, messageId).catch(() => {});
-    
-    const text = this.lang === 'zh' ? `
-💰 *理财产品*
-
-_此功能需要币安理财 API 权限_
-
-由于币安理财 API 限制，暂时无法直接获取理财产品信息。
-
-你可以：
-1. 登录币安网站查看
-2. 使用币安 App 查看
-
-或者联系开发者添加此功能。
-    `.trim() : `
-💰 *Earn Products*
-
-_This feature requires Binance Earn API permission_
-
-Due to Binance Earn API limitations, we cannot directly fetch earn product information at this time.
-
-You can:
-1. Login to Binance website to view
-2. Use Binance App to view
-
-Or contact the developer to add this feature.
-    `.trim();
-    
-    const keyboard = {
-      inline_keyboard: [
-        [
-          { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'binance_account' }
-        ]
-      ]
-    };
-    
-    this.bot.sendMessage(chatId, text, {
-      parse_mode: 'Markdown',
-      reply_markup: keyboard
-    });
-  }
 }
 
 module.exports = TelegramUI;
