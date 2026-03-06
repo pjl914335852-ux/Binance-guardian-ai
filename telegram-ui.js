@@ -290,6 +290,7 @@ I'm already running in the background! I'll notify you immediately when arbitrag
     // Get current refresh interval (in seconds)
     const currentInterval = (this.config.trading.checkInterval || 60000) / 1000;
     const autoPushEnabled = this.config.trading.autoPush !== false; // default true
+    const currentThreshold = this.config.trading.threshold || 0.5;
     
     let pairsText = this.lang === 'zh' ? `
 📈 *交易对修改*
@@ -333,6 +334,7 @@ ${aiPairs.map(p => `• ${p}`).join('\n')}
 
 ⚙️ *当前设置:*
 • 刷新间隔: ${currentInterval}秒
+• 套利阈值: ${currentThreshold}%
 • 自动推送: ${autoPushEnabled ? '✅ 已启用' : '❌ 已禁用'}
     ` : `
 
@@ -340,6 +342,7 @@ ${aiPairs.map(p => `• ${p}`).join('\n')}
 
 ⚙️ *Current Settings:*
 • Refresh interval: ${currentInterval}s
+• Threshold: ${currentThreshold}%
 • Auto push: ${autoPushEnabled ? '✅ Enabled' : '❌ Disabled'}
     `;
     
@@ -351,10 +354,14 @@ ${aiPairs.map(p => `• ${p}`).join('\n')}
         ],
         [
           { text: this.lang === 'zh' ? '⏱️ 刷新间隔' : '⏱️ Refresh Interval', callback_data: 'set_interval' },
-          { text: this.lang === 'zh' ? (autoPushEnabled ? '🔕 关闭推送' : '🔔 开启推送') : (autoPushEnabled ? '🔕 Disable Push' : '🔔 Enable Push'), callback_data: 'toggle_push' }
+          { text: this.lang === 'zh' ? '🎯 套利阈值' : '🎯 Threshold', callback_data: 'set_threshold' }
         ],
         [
-          { text: this.lang === 'zh' ? '📊 运行状态' : '📊 Status', callback_data: 'status' },
+          { text: this.lang === 'zh' ? (autoPushEnabled ? '🔕 关闭推送' : '🔔 开启推送') : (autoPushEnabled ? '🔕 Disable Push' : '🔔 Enable Push'), callback_data: 'toggle_push' },
+          { text: this.lang === 'zh' ? '📊 市场概览' : '📊 Market Overview', callback_data: 'market_overview' }
+        ],
+        [
+          { text: this.lang === 'zh' ? '🧪 测试通知' : '🧪 Test Alert', callback_data: 'test_alert' },
           { text: this.lang === 'zh' ? '📝 历史记录' : '📝 History', callback_data: 'history' }
         ],
         [
@@ -657,6 +664,15 @@ We are an intelligent assistant focused on cryptocurrency arbitrage monitoring, 
     } else if (data === 'toggle_push') {
       // Toggle auto push
       this.handleTogglePush(chatId, messageId, query.id);
+    } else if (data === 'set_threshold') {
+      // Set threshold
+      this.handleSetThreshold(chatId, messageId, query.id);
+    } else if (data === 'market_overview') {
+      // Market overview
+      this.handleMarketOverview(chatId, messageId, query.id);
+    } else if (data === 'test_alert') {
+      // Test alert
+      this.handleTestAlert(chatId, messageId, query.id);
     }
   }
   
@@ -867,6 +883,222 @@ Send /cancel to cancel
     }, 500);
   }
   
+  // Handle set threshold
+  handleSetThreshold(chatId, messageId, queryId) {
+    const currentThreshold = this.config.trading.threshold || 0.5;
+    const minThreshold = this.config.trading.minThreshold || 0.1;
+    const maxThreshold = this.config.trading.maxThreshold || 1.0;
+    
+    const text = this.lang === 'zh' ? `
+🎯 *设置套利阈值*
+
+当前阈值: ${currentThreshold}%
+范围: ${minThreshold}% - ${maxThreshold}%
+
+请发送新的阈值（例如：0.3）
+
+💡 提示：
+• 阈值越低，触发机会越多
+• 阈值越高，机会质量越好
+• 推荐范围：0.3% - 0.5%
+
+发送 /cancel 取消操作
+    ` : `
+🎯 *Set Arbitrage Threshold*
+
+Current: ${currentThreshold}%
+Range: ${minThreshold}% - ${maxThreshold}%
+
+Please send new threshold (e.g., 0.3)
+
+💡 Tips:
+• Lower = more opportunities
+• Higher = better quality
+• Recommended: 0.3% - 0.5%
+
+Send /cancel to cancel
+    `;
+    
+    this.bot.answerCallbackQuery(queryId);
+    this.bot.deleteMessage(chatId, messageId).catch(() => {});
+    
+    const keyboard = {
+      inline_keyboard: [
+        [
+          { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'pairs' }
+        ]
+      ]
+    };
+    
+    this.bot.sendMessage(chatId, text, { 
+      parse_mode: 'Markdown',
+      reply_markup: keyboard
+    });
+    
+    // Set waiting state
+    this.state.waitingForThreshold = { chatId };
+  }
+  
+  // Handle market overview
+  async handleMarketOverview(chatId, messageId, queryId) {
+    this.bot.answerCallbackQuery(queryId, { text: this.lang === 'zh' ? '📊 获取市场数据...' : '📊 Fetching market data...', show_alert: false });
+    this.bot.deleteMessage(chatId, messageId).catch(() => {});
+    
+    try {
+      const allPairs = this.getAllPairs();
+      const prices = this.state.priceCache || {};
+      const volumes = this.state.volumeCache || {};
+      
+      let overviewText = this.lang === 'zh' ? `
+📊 *市场概览*
+
+⏰ 更新时间: ${new Date().toLocaleString('zh-CN')}
+
+` : `
+📊 *Market Overview*
+
+⏰ Updated: ${new Date().toLocaleString('en-US')}
+
+`;
+      
+      for (const pair of allPairs) {
+        const price = prices[pair];
+        const volume = volumes[pair];
+        const prevPrice = this.state.prevPriceCache?.[pair];
+        
+        if (price && volume) {
+          const change = prevPrice ? ((price - prevPrice) / prevPrice * 100).toFixed(2) : '0.00';
+          const changeEmoji = parseFloat(change) > 0 ? '📈' : parseFloat(change) < 0 ? '📉' : '➡️';
+          const volumeM = (volume / 1000000).toFixed(1);
+          
+          overviewText += `${changeEmoji} *${pair}*\n`;
+          overviewText += `   $${price.toLocaleString()} (${change}%)\n`;
+          overviewText += `   ${this.lang === 'zh' ? '交易量' : 'Volume'}: $${volumeM}M\n\n`;
+        }
+      }
+      
+      overviewText += this.lang === 'zh' ? 
+        `\n💡 数据每 30 秒更新一次` :
+        `\n💡 Data updates every 30 seconds`;
+      
+      const keyboard = {
+        inline_keyboard: [
+          [
+            { text: this.lang === 'zh' ? '🔄 刷新' : '🔄 Refresh', callback_data: 'market_overview' },
+            { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'pairs' }
+          ]
+        ]
+      };
+      
+      this.bot.sendMessage(chatId, overviewText, {
+        parse_mode: 'Markdown',
+        reply_markup: keyboard
+      });
+    } catch (error) {
+      this.bot.sendMessage(chatId, this.lang === 'zh' ? 
+        '❌ 获取市场数据失败' :
+        '❌ Failed to fetch market data'
+      );
+    }
+  }
+  
+  // Handle test alert
+  handleTestAlert(chatId, messageId, queryId) {
+    this.bot.answerCallbackQuery(queryId, { text: this.lang === 'zh' ? '🧪 发送测试通知...' : '🧪 Sending test alert...', show_alert: false });
+    this.bot.deleteMessage(chatId, messageId).catch(() => {});
+    
+    const testOpportunity = {
+      pair1: 'BTCUSDT',
+      pair2: 'ETHUSDT',
+      spread: '0.75',
+      change1: '1.2',
+      change2: '0.45',
+      suggestion: this.lang === 'zh' ? 'Buy ETHUSDT, Sell BTCUSDT' : 'Buy ETHUSDT, Sell BTCUSDT',
+      riskLevel: this.lang === 'zh' ? '低' : 'low',
+      nofx: {
+        quality1: 85,
+        quality2: 78,
+        avgQuality: 81.5,
+        flow1: 1234567,
+        flow2: 987654,
+        ai500Score1: 92,
+        ai500Score2: 88
+      },
+      timestamp: new Date().toISOString()
+    };
+    
+    const message = this.lang === 'zh' ? `
+🧪 *测试通知 - 这是一个模拟套利机会*
+
+🚨 *套利机会发现！*
+_由 NOFX 精准数据驱动_
+
+*交易对:* ${testOpportunity.pair1} / ${testOpportunity.pair2}
+*价差:* ${testOpportunity.spread}%
+*风险等级:* ${testOpportunity.riskLevel}
+
+*价格变化:*
+${testOpportunity.pair1}: ${testOpportunity.change1}%
+${testOpportunity.pair2}: ${testOpportunity.change2}%
+
+*💡 建议:* ${testOpportunity.suggestion}
+
+*📊 NOFX 信号质量:*
+• ${testOpportunity.pair1}: ${testOpportunity.nofx.quality1}/100 (AI: ${testOpportunity.nofx.ai500Score1})
+• ${testOpportunity.pair2}: ${testOpportunity.nofx.quality2}/100 (AI: ${testOpportunity.nofx.ai500Score2})
+• 平均质量: ${testOpportunity.nofx.avgQuality.toFixed(1)}/100
+
+*💰 资金流 (1h):*
+• ${testOpportunity.pair1}: $${testOpportunity.nofx.flow1.toLocaleString()}
+• ${testOpportunity.pair2}: $${testOpportunity.nofx.flow2.toLocaleString()}
+
+⏰ *时间:* ${new Date(testOpportunity.timestamp).toLocaleString('zh-CN')}
+
+✅ *机器人工作正常！*
+    `.trim() : `
+🧪 *Test Alert - This is a simulated opportunity*
+
+🚨 *Arbitrage Opportunity Found!*
+_Powered by NOFX Precise Data_
+
+*Pairs:* ${testOpportunity.pair1} / ${testOpportunity.pair2}
+*Spread:* ${testOpportunity.spread}%
+*Risk Level:* ${testOpportunity.riskLevel}
+
+*Price Changes:*
+${testOpportunity.pair1}: ${testOpportunity.change1}%
+${testOpportunity.pair2}: ${testOpportunity.change2}%
+
+*💡 Suggestion:* ${testOpportunity.suggestion}
+
+*📊 NOFX Signal Quality:*
+• ${testOpportunity.pair1}: ${testOpportunity.nofx.quality1}/100 (AI: ${testOpportunity.nofx.ai500Score1})
+• ${testOpportunity.pair2}: ${testOpportunity.nofx.quality2}/100 (AI: ${testOpportunity.nofx.ai500Score2})
+• Average Quality: ${testOpportunity.nofx.avgQuality.toFixed(1)}/100
+
+*💰 Fund Flow (1h):*
+• ${testOpportunity.pair1}: $${testOpportunity.nofx.flow1.toLocaleString()}
+• ${testOpportunity.pair2}: $${testOpportunity.nofx.flow2.toLocaleString()}
+
+⏰ *Time:* ${new Date(testOpportunity.timestamp).toLocaleString('en-US')}
+
+✅ *Bot is working properly!*
+    `.trim();
+    
+    const keyboard = {
+      inline_keyboard: [
+        [
+          { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'pairs' }
+        ]
+      ]
+    };
+    
+    this.bot.sendMessage(chatId, message, {
+      parse_mode: 'Markdown',
+      reply_markup: keyboard
+    });
+  }
+  
   // Handle text input for pair/interval
   handleTextInput(msg) {
     const chatId = msg.chat.id;
@@ -1016,6 +1248,58 @@ Send /cancel to cancel
       this.bot.sendMessage(chatId, this.lang === 'zh' ? 
         `✅ 刷新间隔已设置为 ${interval} 秒` :
         `✅ Refresh interval set to ${interval} seconds`
+      );
+      
+      // Show updated pairs
+      setTimeout(() => {
+        this.handlePairs({ chat: { id: chatId } });
+      }, 1000);
+      
+      return;
+    }
+    
+    // Handle set threshold
+    if (this.state.waitingForThreshold?.chatId === chatId) {
+      if (text === '/cancel') {
+        delete this.state.waitingForThreshold;
+        this.bot.sendMessage(chatId, this.lang === 'zh' ? '❌ 已取消' : '❌ Cancelled');
+        return;
+      }
+      
+      const minThreshold = this.config.trading.minThreshold || 0.1;
+      const maxThreshold = this.config.trading.maxThreshold || 1.0;
+      
+      const threshold = parseFloat(text);
+      
+      if (isNaN(threshold)) {
+        this.bot.sendMessage(chatId, this.lang === 'zh' ? 
+          '❌ 请输入有效的数字（例如：0.3）' :
+          '❌ Please enter a valid number (e.g., 0.3)'
+        );
+        return;
+      }
+      
+      if (threshold < minThreshold || threshold > maxThreshold) {
+        this.bot.sendMessage(chatId, this.lang === 'zh' ? 
+          `❌ 阈值必须在 ${minThreshold}%-${maxThreshold}% 之间` :
+          `❌ Threshold must be between ${minThreshold}%-${maxThreshold}%`
+        );
+        return;
+      }
+      
+      // Update config
+      this.config.trading.threshold = threshold;
+      
+      // Save config
+      if (this.onConfigChange) {
+        this.onConfigChange(this.config);
+      }
+      
+      delete this.state.waitingForThreshold;
+      
+      this.bot.sendMessage(chatId, this.lang === 'zh' ? 
+        `✅ 套利阈值已设置为 ${threshold}%\n\n💡 阈值越低，触发机会越多` :
+        `✅ Threshold set to ${threshold}%\n\n💡 Lower threshold = more opportunities`
       );
       
       // Show updated pairs

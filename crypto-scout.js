@@ -87,12 +87,14 @@ const state = {
   priceCache: {},
   volumeCache: {},
   nofxCache: {},
+  prevPriceCache: {},
   opportunityHistory: [],
   isFirstRun: true,
   lastPriceUpdate: 0,
   lastVolumeUpdate: 0,
   lastNOFXUpdate: 0,
   lastHeartbeat: 0,
+  lastDailySummary: 0,
   requestCount: 0,
   requestResetTime: Date.now(),
   startTime: Date.now(),
@@ -435,6 +437,124 @@ ${opportunity.pair2}: ${opportunity.change2}%
   }
 }
 
+// ==================== Daily Market Summary ====================
+
+async function sendDailySummary() {
+  try {
+    const allPairs = getAllPairs();
+    const prices = state.priceCache || {};
+    const volumes = state.volumeCache || {};
+    const prevPrices = state.prevPriceCache || {};
+    
+    let summaryText = lang === 'zh' ? `
+📊 *每日市场摘要*
+
+⏰ ${new Date().toLocaleString('zh-CN')}
+
+` : `
+📊 *Daily Market Summary*
+
+⏰ ${new Date().toLocaleString('en-US')}
+
+`;
+    
+    // Calculate stats
+    let gainers = [];
+    let losers = [];
+    let totalVolume = 0;
+    
+    for (const pair of allPairs) {
+      const price = prices[pair];
+      const prevPrice = prevPrices[pair];
+      const volume = volumes[pair] || 0;
+      
+      if (price && prevPrice) {
+        const change = ((price - prevPrice) / prevPrice * 100);
+        totalVolume += volume;
+        
+        if (change > 0) {
+          gainers.push({ pair, change, price, volume });
+        } else if (change < 0) {
+          losers.push({ pair, change, price, volume });
+        }
+      }
+    }
+    
+    // Sort by change
+    gainers.sort((a, b) => b.change - a.change);
+    losers.sort((a, b) => a.change - b.change);
+    
+    // Top gainers
+    if (gainers.length > 0) {
+      summaryText += lang === 'zh' ? '\n📈 *涨幅榜 TOP 3:*\n' : '\n📈 *Top Gainers:*\n';
+      gainers.slice(0, 3).forEach((item, i) => {
+        summaryText += `${i + 1}. ${item.pair}: +${item.change.toFixed(2)}% ($${item.price.toLocaleString()})\n`;
+      });
+    }
+    
+    // Top losers
+    if (losers.length > 0) {
+      summaryText += lang === 'zh' ? '\n📉 *跌幅榜 TOP 3:*\n' : '\n📉 *Top Losers:*\n';
+      losers.slice(0, 3).forEach((item, i) => {
+        summaryText += `${i + 1}. ${item.pair}: ${item.change.toFixed(2)}% ($${item.price.toLocaleString()})\n`;
+      });
+    }
+    
+    // Stats
+    summaryText += lang === 'zh' ? '\n📊 *统计数据:*\n' : '\n📊 *Statistics:*\n';
+    summaryText += lang === 'zh' ? 
+      `• 监控交易对: ${allPairs.length}\n` :
+      `• Monitored pairs: ${allPairs.length}\n`;
+    summaryText += lang === 'zh' ? 
+      `• 总交易量: $${(totalVolume / 1000000).toFixed(1)}M\n` :
+      `• Total volume: $${(totalVolume / 1000000).toFixed(1)}M\n`;
+    summaryText += lang === 'zh' ? 
+      `• 发现机会: ${state.opportunityHistory.length}\n` :
+      `• Opportunities found: ${state.opportunityHistory.length}\n`;
+    
+    // Recent opportunities
+    if (state.opportunityHistory.length > 0) {
+      const recentOpps = state.opportunityHistory.slice(-3);
+      summaryText += lang === 'zh' ? '\n🎯 *最近机会:*\n' : '\n🎯 *Recent Opportunities:*\n';
+      recentOpps.forEach((opp, i) => {
+        summaryText += `${i + 1}. ${opp.pair1}/${opp.pair2} - ${opp.spread}% (${opp.riskLevel})\n`;
+      });
+    }
+    
+    summaryText += lang === 'zh' ? 
+      '\n💡 持续监控中，发现机会立即通知！' :
+      '\n💡 Monitoring continues, instant alerts on opportunities!';
+    
+    await bot.sendMessage(config.telegram.chatId, summaryText, { parse_mode: 'Markdown' });
+    console.log('✅ Daily summary sent');
+  } catch (error) {
+    console.error('❌ Failed to send daily summary:', error.message);
+  }
+}
+
+function scheduleDailySummary() {
+  const times = config.trading.dailySummary?.times || ['09:00', '14:00', '20:00'];
+  
+  console.log(lang === 'zh' ? 
+    `📅 每日摘要已启用，发送时间: ${times.join(', ')}` :
+    `📅 Daily summary enabled, times: ${times.join(', ')}`);
+  
+  // Check every minute
+  setInterval(() => {
+    const now = new Date();
+    const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    
+    if (times.includes(currentTime)) {
+      // Check if already sent in this minute
+      const lastSent = state.lastDailySummary || 0;
+      if (Date.now() - lastSent > 60000) { // More than 1 minute ago
+        state.lastDailySummary = Date.now();
+        sendDailySummary();
+      }
+    }
+  }, 60000); // Check every minute
+}
+
 // ==================== Log ====================
 
 function log(message) {
@@ -535,6 +655,7 @@ async function mainLoop() {
     }
     
     // Update cache
+    state.prevPriceCache = { ...state.priceCache }; // Save previous prices
     Object.assign(state.priceCache, prices);
     Object.assign(state.volumeCache, volumes);
     
@@ -654,6 +775,11 @@ async function start() {
   
   // Schedule periodic runs
   setInterval(mainLoop, config.trading.checkInterval);
+  
+  // Schedule daily market summary
+  if (config.trading.dailySummary?.enabled) {
+    scheduleDailySummary();
+  }
   
   console.log(lang === 'zh' ? '✅ 交易侦察员正在运行...' : '✅ Trading Scout is running...');
   console.log(lang === 'zh' ? '💡 按 Ctrl+C 停止\n' : '💡 Press Ctrl+C to stop\n');
