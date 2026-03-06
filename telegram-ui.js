@@ -370,10 +370,11 @@ ${aiPairs.map(p => `• ${p}`).join('\n')}
           { text: this.lang === 'zh' ? '📊 市场概览' : '📊 Market Overview', callback_data: 'market_overview' }
         ],
         [
-          { text: this.lang === 'zh' ? '🧪 测试通知' : '🧪 Test Alert', callback_data: 'test_alert' },
-          { text: this.lang === 'zh' ? '📝 历史记录' : '📝 History', callback_data: 'history' }
+          { text: this.lang === 'zh' ? '🔥 AI500排行' : '🔥 AI500 Ranking', callback_data: 'ai500_ranking' },
+          { text: this.lang === 'zh' ? '🧪 测试通知' : '🧪 Test Alert', callback_data: 'test_alert' }
         ],
         [
+          { text: this.lang === 'zh' ? '📝 历史记录' : '📝 History', callback_data: 'history' },
           { text: this.lang === 'zh' ? '🏠 返回主菜单' : '🏠 Back to Menu', callback_data: 'start' }
         ]
       ]
@@ -821,6 +822,9 @@ We are an intelligent assistant focused on cryptocurrency arbitrage monitoring, 
     } else if (data === 'test_alert') {
       // Test alert
       this.handleTestAlert(chatId, messageId, query.id);
+    } else if (data === 'ai500_ranking') {
+      // AI500 ranking
+      this.handleAI500Ranking(chatId, messageId, query.id);
     } else if (data === 'last_summary') {
       // Last summary
       this.handleLastSummary(chatId, messageId, query.id);
@@ -1248,6 +1252,104 @@ ${testOpportunity.pair2}: ${testOpportunity.change2}%
       parse_mode: 'Markdown',
       reply_markup: keyboard
     });
+  }
+  
+  // Handle AI500 ranking
+  async handleAI500Ranking(chatId, messageId, queryId) {
+    this.bot.answerCallbackQuery(queryId, { text: this.lang === 'zh' ? '🔥 获取 AI500 排行...' : '🔥 Fetching AI500 ranking...', show_alert: false });
+    this.bot.deleteMessage(chatId, messageId).catch(() => {});
+    
+    try {
+      // Get high potential coins from NOFX
+      const nofxApi = require('./nofx-api');
+      const api = new nofxApi(this.config.nofx.apiKey);
+      const highPotentialCoins = await api.getAI500List();
+      
+      if (!highPotentialCoins || highPotentialCoins.length === 0) {
+        const noDataText = this.lang === 'zh' ? 
+          '😴 暂无 AI500 高分币种数据' :
+          '😴 No AI500 high-score coins data available';
+        
+        const keyboard = {
+          inline_keyboard: [
+            [
+              { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'pairs' }
+            ]
+          ]
+        };
+        
+        this.bot.sendMessage(chatId, noDataText, { reply_markup: keyboard });
+        return;
+      }
+      
+      // Sort by AI500 score
+      const sortedCoins = highPotentialCoins
+        .sort((a, b) => b.ai500Score - a.ai500Score)
+        .slice(0, 10); // Top 10
+      
+      let rankingText = this.lang === 'zh' ? `
+🔥 *AI500 热点币排行榜*
+
+_NOFX AI500 高分币种 TOP 10_
+
+` : `
+🔥 *AI500 Hot Coins Ranking*
+
+_NOFX AI500 Top 10 High-Score Coins_
+
+`;
+      
+      sortedCoins.forEach((coin, index) => {
+        const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`;
+        const scoreEmoji = coin.ai500Score >= 80 ? '🔥' : coin.ai500Score >= 60 ? '⚡' : '💫';
+        
+        rankingText += `${medal} *${coin.symbol}* ${scoreEmoji}\n`;
+        rankingText += `   AI500: ${coin.ai500Score.toFixed(1)} | `;
+        rankingText += `价格: $${coin.price?.toFixed(4) || 'N/A'}\n`;
+        
+        if (coin.change24h !== undefined) {
+          const changeEmoji = coin.change24h > 0 ? '📈' : coin.change24h < 0 ? '📉' : '➡️';
+          rankingText += `   24h: ${changeEmoji} ${coin.change24h > 0 ? '+' : ''}${coin.change24h.toFixed(2)}%\n`;
+        }
+        
+        rankingText += '\n';
+      });
+      
+      rankingText += this.lang === 'zh' ? 
+        '\n💡 AI500 分数越高，表示该币种潜力越大' :
+        '\n💡 Higher AI500 score indicates greater potential';
+      
+      const keyboard = {
+        inline_keyboard: [
+          [
+            { text: this.lang === 'zh' ? '🔄 刷新' : '🔄 Refresh', callback_data: 'ai500_ranking' },
+            { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'pairs' }
+          ]
+        ]
+      };
+      
+      this.bot.sendMessage(chatId, rankingText, {
+        parse_mode: 'Markdown',
+        reply_markup: keyboard
+      });
+      
+    } catch (error) {
+      console.error('❌ Failed to get AI500 ranking:', error.message);
+      
+      const errorText = this.lang === 'zh' ? 
+        '❌ 获取 AI500 排行失败\n\n请稍后重试' :
+        '❌ Failed to get AI500 ranking\n\nPlease try again later';
+      
+      const keyboard = {
+        inline_keyboard: [
+          [
+            { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'pairs' }
+          ]
+        ]
+      };
+      
+      this.bot.sendMessage(chatId, errorText, { reply_markup: keyboard });
+    }
   }
   
   // Handle last summary
