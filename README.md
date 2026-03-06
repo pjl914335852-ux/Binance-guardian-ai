@@ -594,7 +594,7 @@ sudo systemctl start binance-guardian
 🤖 Guardian: 
 "⚠️ Pi 币风险预警
 
-妈，Pi 币目前还没有在币安上线。有些小交易所虽然有交易，
+妈，Pi 币目前还没有在币安上线。有些交易所虽然有交易，
 但那些是'欠条'（IOU），跟你手机挖的币不一定能直接换。
 
 🚨 主要风险：
