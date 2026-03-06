@@ -178,7 +178,13 @@ class TelegramUI {
 *🛡️ 守护者模式：*
 
 当前状态: ${this.guardianMode ? '✅ 已开启（安全保护中）' : '❌ 已关闭'}
-${this.guardianMode ? '💡 守护者模式会自动拦截风险操作' : '⚠️ 关闭守护模式需要密码验证'}
+
+${this.guardianMode ? `💡 *守护者正在保护你：*
+• 自动识别诈骗币
+• 拦截可疑操作
+• 翻译专业术语
+• 每日安全课程
+• 简化界面` : '⚠️ 关闭守护模式需要密码验证'}
 
 点击下方按钮快速访问功能 👇
     ` : `
@@ -205,7 +211,13 @@ I'm your crypto safety assistant, designed for beginners and elderly users.
 *🛡️ Guardian Mode:*
 
 Current status: ${this.guardianMode ? '✅ Enabled (Protected)' : '❌ Disabled'}
-${this.guardianMode ? '💡 Guardian mode auto-blocks risky operations' : '⚠️ Password required to disable guardian mode'}
+
+${this.guardianMode ? `💡 *Guardian is protecting you:*
+• Auto-detect scam coins
+• Block suspicious operations
+• Translate technical terms
+• Daily safety lessons
+• Simplified interface` : '⚠️ Password required to disable guardian mode'}
 
 Click buttons below for quick access 👇
     `;
@@ -890,11 +902,21 @@ We are an AI safety assistant designed for crypto beginners and elderly users, b
           const text = this.lang === 'zh' ? `
 🔐 *设置守护者密码*
 
+⚠️ *重要提示：这是第一次设置密码，不是验证！*
+
 为了保护你的安全，关闭守护者模式需要密码验证。
+
+🛡️ *守护者模式保护你：*
+• 自动识别诈骗币和高风险项目
+• 拦截可疑交易和异常操作
+• 翻译专业术语成大白话
+• 每日安全知识教育
+• 简化界面，隐藏高风险功能
 
 请设置一个 4-6 位数字密码：
 
 ⚠️ 注意：
+• 这是第一次输入，是设置密码
 • 请牢记这个密码
 • 密码用于关闭守护者模式
 • 不要告诉任何人
@@ -903,11 +925,21 @@ We are an AI safety assistant designed for crypto beginners and elderly users, b
           `.trim() : `
 🔐 *Set Guardian Password*
 
+⚠️ *IMPORTANT: This is your FIRST TIME setting password, not verification!*
+
 To protect your safety, disabling guardian mode requires password verification.
+
+🛡️ *Guardian Mode Protects You:*
+• Auto-detect scam coins and high-risk projects
+• Block suspicious transactions and anomalies
+• Translate technical terms to plain language
+• Daily safety education
+• Simplified interface, hide high-risk features
 
 Please set a 4-6 digit password:
 
 ⚠️ Note:
+• This is FIRST TIME input, setting password
 • Remember this password
 • Password is used to disable guardian mode
 • Don't tell anyone
