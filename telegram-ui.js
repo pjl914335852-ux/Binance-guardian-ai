@@ -222,30 +222,65 @@ ${this.guardianMode ? `💡 *Guardian is protecting you:*
 Click buttons below for quick access 👇
     `;
     
-    const keyboard = {
-      inline_keyboard: [
-        [
-          { text: this.lang === 'zh' ? '🛡️ 检查币种' : '🛡️ Check Coin', callback_data: 'check_coin' },
-          { text: this.lang === 'zh' ? '📚 今日课程' : '📚 Today\'s Lesson', callback_data: 'today_lesson' }
-        ],
-        [
-          { text: this.lang === 'zh' ? '💼 币安账户' : '💼 Binance Account', callback_data: 'binance_account' },
-          { text: this.lang === 'zh' ? '📊 市场概览' : '📊 Market Overview', callback_data: 'market_overview' }
-        ],
-        [
-          { text: this.lang === 'zh' ? '📈 交易对' : '📈 Pairs', callback_data: 'pairs' },
-          { text: this.lang === 'zh' ? '📝 历史记录' : '📝 History', callback_data: 'history' }
-        ],
-        [
-          { text: this.lang === 'zh' ? '💻 系统监控' : '💻 System', callback_data: 'system' },
-          { text: this.guardianMode ? (this.lang === 'zh' ? '🛡️ 守护模式' : '🛡️ Guardian') : (this.lang === 'zh' ? '⚙️ 专业模式' : '⚙️ Pro'), callback_data: 'toggle_guardian' }
-        ],
-        [
-          { text: this.lang === 'zh' ? '🇬🇧 English' : '🇨🇳 中文', callback_data: this.lang === 'zh' ? 'lang_en' : 'lang_zh' },
-          { text: this.lang === 'zh' ? '❓ 帮助' : '❓ Help', callback_data: 'help' }
+    // 根据守护模式显示不同的菜单
+    let keyboard;
+    
+    if (this.guardianMode) {
+      // 守护模式：简化菜单，只显示安全功能
+      keyboard = {
+        inline_keyboard: [
+          [
+            { text: this.lang === 'zh' ? '🛡️ 检查币种' : '🛡️ Check Coin', callback_data: 'check_coin' },
+            { text: this.lang === 'zh' ? '📚 今日课程' : '📚 Today\'s Lesson', callback_data: 'today_lesson' }
+          ],
+          [
+            { text: this.lang === 'zh' ? '💼 币安账户' : '💼 Binance Account', callback_data: 'binance_account' },
+            { text: this.lang === 'zh' ? '📊 市场概览' : '📊 Market Overview', callback_data: 'market_overview' }
+          ],
+          [
+            { text: this.lang === 'zh' ? '💻 系统监控' : '💻 System', callback_data: 'system' },
+            { text: this.lang === 'zh' ? '❓ 帮助' : '❓ Help', callback_data: 'help' }
+          ],
+          [
+            { text: this.lang === 'zh' ? '🇬🇧 English' : '🇨🇳 中文', callback_data: this.lang === 'zh' ? 'lang_en' : 'lang_zh' },
+            { text: this.lang === 'zh' ? '🛡️ 守护模式: 开启' : '🛡️ Guardian: ON', callback_data: 'toggle_guardian' }
+          ]
         ]
-      ]
-    };
+      };
+    } else {
+      // 专业模式：完整功能菜单
+      keyboard = {
+        inline_keyboard: [
+          [
+            { text: this.lang === 'zh' ? '🛡️ 检查币种' : '🛡️ Check Coin', callback_data: 'check_coin' },
+            { text: this.lang === 'zh' ? '📚 今日课程' : '📚 Today\'s Lesson', callback_data: 'today_lesson' }
+          ],
+          [
+            { text: this.lang === 'zh' ? '💼 币安账户' : '💼 Binance Account', callback_data: 'binance_account' },
+            { text: this.lang === 'zh' ? '📊 市场概览' : '📊 Market Overview', callback_data: 'market_overview' }
+          ],
+          [
+            { text: this.lang === 'zh' ? '📈 交易对' : '📈 Pairs', callback_data: 'pairs' },
+            { text: this.lang === 'zh' ? '📝 历史记录' : '📝 History', callback_data: 'history' }
+          ],
+          [
+            { text: this.lang === 'zh' ? '🎯 套利阈值' : '🎯 Threshold', callback_data: 'set_threshold' },
+            { text: this.lang === 'zh' ? '⏱️ 刷新间隔' : '⏱️ Interval', callback_data: 'set_interval' }
+          ],
+          [
+            { text: this.lang === 'zh' ? '🔔 推送开关' : '🔔 Push', callback_data: 'toggle_push' },
+            { text: this.lang === 'zh' ? '💻 系统监控' : '💻 System', callback_data: 'system' }
+          ],
+          [
+            { text: this.lang === 'zh' ? '🇬🇧 English' : '🇨🇳 中文', callback_data: this.lang === 'zh' ? 'lang_en' : 'lang_zh' },
+            { text: this.lang === 'zh' ? '❓ 帮助' : '❓ Help', callback_data: 'help' }
+          ],
+          [
+            { text: this.lang === 'zh' ? '⚙️ 专业模式: 开启' : '⚙️ Pro Mode: ON', callback_data: 'toggle_guardian' }
+          ]
+        ]
+      };
+    }
     
     this.bot.sendMessage(chatId, welcomeText, {
       parse_mode: 'Markdown',
