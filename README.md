@@ -763,17 +763,16 @@ sudo systemctl start binance-guardian
 
 - [OpenClaw](https://openclaw.ai) - 提供强大的 AI 框架和技术支持
 - [Binance](https://www.binance.com) - 提供可靠的 API 和数据支持
-- [NOFX Community](https://nofx.io) - 提供专业的市场数据和 AI500 评分系统
+- [NOFX 社区](https://nofx.io) - 提供专业的市场数据和 AI500 评分系统
 - 所有为加密货币安全教育做出贡献的开发者和用户
 
 ---
 
 ## 📞 联系方式
 
+- **Telegram**: [@Ee_7t](https://t.me/Ee_7t)
 - **GitHub 仓库**: [binance-guardian-ai](https://github.com/pjl914335852-ux/binance-guardian-ai)
 - **问题反馈**: [GitHub Issues](https://github.com/pjl914335852-ux/binance-guardian-ai/issues)
-- **Telegram 群组**: 加入我们的社区讨论
-- **开发者**: [@pjl914335852-ux](https://github.com/pjl914335852-ux)
 
 ---
 

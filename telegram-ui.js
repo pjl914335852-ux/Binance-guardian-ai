@@ -134,7 +134,7 @@ class TelegramUI {
     });
     
     // Inline keyboard callbacks
-    this.bot.on('callback_query', (query) => {
+    this.bot.on('callback_query', async (query) => {
       this.handleCallback(query);
     });
     
@@ -498,109 +498,113 @@ ${index + 1}. *${opp.pair1} / ${opp.pair2}*
     const helpText1 = this.lang === 'zh' ? `
 ❓ *帮助 & 关于我们*
 
-*🦞 关于 OpenClaw 交易侦察员*
+*🛡️ 关于 Binance Guardian AI*
 
-我们是一个专注于加密货币套利监控的智能助手，由 NOFX 社区精准数据支持。
+我们是一个专为加密货币新手和长辈设计的 AI 安全助手，基于 OpenClaw 框架开发。
 
-*🔧 工作原理:*
+*🎯 核心功能:*
 
-1. *实时监控*: 每 30 秒获取币安价格数据
-2. *价差计算*: 对比不同交易对的价格变化
-3. *套利检测*: 当价差超过 0.5% 时触发通知
-4. *NOFX 增强*: 使用 NOFX 数据评估信号质量
-5. *风险评估*: 根据交易量和波动性评估风险
-6. *即时推送*: 发现机会立即发送 Telegram 通知
+1. *骗局识别*: 跨境诈骗数据库交叉比对
+2. *人话翻译*: 专业术语翻译成大白话
+3. *安全课堂*: 每日一课，30 天掌握基础
+4. *资产守护*: 实时监控账户安全
+5. *风险预警*: 市场异动及时提醒
 
-*💓 心跳功能:*
+*🛡️ 守护者模式:*
 
-• 每 2 小时自动发送运行状态报告
-• 显示运行时间、检查次数、发现机会数
-• 让你知道机器人一直在工作
+• 长辈友好的交互方式
+• 自动识别币种风险
+• 智能翻译专业术语
+• 每日安全知识推送
     ` : `
 ❓ *Help & About Us*
 
-*🦞 About OpenClaw Trading Scout*
+*🛡️ About Binance Guardian AI*
 
-We are an intelligent assistant focused on cryptocurrency arbitrage monitoring, powered by NOFX community precision data.
+We are an AI safety assistant designed for crypto beginners and elderly users, built on OpenClaw framework.
 
-*🔧 How It Works:*
+*🎯 Core Features:*
 
-1. *Real-time Monitoring*: Fetches Binance prices every 30s
-2. *Spread Calculation*: Compares price changes across pairs
-3. *Arbitrage Detection*: Triggers when spread exceeds 0.5%
-4. *NOFX Enhancement*: Uses NOFX data to assess signal quality
-5. *Risk Assessment*: Evaluates risk based on volume & volatility
-6. *Instant Push*: Sends Telegram notification immediately
+1. *Scam Detection*: Cross-referencing global scam databases
+2. *Plain Translation*: Technical terms to simple language
+3. *Safety Lessons*: Daily lessons, master basics in 30 days
+4. *Asset Guardian*: Real-time account monitoring
+5. *Risk Alerts*: Market anomaly notifications
 
-*💓 Heartbeat Feature:*
+*🛡️ Guardian Mode:*
 
-• Sends status report every 2 hours automatically
-• Shows uptime, checks count, opportunities found
-• Lets you know the bot is always working
+• Elderly-friendly interaction
+• Auto-detect coin risks
+• Smart term translation
+• Daily safety knowledge push
     `;
     
     const helpText2 = this.lang === 'zh' ? `
 *📋 可用命令:*
 
 /start - 开始使用
-/status - 查看运行状态
-/pairs - 管理交易对
-/history - 查看历史机会
+/guardian - 切换守护者模式
+/check <币名> - 检查币种安全性
+/translate <术语> - 翻译专业术语
+/lesson - 查看今日课程
 /help - 显示此帮助
 
-*🎯 核心功能:*
+*🎯 快速开始:*
 
-• 实时监控多个交易对
-• 发现价差套利机会
-• 评估风险等级
-• 智能管理设置
+• 问我："Pi 币能买吗？"
+• 问我："什么是 Launchpool？"
+• 发送 /lesson 查看今日课程
+• 点击"检查币种"输入币名
 
 *💡 使用提示:*
 
-1. 点击"交易对修改"管理币种
-2. 设置刷新间隔（推荐 30-60 秒）
-3. 开启自动推送接收通知
-4. 定期查看历史记录
+1. 守护者模式适合新手和长辈
+2. 专业模式提供更多技术功能
+3. 可以随时切换模式
+4. 有问题直接问我
 
-*🔒 安全提示:*
+*🔒 安全保证:*
 
 • 只使用只读 API 密钥
-• 不要分享 Bot Token
-• 本机器人不会要求私钥
+• 永不接触私钥和助记词
+• 不会要求转账
+• 100% 开源透明
 
 *📞 联系:* @Ee_7t
-💰 由 NOFX 社区精准数据支持
+🛡️ 让加密货币投资更安全
     ` : `
 *📋 Available Commands:*
 
 /start - Get started
-/status - View status
-/pairs - Manage pairs
-/history - View history
+/guardian - Toggle guardian mode
+/check <coin> - Check coin safety
+/translate <term> - Translate term
+/lesson - Today's lesson
 /help - Show help
 
-*🎯 Core Features:*
+*🎯 Quick Start:*
 
-• Real-time monitoring
-• Arbitrage detection
-• Risk assessment
-• Smart management
+• Ask me: "Is Pi coin safe?"
+• Ask me: "What is Launchpool?"
+• Send /lesson for today's lesson
+• Click "Check Coin" to enter coin name
 
 *💡 Usage Tips:*
 
-1. Click "Modify Pairs" to manage coins
-2. Set refresh interval (30-60s recommended)
-3. Enable auto push for notifications
-4. Check history regularly
+1. Guardian mode for beginners & elderly
+2. Professional mode for advanced features
+3. Switch modes anytime
+4. Ask me anything
 
-*🔒 Security:*
+*🔒 Security Guarantee:*
 
-• Only use read-only API keys
-• Don't share Bot Token
-• Bot never asks for private keys
+• Read-only API keys only
+• Never touch private keys
+• No transfer requests
+• 100% open source
 
 *📞 Contact:* @Ee_7t
-💰 Powered by NOFX Community Data
+🛡️ Making crypto investment safer
     `;
     
     const keyboard = {
@@ -839,19 +843,21 @@ We are an intelligent assistant focused on cryptocurrency arbitrage monitoring, 
       this.bot.deleteMessage(chatId, messageId).catch(() => {});
       
       const promptText = this.lang === 'zh' ? 
-        '🛡️ *检查币种安全性*\n\n请输入币种名称（如：PI、BTC、ETH）：' :
-        '🛡️ *Check Coin Safety*\n\nPlease enter coin name (e.g., PI, BTC, ETH):';
+        '🛡️ *检查币种安全性*\n\n请输入币种名称（如：BTC、ETH、DOGE）：' :
+        '🛡️ *Check Coin Safety*\n\nPlease enter coin name (e.g., BTC, ETH, DOGE):';
       
-      this.bot.sendMessage(chatId, promptText, { parse_mode: 'Markdown' });
-      
-      // 等待用户输入
-      const listener = async (msg) => {
-        if (msg.chat.id === chatId && msg.text && !msg.text.startsWith('/')) {
-          this.bot.removeListener('message', listener);
-          await this.handleCheckCoin(msg, msg.text);
-        }
+      const keyboard = {
+        inline_keyboard: [
+          [
+            { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'start' }
+          ]
+        ]
       };
-      this.bot.on('message', listener);
+      
+      this.bot.sendMessage(chatId, promptText, { 
+        parse_mode: 'Markdown',
+        reply_markup: keyboard
+      });
       
     } else if (data === 'today_lesson') {
       // Today's lesson
@@ -861,7 +867,6 @@ We are an intelligent assistant focused on cryptocurrency arbitrage monitoring, 
       
     } else if (data === 'toggle_guardian') {
       // Toggle guardian mode
-      this.bot.answerCallbackQuery(query.id);
       this.guardianMode = !this.guardianMode;
       
       const text = this.lang === 'zh' ? 
@@ -961,6 +966,9 @@ Send lesson number (1-10) to view details
         inline_keyboard: [
           [
             { text: this.lang === 'zh' ? '📚 查看其他课程' : '📚 Other Lessons', callback_data: 'past_lessons' },
+            { text: this.lang === 'zh' ? '🎓 进阶课程' : '🎓 Advanced', callback_data: 'advanced_lessons' }
+          ],
+          [
             { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'start' }
           ]
         ]
@@ -970,6 +978,103 @@ Send lesson number (1-10) to view details
         parse_mode: 'Markdown',
         reply_markup: keyboard
       });
+      
+    } else if (data === 'advanced_lessons') {
+      // Advanced lessons menu
+      this.bot.answerCallbackQuery(query.id);
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
+      
+      const topics = this.safetyLessons.getAdvancedTopics(this.lang);
+      
+      const text = this.lang === 'zh' ? `
+🎓 *进阶安全课程*
+
+选择你想深入学习的主题：
+
+${topics.map((t, i) => `${i + 1}. *${t.name}*\n   ${t.desc}`).join('\n\n')}
+
+💡 *说明：*
+这些课程会推荐专业的 Web3 安全资源，
+包括 CertiK、SlowMist、Binance Academy 等
+权威机构的公开内容。
+
+点击下方按钮选择主题 👇
+      `.trim() : `
+🎓 *Advanced Safety Courses*
+
+Choose a topic to learn more:
+
+${topics.map((t, i) => `${i + 1}. *${t.name}*\n   ${t.desc}`).join('\n\n')}
+
+💡 *Note:*
+These courses recommend professional Web3 security resources
+from authoritative institutions like CertiK, SlowMist,
+and Binance Academy.
+
+Click buttons below to select a topic 👇
+      `.trim();
+      
+      // 创建按钮（每行2个）
+      const buttons = [];
+      for (let i = 0; i < topics.length; i += 2) {
+        const row = [];
+        row.push({ 
+          text: `${i + 1}. ${topics[i].name}`, 
+          callback_data: `advanced_${topics[i].id}` 
+        });
+        if (i + 1 < topics.length) {
+          row.push({ 
+            text: `${i + 2}. ${topics[i + 1].name}`, 
+            callback_data: `advanced_${topics[i + 1].id}` 
+          });
+        }
+        buttons.push(row);
+      }
+      buttons.push([
+        { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'past_lessons' }
+      ]);
+      
+      const keyboard = { inline_keyboard: buttons };
+      
+      this.bot.sendMessage(chatId, text, {
+        parse_mode: 'Markdown',
+        reply_markup: keyboard
+      });
+      
+    } else if (data.startsWith('advanced_')) {
+      // View advanced topic
+      const topicId = data.split('_')[1];
+      this.bot.answerCallbackQuery(query.id);
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
+      
+      const topics = this.safetyLessons.getAdvancedTopics(this.lang);
+      const topic = topics.find(t => t.id === topicId);
+      
+      if (topic) {
+        // 异步获取内容
+        this.safetyLessons.searchWeb3SafetyContent(topic.name, this.lang).then(content => {
+          const keyboard = {
+            inline_keyboard: [
+              [
+                { text: this.lang === 'zh' ? '📚 其他主题' : '📚 Other Topics', callback_data: 'advanced_lessons' },
+                { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'start' }
+              ]
+            ]
+          };
+          
+          this.bot.sendMessage(chatId, content, {
+            parse_mode: 'Markdown',
+            reply_markup: keyboard,
+            disable_web_page_preview: true
+          });
+        }).catch(error => {
+          console.error('❌ Failed to get advanced content:', error.message);
+          const errorText = this.lang === 'zh' ? 
+            '❌ 获取课程内容失败，请稍后重试' :
+            '❌ Failed to get course content, please try again later';
+          this.bot.sendMessage(chatId, errorText);
+        });
+      }
       
     } else if (data === 'binance_account') {
       // Binance account menu
