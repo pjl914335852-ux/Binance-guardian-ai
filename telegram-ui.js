@@ -1129,164 +1129,74 @@ Send /cancel to cancel
     
     // Handle different callbacks
     if (data === 'start') {
-      // Answer callback first
       this.bot.answerCallbackQuery(query.id);
-      // Delete old message and send new start message
-      setTimeout(() => {
-        this.bot.deleteMessage(chatId, messageId).catch(() => {});
-      }, 100);
-      setTimeout(() => {
-        this.handleStart({ chat: { id: chatId } });
-      }, 200);
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
+      this.handleStart({ chat: { id: chatId } });
     } else if (data === 'status') {
       this.bot.answerCallbackQuery(query.id);
-      // Delete old message and send new status
-      setTimeout(() => {
-        this.bot.deleteMessage(chatId, messageId).catch(() => {});
-      }, 100);
-      setTimeout(() => {
-        this.handleStatus({ chat: { id: chatId } });
-      }, 200);
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
+      this.handleStatus({ chat: { id: chatId } });
     } else if (data === 'pairs') {
       this.bot.answerCallbackQuery(query.id);
-      // Delete old message and send new pairs
-      setTimeout(() => {
-        this.bot.deleteMessage(chatId, messageId).catch(() => {});
-      }, 100);
-      setTimeout(() => {
-        this.handlePairs({ chat: { id: chatId } });
-      }, 200);
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
+      this.handlePairs({ chat: { id: chatId } });
     } else if (data === 'history') {
       this.bot.answerCallbackQuery(query.id);
-      // Delete old message and send new history
-      setTimeout(() => {
-        this.bot.deleteMessage(chatId, messageId).catch(() => {});
-      }, 100);
-      setTimeout(() => {
-        this.handleHistory({ chat: { id: chatId } });
-      }, 200);
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
+      this.handleHistory({ chat: { id: chatId } });
     } else if (data === 'help') {
       this.bot.answerCallbackQuery(query.id);
-      // Delete old message and send help
-      setTimeout(() => {
-        this.bot.deleteMessage(chatId, messageId).catch(() => {});
-      }, 100);
-      setTimeout(() => {
-        this.handleHelp({ chat: { id: chatId } });
-      }, 200);
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
+      this.handleHelp({ chat: { id: chatId } });
     } else if (data === 'voice_setup') {
-      // Voice setup guide
       this.bot.answerCallbackQuery(query.id);
-      setTimeout(() => {
-        this.bot.deleteMessage(chatId, messageId).catch(() => {});
-      }, 100);
-      setTimeout(() => {
-        this.handleVoiceSetup(chatId);
-      }, 200);
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
+      this.handleVoiceSetup(chatId);
     } else if (data === 'voice_config_api') {
-      // Configure API key
       this.handleVoiceConfigApi(chatId, messageId, query.id);
     } else if (data === 'voice_full_guide') {
-      // Show full guide
       this.bot.answerCallbackQuery(query.id);
-      setTimeout(() => {
-        this.bot.deleteMessage(chatId, messageId).catch(() => {});
-      }, 100);
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
       const guideUrl = 'https://github.com/pjl914335852-ux/Binance-guardian-ai#enable-voice-features-optional';
       const text = this.lang === 'zh' ?
-        `📖 *完整语音功能教程*\n\n请访问 GitHub README 查看详细教程：\n${guideUrl}` :
-        `📖 *Full Voice Features Guide*\n\nVisit GitHub README for detailed guide:\n${guideUrl}`;
-      setTimeout(() => {
-        this.bot.sendMessage(chatId, text, {
-          parse_mode: 'Markdown',
-          reply_markup: {
-            inline_keyboard: [[
-              { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'voice_setup' }
-            ]]
-          }
-        }).catch(err => console.error('发送教程链接失败:', err));
-      }, 200);
+        `📖 完整语音功能教程\n\n请访问 GitHub README 查看详细教程：\n${guideUrl}` :
+        `📖 Full Voice Features Guide\n\nVisit GitHub README for detailed guide:\n${guideUrl}`;
+      this.bot.sendMessage(chatId, text, {
+        reply_markup: { inline_keyboard: [[{ text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'voice_setup' }]] }
+      }).catch(err => console.error('发送教程链接失败:', err));
     } else if (data === 'voice_test') {
-      // Test voice feature
       this.bot.answerCallbackQuery(query.id);
-      setTimeout(() => {
-        this.bot.deleteMessage(chatId, messageId).catch(() => {});
-      }, 100);
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
       const text = this.lang === 'zh' ?
-        `🧪 *测试语音功能*\n\n请发送一条语音消息，我会尝试识别并回答。\n\n💡 提示：\n• 在安静环境录音\n• 说话清晰\n• 内容简短明确` :
-        `🧪 *Test Voice Feature*\n\nPlease send a voice message, I'll try to recognize and respond.\n\n💡 Tips:\n• Record in quiet place\n• Speak clearly\n• Keep it short`;
-      setTimeout(() => {
-        this.bot.sendMessage(chatId, text, {
-          parse_mode: 'Markdown',
-          reply_markup: {
-            inline_keyboard: [[
-              { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'voice_setup' }
-            ]]
-          }
-        }).catch(err => console.error('发送测试提示失败:', err));
-      }, 200);
+        `🧪 测试语音功能\n\n请发送一条语音消息，我会尝试识别并回答。\n\n💡 提示：\n• 在安静环境录音\n• 说话清晰\n• 内容简短明确` :
+        `🧪 Test Voice Feature\n\nPlease send a voice message, I'll try to recognize and respond.\n\n💡 Tips:\n• Record in quiet place\n• Speak clearly\n• Keep it short`;
+      this.bot.sendMessage(chatId, text, {
+        reply_markup: { inline_keyboard: [[{ text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'voice_setup' }]] }
+      }).catch(err => console.error('发送测试提示失败:', err));
     } else if (data === 'system') {
-      // Answer callback first
       this.bot.answerCallbackQuery(query.id);
-      // Delete old message and send system info
-      setTimeout(() => {
-        this.bot.deleteMessage(chatId, messageId).catch(() => {});
-      }, 100);
-      setTimeout(() => {
-        this.handleSystem({ chat: { id: chatId } });
-      }, 200);
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
+      this.handleSystem({ chat: { id: chatId } });
     } else if (data === 'lang_en') {
-      // Switch language and update config
       this.lang = 'en';
       this.config.language = 'en';
-      
-      // Save config
-      if (this.onConfigChange) {
-        this.onConfigChange(this.config);
-      }
-      
-      this.bot.answerCallbackQuery(query.id, { 
-        text: '✅ Language switched to English',
-        show_alert: false
-      });
-      // Delete old message and send new start message in English
-      setTimeout(() => {
-        this.bot.deleteMessage(chatId, messageId).catch(() => {});
-      }, 100);
-      setTimeout(() => {
-        this.handleStart({ chat: { id: chatId } });
-      }, 200);
+      if (this.onConfigChange) this.onConfigChange(this.config);
+      this.bot.answerCallbackQuery(query.id, { text: '✅ Language switched to English', show_alert: false });
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
+      this.handleStart({ chat: { id: chatId } });
     } else if (data === 'lang_zh') {
-      // Switch language and update config
       this.lang = 'zh';
       this.config.language = 'zh';
-      
-      // Save config
-      if (this.onConfigChange) {
-        this.onConfigChange(this.config);
-      }
-      
-      this.bot.answerCallbackQuery(query.id, { 
-        text: '✅ 语言已切换到中文',
-        show_alert: false
-      });
-      // Delete old message and send new start message in Chinese
-      setTimeout(() => {
-        this.bot.deleteMessage(chatId, messageId).catch(() => {});
-      }, 100);
-      setTimeout(() => {
-        this.handleStart({ chat: { id: chatId } });
-      }, 200);
+      if (this.onConfigChange) this.onConfigChange(this.config);
+      this.bot.answerCallbackQuery(query.id, { text: '✅ 语言已切换到中文', show_alert: false });
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
+      this.handleStart({ chat: { id: chatId } });
     } else if (data === 'check_coin') {
-      // Check coin safety
       this.bot.answerCallbackQuery(query.id);
-      setTimeout(() => {
-        this.bot.deleteMessage(chatId, messageId).catch(() => {});
-      }, 100);
-      
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
       const promptText = this.lang === 'zh' ? 
-        '🛡️ *检查币种安全性*\n\n请输入币种名称（如：BTC、ETH、DOGE）：' :
-        '🛡️ *Check Coin Safety*\n\nPlease enter coin name (e.g., BTC, ETH, DOGE):';
+        '🛡️ 检查币种安全性\n\n请输入币种名称（如：BTC、ETH、DOGE）：' :
+        '🛡️ Check Coin Safety\n\nPlease enter coin name (e.g., BTC, ETH, DOGE):';
       
       const keyboard = {
         inline_keyboard: [
