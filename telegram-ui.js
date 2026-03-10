@@ -139,6 +139,18 @@ class TelegramUI {
     // /resetguardian - 重置守护者密码（忘记密码时使用）
     this.bot.onText(/\/resetguardian/, (msg) => {
       const chatId = msg.chat.id;
+      const ownerChatId = this.config.guardian.ownerChatId;
+
+      // 只有主人才能重置密码
+      if (ownerChatId && chatId !== ownerChatId) {
+        this.bot.sendMessage(chatId,
+          this.lang === 'zh'
+            ? '❌ 无权限。只有 Bot 主人才能重置守护者密码。'
+            : '❌ Permission denied. Only the Bot owner can reset the guardian password.'
+        );
+        return;
+      }
+
       this.config.guardian.password = null;
       this.config.guardian.passwordSet = false;
       this.config.guardian.enabled = false;
@@ -204,6 +216,12 @@ class TelegramUI {
   // /start - Welcome message
   handleStart(msg) {
     const chatId = msg.chat.id;
+
+    // 第一次 /start 自动记录主人 chatId
+    if (!this.config.guardian.ownerChatId) {
+      this.config.guardian.ownerChatId = chatId;
+      this.saveConfig();
+    }
     
     const welcomeText = this.lang === 'zh' ? `
 🛡️ *欢迎使用 Binance Guardian AI！*
