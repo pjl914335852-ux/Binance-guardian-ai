@@ -578,6 +578,30 @@ Edit `config.json`:
 | `guardian.enabled` | Enable guardian mode | `true` | No |
 | `guardian.ownerChatId` | Your Telegram ID — only this user can reset guardian password. Get it from [@userinfobot](https://t.me/userinfobot) | - | Recommended |
 | `trading.threshold` | Arbitrage threshold (%) | `0.5` | No |
+
+#### 5. Daily Scam Case Push (scam-case-push.js)
+
+Auto-generates and pushes daily security education content to your Telegram.
+
+**Setup:**
+```bash
+# Run manually
+node scam-case-push.js
+
+# Schedule with cron (9 PM daily)
+0 21 * * * node /path/to/scam-case-push.js
+```
+
+**Language:** Reads `language` field from `config.json`. Set `"language": "en"` for English.
+
+> ⚠️ **Note on AI Content Generation**
+> 
+> This script uses an AI API to generate scam education content. If you use a **third-party API proxy** (not official Anthropic/OpenAI), the proxy may have stricter content filters that block security-related topics, returning "I can't discuss that" instead of actual content.
+> 
+> **Solutions:**
+> - Use the official Anthropic API (`api.anthropic.com`) — no content restrictions on educational content
+> - Use the official OpenAI API (`api.openai.com`)
+> - If using a proxy, ensure it supports security/educational content
 | `trading.checkInterval` | Check interval (ms) | `30000` | No |
 
 ### Run
