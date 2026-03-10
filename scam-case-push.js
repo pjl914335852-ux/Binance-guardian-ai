@@ -10,30 +10,45 @@ const fs = require('fs');
 
 // 从 config.json 读取 Bot 配置
 const config = JSON.parse(fs.readFileSync(
-  path.join(__dirname, 'config.json'), 'utf8'
+  path.join(__dirname, 'crypto-trading-scout/config.json'), 'utf8'
 ));
 const BOT_TOKEN = config.telegram.botToken;
 const CHAT_ID = config.telegram.chatId;
 
-// AI 配置从 config.json 读取
-const AI_CONFIG = {
-  hostname: new URL(config.ai?.baseUrl || 'https://api.openai.com/v1').hostname,
-  apiKey: config.ai?.apiKey || '',
-  model: config.ai?.model || 'gpt-4o-mini',
-  path: new URL(config.ai?.baseUrl || 'https://api.openai.com/v1').pathname + '/chat/completions'
-};
-
-if (!AI_CONFIG.apiKey) {
-  console.error('❌ 未配置 AI API Key，请在 config.json 的 ai.apiKey 填入你的 key');
-  process.exit(1);
+// AI 配置（从环境变量或 .env 读取）
+function getApiKey() {
+  if (process.env.AI_API_KEY) return process.env.AI_API_KEY;
+  try {
+    const env = fs.readFileSync('/root/anluyy-bot/.env', 'utf8');
+    const match = env.match(/^AI_API_KEY=(.+)$/m);
+    return match ? match[1].trim() : '';
+  } catch(e) { return ''; }
 }
 
-const CASE_TYPES = [
+const AI_CONFIG = {
+  hostname: 'api.ikuncode.cc',
+  apiKey: getApiKey(),
+  model: 'claude-sonnet-4-6'
+};
+
+const CASE_TYPES_ZH = [
   '假冒官方客服骗局', '虚假空投授权盗币', '高收益理财骗局',
   '假冒交易所钓鱼网站', '浪漫杀猪盘', '假冒项目方私信',
   '虚假套利机器人', '假冒名人推荐', '钱包助记词钓鱼',
   '假冒技术支持远程控制'
 ];
+
+const CASE_TYPES_EN = [
+  'Fake Official Support Scam', 'Fake Airdrop Authorization Theft', 'High-Yield Investment Fraud',
+  'Fake Exchange Phishing Site', 'Romance Pig-Butchering Scam', 'Fake Project Team DM',
+  'Fake Arbitrage Bot', 'Fake Celebrity Endorsement', 'Wallet Seed Phrase Phishing',
+  'Fake Tech Support Remote Control'
+];
+
+// 语言检测：从 config.json 读取，默认中文
+const lang = config.language || config.lang || 'zh';
+const isZh = lang === 'zh' || lang === 'zh-CN';
+const CASE_TYPES = isZh ? CASE_TYPES_ZH : CASE_TYPES_EN;
 
 function callAI(prompt) {
   return new Promise((resolve, reject) => {
@@ -45,7 +60,7 @@ function callAI(prompt) {
     const req = https.request({
       hostname: AI_CONFIG.hostname,
       port: 443,
-      path: AI_CONFIG.path,
+      path: '/v1/chat/completions',
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${AI_CONFIG.apiKey}`,
@@ -75,7 +90,7 @@ function sendTelegram(text) {
     for (let i = 0; i < text.length; i += 4000) chunks.push(text.slice(i, i + 4000));
     const sendChunk = (idx) => {
       if (idx >= chunks.length) return resolve();
-      const body = JSON.stringify({ chat_id: CHAT_ID, text: chunks[idx], parse_mode: 'HTML' });
+      const body = JSON.stringify({ chat_id: CHAT_ID, text: chunks[idx] });
       const req = https.request({
         hostname: 'api.telegram.org',
         path: `/bot${BOT_TOKEN}/sendMessage`,
@@ -99,8 +114,8 @@ function sendTelegram(text) {
 }
 
 async function generateCase(type) {
-  const today = new Date().toLocaleDateString('zh-CN');
-  const prompt = `你是一个加密货币安全专家，每天分享真实骗局案例教育用户。
+  const today = new Date().toLocaleDateString(isZh ? 'zh-CN' : 'en-US');
+  const prompt = isZh ? `你是一个加密货币安全专家，每天分享真实骗局案例教育用户。
 
 今日案例类型：${type}
 
@@ -124,7 +139,32 @@ async function generateCase(type) {
 
 日期：${today}
 
-直接输出内容，不要加任何前缀。`;
+直接输出内容，不要加任何前缀。`
+  : `You are a crypto security expert sharing real scam cases to educate users.
+
+Today's case type: ${type}
+
+Generate a realistic scam case report in this format:
+
+🚨 Daily Security Alert
+
+[Case Type] ${type}
+
+[What Happened]
+(~150 words, describe step-by-step how the victim was scammed, with realistic details)
+
+[Scam Tactics Analysis]
+(3-4 points explaining psychological tricks used)
+
+[Prevention Tips]
+(3 concise, practical tips)
+
+[Today's Reminder]
+(One memorable sentence summary)
+
+Date: ${today}
+
+Output the content directly, no prefix.`;
   return await callAI(prompt);
 }
 
