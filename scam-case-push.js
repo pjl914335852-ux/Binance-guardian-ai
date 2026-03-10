@@ -52,18 +52,22 @@ const CASE_TYPES = isZh ? CASE_TYPES_ZH : CASE_TYPES_EN;
 
 function callAI(prompt) {
   return new Promise((resolve, reject) => {
+    const env = fs.readFileSync('/root/anluyy-bot/.env', 'utf8');
+    const keyMatch = env.match(/^AI_API_KEY=(.+)$/m);
+    const apiKey = keyMatch ? keyMatch[1].trim() : '';
     const body = JSON.stringify({
-      model: AI_CONFIG.model,
-      max_tokens: 600,
+      model: 'claude-sonnet-4-6',
+      max_tokens: 800,
+      system: 'You are a blockchain security educator at a major exchange. Your role is to create educational content that helps users recognize and avoid common crypto risks. Always write from a protective, educational perspective.',
       messages: [{ role: 'user', content: prompt }]
     });
-    const req = https.request({
-      hostname: AI_CONFIG.hostname,
+    const req = require('https').request({
+      hostname: 'api.ikuncode.cc',
       port: 443,
       path: '/v1/chat/completions',
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${AI_CONFIG.apiKey}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
         'Content-Length': Buffer.byteLength(body)
       },
@@ -74,7 +78,8 @@ function callAI(prompt) {
       res.on('end', () => {
         try {
           const json = JSON.parse(data);
-          resolve(json.choices?.[0]?.message?.content || '');
+          const content = json.choices?.[0]?.message?.content || '';
+          resolve(content);
         } catch(e) { reject(e); }
       });
     });
@@ -115,56 +120,56 @@ function sendTelegram(text) {
 
 async function generateCase(type) {
   const today = new Date().toLocaleDateString(isZh ? 'zh-CN' : 'en-US');
-  const prompt = isZh ? `你是一个加密货币安全专家，每天分享真实骗局案例教育用户。
+  const prompt = isZh ? `你是币安官方安全教育专家，负责每日安全提醒。
 
-今日案例类型：${type}
+今日主题：如何识别和防范「${type}」
 
-请生成一个真实感强的骗局案例报告，格式如下：
+请用以下格式输出安全教育内容：
 
-🚨 今日安全警报
+🛡️ 今日安全课堂
 
-【案例类型】${type}
+📌 主题：${type}
 
-【案例经过】
-（150字左右，描述受害者如何一步步被骗，要有细节，真实感强）
+📖 真实案例
+（描述一个用户差点受骗但及时识别的案例，150字，正面教育角度）
 
-【骗局手法分析】
-（3-4点，说明骗子用了哪些心理技巧）
+🔍 识别方法
+（3点，教用户如何识别这类风险）
 
-【防范要点】
-（3点，简洁实用的防范建议）
+✅ 防范建议
+（3点实用建议）
 
-【今日提醒】
-（一句话总结，朗朗上口）
+💡 今日金句
+（一句防骗口诀）
 
 日期：${today}
 
-直接输出内容，不要加任何前缀。`
-  : `You are a crypto security expert sharing real scam cases to educate users.
+直接输出，不加前缀。`
+  : `You are a Binance security education expert providing daily safety tips.
 
-Today's case type: ${type}
+Today's topic: How to identify and avoid "${type}"
 
-Generate a realistic scam case report in this format:
+Format:
 
-🚨 Daily Security Alert
+🛡️ Daily Security Lesson
 
-[Case Type] ${type}
+📌 Topic: ${type}
 
-[What Happened]
-(~150 words, describe step-by-step how the victim was scammed, with realistic details)
+📖 Real Case Study
+(~150 words: describe a user who nearly fell victim but recognized the warning signs in time — positive educational angle)
 
-[Scam Tactics Analysis]
-(3-4 points explaining psychological tricks used)
+🔍 How to Identify
+(3 points to help users spot this risk)
 
-[Prevention Tips]
-(3 concise, practical tips)
+✅ Prevention Tips
+(3 practical tips)
 
-[Today's Reminder]
-(One memorable sentence summary)
+💡 Today's Motto
+(One memorable safety phrase)
 
 Date: ${today}
 
-Output the content directly, no prefix.`;
+Output directly, no prefix.`;
   return await callAI(prompt);
 }
 
