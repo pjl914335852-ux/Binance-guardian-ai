@@ -1,0 +1,32 @@
+{
+  "name": "crypto-trading-scout",
+  "version": "2.7.0",
+  "description": "Binance Guardian AI - Your crypto safety assistant for beginners and elderly users",
+  "main": "crypto-scout.js",
+  "scripts": {
+    "start": "node crypto-scout.js",
+    "start:ai": "node crypto-scout-ai.js",
+    "start:pro": "node crypto-scout-pro.js",
+    "test": "node test.js",
+    "demo": "node demo-crypto-ai.js"
+  },
+  "keywords": [
+    "openclaw",
+    "crypto",
+    "binance",
+    "guardian",
+    "safety",
+    "ai",
+    "voice",
+    "scam-detection"
+  ],
+  "author": "发财猫",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "chart.js": "^4.5.1",
+    "chartjs-node-canvas": "^5.0.0",
+    "node-telegram-bot-api": "^0.64.0",
+    "openai": "^6.27.0"
+  }
+}

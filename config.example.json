@@ -1,0 +1,66 @@
+{
+  "language": "zh",
+  "telegram": {
+    "botToken": "YOUR_BOT_TOKEN",
+    "chatId": "YOUR_CHAT_ID"
+  },
+  "cryptoex": {
+    "apiKey": "YOUR_BINANCE_API_KEY",
+    "apiSecret": "YOUR_BINANCE_API_SECRET",
+    "testnet": false
+  },
+  "trading": {
+    "pairs": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "BNBUSDT",
+      "SOLUSDT"
+    ],
+    "customPairs": [],
+    "maxCustomPairs": 4,
+    "threshold": 0.5,
+    "minThreshold": 0.1,
+    "maxThreshold": 1,
+    "checkInterval": 30000,
+    "minVolume": 1000000,
+    "autoPush": false,
+    "dailySummary": {
+      "enabled": true,
+      "times": [
+        "08:00",
+        "12:00",
+        "20:00"
+      ]
+    }
+  },
+  "aiAgent": {
+    "enabled": false,
+    "category": "trending"
+  },
+  "rateLimit": {
+    "maxRequestsPerMinute": 20,
+    "priceUpdateInterval": 30000,
+    "volumeUpdateInterval": 60000
+  },
+  "logging": {
+    "enabled": true,
+    "file": "scout.log",
+    "level": "info",
+    "suppressPollingErrors": true
+  },
+  "nofx": {
+    "apiKey": "cm_568c67eae410d912c54c",
+    "updateInterval": 300000
+  },
+  "guardian": {
+    "enabled": false,
+    "password": "1234",
+    "passwordSet": true
+  },
+  "priceAlerts": [],
+  "ai": {
+    "baseUrl": "https://api.ikuncode.cc/v1",
+    "apiKey": "YOUR_AI_API_KEY",
+    "model": "claude-sonnet-4-6"
+  }
+}

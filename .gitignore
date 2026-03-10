@@ -1,0 +1,15 @@
+node_modules/
+config.json
+*.log
+.DS_Store
+.env
+
+# Runtime data
+data/
+reports/
+cases/
+assessments/
+
+# Backup files
+*.backup
+*.old
