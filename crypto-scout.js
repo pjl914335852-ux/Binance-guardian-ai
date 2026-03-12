@@ -30,6 +30,7 @@ const TelegramBot = require('node-telegram-bot-api');
 
 const NOFXDataAPI = require('./nofx-api');
 const TelegramUI = require('./telegram-ui');
+const { generateGuardianDailyReport } = require('./guardian-daily-report');
 
 // ==================== Configuration Validation ====================
 
@@ -680,6 +681,24 @@ function scheduleDailySummary() {
       if (Date.now() - lastSent > 60000) { // More than 1 minute ago
         state.lastDailySummary = Date.now();
         sendDailySummary();
+
+        // 守护者模式：早上9点额外推送新手友好简报
+        if (currentTime === '09:00' && config.guardian?.enabled) {
+          generateGuardianDailyReport({
+            prices: async (symbol) => {
+              const res = await axios.get(`${BINANCE_API}/ticker/price?symbol=${symbol}`);
+              return { [symbol]: res.data.price };
+            },
+            dailyStats: async (symbol) => {
+              const res = await axios.get(`${BINANCE_API}/ticker/24hr?symbol=${symbol}`);
+              return res.data;
+            }
+          }).then(report => {
+            if (config.telegram?.chatId) {
+              bot.sendMessage(config.telegram.chatId, report, { parse_mode: 'Markdown' });
+            }
+          }).catch(err => console.error('❌ Guardian daily report error:', err.message));
+        }
       }
     }
   }, 60000); // Check every minute
