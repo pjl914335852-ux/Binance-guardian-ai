@@ -10,7 +10,7 @@ const fs = require('fs');
 
 // 从 config.json 读取 Bot 配置
 const config = JSON.parse(fs.readFileSync(
-  path.join(__dirname, 'crypto-trading-scout/config.json'), 'utf8'
+  path.join(__dirname, 'config.json'), 'utf8'
 ));
 const BOT_TOKEN = config.telegram.botToken;
 const CHAT_ID = config.telegram.chatId;
