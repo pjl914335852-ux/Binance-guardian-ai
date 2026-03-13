@@ -24,24 +24,49 @@ if (!AI_CONFIG.apiKey) {
   process.exit(1);
 }
 
-// 抓取 NOFX 市场数据
+// 抓取 BlockBeats 新闻（web_fetch 方式，无需 API key）
+async function fetchBlockBeatsNews() {
+  return new Promise((resolve) => {
+    const req = https.request({
+      hostname: 'www.theblockbeats.info',
+      path: '/newsflash',
+      method: 'GET',
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; bot/1.0)' }
+    }, (res) => {
+      let data = '';
+      res.on('data', c => data += c);
+      res.on('end', () => {
+        // 简单提取文字段落
+        const lines = data.replace(/<[^>]+>/g, ' ')
+          .split('\n')
+          .map(l => l.trim())
+          .filter(l => l.startsWith('BlockBeats 消息') && l.length > 30)
+          .slice(0, 5);
+        resolve(lines);
+      });
+    });
+    req.on('error', () => resolve([]));
+    req.setTimeout(8000, () => { req.destroy(); resolve([]); });
+    req.end();
+  });
+}
+
 async function fetchMarketData() {
   try {
     const nofx = new NOFXDataAPI();
-    const [priceData, lsData] = await Promise.all([
+    const [priceData, news] = await Promise.all([
       nofx.getPriceRanking('24h', 5),
-      nofx.getLongShortList()
+      fetchBlockBeatsNews()
     ]);
 
     const topGainers = (priceData?.data?.['24h']?.top || []).slice(0, 5)
       .map(c => `${c.symbol} +${(c.price_delta * 100).toFixed(1)}%`).join(', ');
-    const lsInfo = (lsData?.data || []).slice(0, 3)
-      .map(c => `${c.symbol} 多空比${c.longShortRatio?.toFixed(2) || '?'}`).join(', ');
 
-    return { topGainers, lsInfo, hasData: !!topGainers };
+    return { topGainers, news, hasData: !!(topGainers || news.length) };
   } catch(e) {
-    console.log('⚠️  NOFX 数据获取失败:', e.message);
-    return { hasData: false };
+    console.log('⚠️  市场数据获取失败:', e.message);
+    const news = await fetchBlockBeatsNews();
+    return { topGainers: '', news, hasData: news.length > 0 };
   }
 }
 
@@ -83,7 +108,7 @@ function callAI(prompt) {
 
 async function generateContent(marketData) {
   const dataSection = marketData.hasData
-    ? `今日市场数据：\n${marketData.topGainers ? `涨幅榜：${marketData.topGainers}` : ''}\n${marketData.lsInfo ? `多空情绪：${marketData.lsInfo}` : ''}\n\n`
+    ? `今日市场数据：\n${marketData.topGainers ? `涨幅榜：${marketData.topGainers}\n` : ''}${marketData.news?.length ? `最新快讯：\n${marketData.news.slice(0,3).join('\n')}\n` : ''}\n`
     : '';
 
   const prompt = `${dataSection}你是一个有3年真实加密货币投资经验的普通散户，在币安广场分享今日感悟。
@@ -107,8 +132,8 @@ async function main() {
   console.log('📊 抓取 NOFX 市场数据...');
   const marketData = await fetchMarketData();
   if (marketData.hasData) {
-    console.log(`✅ 涨幅榜：${marketData.topGainers}`);
-    if (marketData.lsInfo) console.log(`✅ 多空情绪：${marketData.lsInfo}`);
+    if (marketData.topGainers) console.log(`✅ 涨幅榜：${marketData.topGainers}`);
+    if (marketData.news?.length) console.log(`✅ 新闻：${marketData.news.length} 条`);
   } else {
     console.log('⚠️  市场数据获取失败，使用纯 AI 生成');
   }
