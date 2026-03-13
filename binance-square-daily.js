@@ -8,7 +8,7 @@ const https = require('https');
 const { safePost } = require('./binance-square-post-safe.js');
 
 const botConfig = JSON.parse(require('fs').readFileSync(
-  require('path').join(__dirname, 'crypto-trading-scout/config.json'), 'utf8'
+  require('path').join(__dirname, 'config.json'), 'utf8'
 ));
 
 const AI_CONFIG = {
