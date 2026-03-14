@@ -127,7 +127,8 @@ class NOFXDataAPI {
   }
   
   async getLongShortData(symbol) {
-    return await this.request(`/api/long-short/${symbol}`);
+    const res = await this.request(`/api/long-short/${symbol}`);
+    return res ? { data: res } : null;
   }
   
   // ==================== Funding Rate ====================
@@ -141,7 +142,8 @@ class NOFXDataAPI {
   }
   
   async getFundingRate(symbol) {
-    return await this.request(`/api/funding-rate/${symbol}`);
+    const res = await this.request(`/api/funding-rate/${symbol}`);
+    return res ? { data: res } : null;
   }
   
   // ==================== OI Market Cap Ranking ====================
