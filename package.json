@@ -1,6 +1,6 @@
 {
   "name": "crypto-trading-scout",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "description": "Binance Guardian AI - Your crypto safety assistant for beginners and elderly users",
   "main": "crypto-scout.js",
   "scripts": {

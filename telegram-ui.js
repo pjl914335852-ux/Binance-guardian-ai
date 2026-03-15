@@ -1264,9 +1264,37 @@ Send /cancel to cancel
     } else if (data === 'check_coin') {
       this.bot.answerCallbackQuery(query.id);
       this.bot.deleteMessage(chatId, messageId).catch(() => {});
-      const promptText = this.lang === 'zh' ? 
-        '🛡️ 检查币种安全性\n\n请输入币种名称（如：BTC、ETH、DOGE）：' :
-        '🛡️ Check Coin Safety\n\nPlease enter coin name (e.g., BTC, ETH, DOGE):';
+      const promptText = this.lang === 'zh' ? `
+🛡️ *快速安全检查*
+
+✅ *支持两种查询方式：*
+1️⃣ 币种名称（如：BTC、ETH、DOGE）
+2️⃣ 合约地址（如：0x1234...）
+
+💡 *适合场景：*
+• 长辈收到推荐，想快速验证是否安全
+• 有人发来合约地址，不知道是不是骗局
+• 快速判断某个币是否能买
+
+⚡ *秒出结果：* 安全 ✅ / 有风险 ⚠️ / 骗局 ❌
+
+请输入币种名称或粘贴合约地址：
+      `.trim() : `
+🛡️ *Quick Safety Check*
+
+✅ *Supports two query methods:*
+1️⃣ Coin name (e.g., BTC, ETH, DOGE)
+2️⃣ Contract address (e.g., 0x1234...)
+
+💡 *Use cases:*
+• Verify if a recommended coin is safe
+• Check if a contract address is a scam
+• Quick judgment on whether to buy
+
+⚡ *Instant result:* Safe ✅ / Risk ⚠️ / Scam ❌
+
+Please enter coin name or paste contract address:
+      `.trim();
       
       const keyboard = {
         inline_keyboard: [
@@ -2386,7 +2414,7 @@ Wait for next auto-push or check market overview.
   }
   
   // Handle text input for pair/interval
-  handleTextInput(msg) {
+  async handleTextInput(msg) {
     const chatId = msg.chat.id;
     const text = msg.text?.trim();
     
@@ -2666,9 +2694,9 @@ Guardian mode remains enabled
       // 检查是否为合约地址
       if (/^0x[a-fA-F0-9]{40}$/.test(text)) {
         this.bot.sendMessage(chatId, this.lang === 'zh' ? 
-          '⚠️ 风险评分不支持合约地址查询\n\n请使用"🛡️ 查币"功能查询合约地址\n\n或输入币种名称（如：BTC、ETH）' :
-          '⚠️ Risk score does not support contract address\n\nPlease use "🛡️ Check Coin" for contract address\n\nOr enter coin name (e.g., BTC, ETH)'
-        );
+          '⚠️ *风险评分不支持合约地址*\n\n💡 合约地址请使用 *"🛡️ 检查币种"* 功能\n\n或者输入币种名称（如：BTC、ETH、DOGE）继续使用风险评分' :
+          '⚠️ *Risk score does not support contract address*\n\n💡 For contract address, please use *"🛡️ Check Coin"*\n\nOr enter coin name (e.g., BTC, ETH, DOGE) to continue'
+        , { parse_mode: 'Markdown' });
         return;
       }
       
@@ -4766,45 +4794,51 @@ Send /cancel to cancel
     this.waitingForRiskScore = chatId;
     
     const text = this.lang === 'zh' ? `
-📊 *智能风险评分*
+📊 *深度风险评分*
 
-输入币种名称，我会从 4 个维度评估风险：
+🎯 *只支持币种名称查询*（不支持合约地址）
 
-🔍 *评估维度：*
-• 安全审计（40%）- 是否通过审计
-• 市场排名（30%）- CoinMarketCap 排名
-• 代币信息（20%）- 流通量、市值等
-• 骗局检查（10%）- 是否在黑名单
+💡 *适合场景：*
+• 想投资某个币，需要详细分析
+• 对比多个币种的风险等级
+• 了解币种的审计、排名、市值等信息
 
-📈 *风险等级：*
-• 🟢 安全（80-100分）
-• 🟡 低风险（60-79分）
-• 🟠 中风险（40-59分）
-• 🔴 高风险（20-39分）
-• ⛔ 极高风险（0-19分）
+📋 *4 维度专业评分（0-100 分）：*
+• 🔒 安全审计（40%）- CertiK/SlowMist 审计
+• 📈 市场排名（30%）- CoinMarketCap 排名
+• 💎 代币信息（20%）- 币安上线 + 流通量
+• 🛡️ 骗局检查（10%）- 黑名单数据库
 
-⚠️ *注意：* 不支持合约地址查询，请输入币种名称
+📊 *风险等级：*
+🟢 安全（80-100分）→ 适合投资
+🟡 低风险（60-79分）→ 谨慎投资
+🟠 中风险（40-59分）→ 小额尝试
+🔴 高风险（20-39分）→ 不建议新手
+⛔ 极高风险（0-19分）→ 强烈不建议
 
 请输入币种名称（如：BTC、ETH、DOGE）：
     `.trim() : `
-📊 *Smart Risk Score*
+📊 *Deep Risk Score*
 
-Enter coin name, I'll assess risk from 4 dimensions:
+🎯 *Coin name only* (contract address not supported)
 
-🔍 *Assessment Dimensions:*
-• Security Audit (40%) - Audited or not
-• Market Ranking (30%) - CoinMarketCap rank
-• Token Info (20%) - Supply, market cap, etc.
-• Scam Check (10%) - Blacklist check
+💡 *Use cases:*
+• Want to invest, need detailed analysis
+• Compare risk levels of multiple coins
+• Learn about audit, ranking, market cap
 
-📈 *Risk Levels:*
-• 🟢 Safe (80-100)
-• 🟡 Low Risk (60-79)
-• 🟠 Medium Risk (40-59)
-• 🔴 High Risk (20-39)
-• ⛔ Extreme Risk (0-19)
+📋 *4-Dimension Professional Score (0-100):*
+• 🔒 Security Audit (40%) - CertiK/SlowMist
+• 📈 Market Ranking (30%) - CoinMarketCap
+• 💎 Token Info (20%) - Binance listing + supply
+• 🛡️ Scam Check (10%) - Blacklist database
 
-⚠️ *Note:* Contract address not supported, please enter coin name
+📊 *Risk Levels:*
+🟢 Safe (80-100) → Suitable for investment
+🟡 Low Risk (60-79) → Invest with caution
+🟠 Medium Risk (40-59) → Small amount only
+🔴 High Risk (20-39) → Not for beginners
+⛔ Extreme Risk (0-19) → Strongly not recommended
 
 Please enter coin name (e.g., BTC, ETH, DOGE):
     `.trim();

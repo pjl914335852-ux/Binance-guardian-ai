@@ -4,7 +4,7 @@
 
 [![License: AGPL--3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](./LICENSE)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-Powered-blue.svg)](https://openclaw.ai)
-[![Version](https://img.shields.io/badge/version-2.7.0-brightgreen.svg)](https://github.com/pjl914335852-ux/binance-guardian-ai/releases)
+[![Version](https://img.shields.io/badge/version-2.8.0-brightgreen.svg)](https://github.com/pjl914335852-ux/binance-guardian-ai/releases)
 [![Binance](https://img.shields.io/badge/Binance-Ecosystem-F0B90B.svg)](https://www.binance.com)
 [![Security](https://img.shields.io/badge/API-Read--Only-green.svg)](https://github.com/pjl914335852-ux/binance-guardian-ai#security)
 
@@ -67,7 +67,118 @@
 
 **Core Safety Features:**
 
-#### 1. Scam Coin Detection
+#### 1. Quick Safety Check 🛡️
+**Fast verification for coins and contract addresses**
+
+**Two Query Methods:**
+- ✅ **Coin Name** (BTC, ETH, DOGE, etc.)
+- ✅ **Contract Address** (0x1234... format)
+
+**Use Cases:**
+- Elderly received a recommendation, want quick verification
+- Someone sent a contract address, unsure if it's a scam
+- Quick judgment on whether to buy
+
+**Instant Results:**
+- ✅ **Safe** - Listed on Binance, low risk
+- ⚠️ **Risk** - Not on Binance, or has warning signs
+- ❌ **Scam** - Known scam, do not invest!
+
+**Example:**
+```
+User: "0x1234567890abcdef..." (paste contract address)
+
+Guardian: "⚠️ This is a contract address!
+
+🚨 Important Reminder:
+• Not a Binance-listed coin
+• On-chain tokens carry extremely high risk!
+• May be a scam or honeypot (can buy but can't sell)
+
+Main Risks:
+• Contract vulnerabilities or backdoors
+• Unable to sell (honeypot)
+• Project team rug pull
+• Insufficient liquidity
+
+💡 Safety Advice:
+⚠️ Strongly recommend: Only trade Binance-listed coins
+
+If you must buy on-chain tokens:
+1. Check if contract is verified on Etherscan/BSCScan
+2. Check for CertiK/SlowMist audit
+3. View holder distribution (avoid high concentration)
+4. Test selling (small amount first)
+5. Only invest what you can afford to lose"
+```
+
+#### 2. Deep Risk Score 📊
+**Professional 4-dimension scoring system (0-100 points)**
+
+**Only Supports Coin Names** (not contract addresses)
+
+**Use Cases:**
+- Want to invest, need detailed analysis
+- Compare risk levels of multiple coins
+- Learn about audit, ranking, market cap
+
+**4 Scoring Dimensions:**
+- 🔒 **Security Audit (40%)** - CertiK/SlowMist audit status
+- 📈 **Market Ranking (30%)** - CoinMarketCap ranking
+- 💎 **Token Info (20%)** - Binance listing + circulating supply
+- 🛡️ **Scam Check (10%)** - Blacklist database
+
+**Risk Levels:**
+- 🟢 **Safe (80-100)** → Suitable for investment
+- 🟡 **Low Risk (60-79)** → Invest with caution
+- 🟠 **Medium Risk (40-59)** → Small amount only
+- 🔴 **High Risk (20-39)** → Not for beginners
+- ⛔ **Extreme Risk (0-19)** → Strongly not recommended
+
+**Example:**
+```
+User: "BTC"
+
+Guardian: "📊 Risk Score Report
+
+Coin: BTC
+Total Score: 96/100
+
+Risk Level: 🟢 Safe
+
+📋 Detailed Scores:
+
+🔒 Security Audit (40%)
+   Score: 100/100
+   ✅ Mainstream project, multiple audits
+
+📈 Market Ranking (30%)
+   Score: 100/100
+   ✅ Top 10 mainstream coin
+
+💎 Token Info (20%)
+   Score: 100/100
+   ✅ Listed on Binance
+
+🛡️ Scam Check (10%)
+   Score: 100/100
+   ✅ Not on scam blacklist
+
+💡 Investment Advice:
+✅ Relatively safe investment choice"
+```
+
+**Feature Comparison:**
+
+| Feature | 🛡️ Quick Check | 📊 Risk Score |
+|---------|----------------|---------------|
+| **Query Method** | Coin name + Contract address | Coin name only |
+| **Speed** | ⚡ Instant | 🔍 3-5 seconds |
+| **Detail Level** | Simple judgment | Detailed report |
+| **Use Case** | Quick verification | Investment research |
+| **Suitable For** | Elderly, beginners | Investors, analysts |
+
+#### 3. Scam Coin Database
 - Identify known scam coins (Squid, BitConnect, OneCoin, etc.)
 - Special handling for controversial coins (Pi Network)
 - Auto-sync Binance listing status (hourly updates)
@@ -95,7 +206,7 @@ have trading, but those are IOUs, not the real coins you mined on your phone.
 Reminder: Coins not on major platforms carry higher risks!"
 ```
 
-#### 2. Plain Language Translator
+#### 4. Plain Language Translator
 Translate 10+ technical terms into simple language:
 
 | Technical Term | Plain Language | Example |
@@ -110,7 +221,7 @@ Translate 10+ technical terms into simple language:
 | Stop Loss | Set loss limit, auto-sell when reached | Protect principal |
 | Take Profit | Set profit target, auto-sell when reached | Lock in gains |
 
-#### 3. Daily Safety Lessons
+#### 5. Daily Safety Lessons
 10 basic courses (expandable to 30):
 
 **Days 1-7: Basic Safety**
@@ -139,7 +250,7 @@ Translate 10+ technical terms into simple language:
 - Tax Compliance
 - Legal Regulations
 
-#### 4. Voice Safety Report 🎙️
+#### 6. Voice Safety Report 🎙️
 **Daily audio safety briefings for elderly users:**
 
 - **Dual Language** - Chinese and English support
@@ -165,7 +276,7 @@ Translate 10+ technical terms into simple language:
 - Listening while driving
 - Sharing with family and friends
 
-#### 5. Voice Recognition 🗣️ (Optional)
+#### 7. Voice Recognition 🗣️ (Optional)
 **Speak to ask questions - hands-free interaction:**
 
 - **Powered by OpenAI Whisper** - Industry-leading speech recognition
