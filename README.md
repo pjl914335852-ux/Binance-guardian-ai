@@ -900,7 +900,59 @@ node crypto-scout.js
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit issues or pull requests.
+We welcome contributions from the community! Whether you're reporting bugs, suggesting features, or submitting code improvements, your input helps make Binance Guardian AI better for everyone.
+
+### How to Contribute
+
+#### 🐛 Report Bugs
+Found a bug? Help us fix it!
+1. Check [existing issues](https://github.com/pjl914335852-ux/Binance-guardian-ai/issues) to avoid duplicates
+2. Create a [new bug report](https://github.com/pjl914335852-ux/Binance-guardian-ai/issues/new?template=bug_report.md)
+3. Include:
+   - Clear description of the problem
+   - Steps to reproduce
+   - Expected vs actual behavior
+   - Your environment (OS, Node.js version, etc.)
+   - Logs or screenshots if applicable
+
+#### 💡 Suggest Features
+Have an idea for improvement?
+1. Check [existing feature requests](https://github.com/pjl914335852-ux/Binance-guardian-ai/issues?q=is%3Aissue+label%3Aenhancement)
+2. Create a [new feature request](https://github.com/pjl914335852-ux/Binance-guardian-ai/issues/new?template=feature_request.md)
+3. Describe:
+   - What problem it solves
+   - How it should work
+   - Why it's valuable
+
+#### 🔧 Submit Code
+Want to contribute code?
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Test thoroughly
+5. Commit with clear messages (`git commit -m 'Add amazing feature'`)
+6. Push to your fork (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+#### 💬 Join Discussions
+Have questions or ideas? Join our [Discussions](https://github.com/pjl914335852-ux/Binance-guardian-ai/discussions) to:
+- Ask questions
+- Share use cases
+- Discuss improvements
+- Help other users
+
+### Code of Conduct
+
+- Be respectful and constructive
+- Focus on the issue, not the person
+- Help create a welcoming environment
+- Follow project guidelines
+
+### Need Help?
+
+- 📖 Check the [Wiki](https://github.com/pjl914335852-ux/Binance-guardian-ai/wiki) for guides
+- 💬 Ask in [Discussions](https://github.com/pjl914335852-ux/Binance-guardian-ai/discussions)
+- 🐛 Report issues on [GitHub Issues](https://github.com/pjl914335852-ux/Binance-guardian-ai/issues)
 
 ---
 
