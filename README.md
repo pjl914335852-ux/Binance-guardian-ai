@@ -4,7 +4,7 @@
 
 [![License: AGPL--3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](./LICENSE)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-Powered-blue.svg)](https://openclaw.ai)
-[![Version](https://img.shields.io/badge/version-2.8.0-brightgreen.svg)](https://github.com/pjl914335852-ux/binance-guardian-ai/releases)
+[![Version](https://img.shields.io/badge/version-2.9.0-brightgreen.svg)](https://github.com/pjl914335852-ux/binance-guardian-ai/releases)
 [![Binance](https://img.shields.io/badge/Binance-Ecosystem-F0B90B.svg)](https://www.binance.com)
 [![Security](https://img.shields.io/badge/API-Read--Only-green.svg)](https://github.com/pjl914335852-ux/binance-guardian-ai#security)
 
@@ -74,6 +74,22 @@
 - ✅ **Coin Name** (BTC, ETH, DOGE, etc.)
 - ✅ **Contract Address** (0x1234... format)
 
+**🔗 Multi-Chain Support (9 Blockchains):**
+- **EVM Chains**: Ethereum, BSC, Polygon, Arbitrum, Optimism, Avalanche, Fantom, Base
+- **Non-EVM Chains**: Solana
+
+**🛡️ Security Scoring System:**
+- **0-100 Score** - Intuitive numerical rating
+- **4 Risk Levels**:
+  - 🟢 80-100: Low Risk
+  - 🟡 60-79: Medium Risk
+  - 🟠 40-59: High Risk
+  - 🔴 0-39: Critical Risk
+- **Scoring Factors**:
+  - Contract Verification: ±30 points
+  - Transaction Count: ±20 points
+  - Base Score: 50 points
+
 **Use Cases:**
 - Elderly received a recommendation, want quick verification
 - Someone sent a contract address, unsure if it's a scam
@@ -88,16 +104,35 @@
 ```
 User: "0x1234567890abcdef..." (paste contract address)
 
-Guardian: "⚠️ This is a contract address!
+Guardian: "🔍 Contract Security Analysis
 
-🚨 Important Reminder:
-• Not a Binance-listed coin
-• On-chain tokens carry extremely high risk!
-• May be a scam or honeypot (can buy but can't sell)
+🛡️ Security Score: 45/100
+🔴 Risk Level: Critical Risk
 
-Main Risks:
-• Contract vulnerabilities or backdoors
-• Unable to sell (honeypot)
+Contract Address: 0x1234...
+Network: Base
+Contract Name: Unknown Token
+
+📊 Detection Results:
+❌ Contract not verified
+⚠️ Very few transactions (50)
+
+⚠️ Risk Warnings:
+• Cannot view contract code, may have backdoors
+• Very few users, liquidity may be insufficient
+
+💡 Safety Advice:
+1. Check holder distribution (avoid high concentration)
+2. Check for CertiK/SlowMist audit
+3. Test selling (small amount first)
+4. Only invest what you can afford to lose
+5. Prefer Binance-listed coins
+
+📌 Disclaimer:
+• Detection results are for reference only, may have delays
+• On-chain data changes in real-time, verify multiple times
+• Investment carries risks, make decisions carefully"
+```
 • Project team rug pull
 • Insufficient liquidity
 
