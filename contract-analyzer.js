@@ -349,6 +349,13 @@ class ContractAnalyzer {
     result.riskLevelText = riskLevelText;
     result.riskEmoji = riskEmoji;
 
+    console.log('[ContractAnalyzer] Final result:', {
+      score: result.score,
+      riskLevelText: result.riskLevelText,
+      riskEmoji: result.riskEmoji,
+      riskLevel: result.riskLevel
+    });
+
     return result;
   }
 
