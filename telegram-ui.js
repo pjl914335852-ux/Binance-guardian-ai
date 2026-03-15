@@ -1356,8 +1356,11 @@ Send /cancel to cancel
       this.bot.deleteMessage(chatId, messageId).catch(() => {});
       this.handleStart({ chat: { id: chatId } });
     } else if (data === 'check_coin') {
+      console.log('[Callback] check_coin - deleting message:', messageId);
       this.bot.answerCallbackQuery(query.id);
-      this.bot.deleteMessage(chatId, messageId).catch(() => {});
+      this.bot.deleteMessage(chatId, messageId).catch((err) => {
+        console.error('[Callback] Failed to delete message:', err.message);
+      });
       const promptText = this.lang === 'zh' ? `
 🛡️ *快速验证*
 
