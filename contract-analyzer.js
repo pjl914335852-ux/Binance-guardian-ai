@@ -186,7 +186,9 @@ class ContractAnalyzer {
 
   // 分析合约风险
   async analyzeContract(contractAddress, context = '') {
+    console.log('[ContractAnalyzer] analyzeContract called with:', { contractAddress, context });
     const network = this.detectNetwork(contractAddress, context);
+    console.log('[ContractAnalyzer] Detected network:', network);
     const info = await this.getContractInfo(contractAddress, network);
 
     const result = {
