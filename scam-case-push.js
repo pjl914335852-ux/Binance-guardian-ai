@@ -15,21 +15,17 @@ const config = JSON.parse(fs.readFileSync(
 const BOT_TOKEN = config.telegram.botToken;
 const CHAT_ID = config.telegram.chatId;
 
-// AI 配置（从环境变量或 .env 读取）
-function getApiKey() {
-  if (process.env.AI_API_KEY) return process.env.AI_API_KEY;
-  try {
-    const env = fs.readFileSync('/root/anluyy-bot/.env', 'utf8');
-    const match = env.match(/^AI_API_KEY=(.+)$/m);
-    return match ? match[1].trim() : '';
-  } catch(e) { return ''; }
-}
-
+// AI 配置（从 config.json 读取，统一管理）
 const AI_CONFIG = {
-  hostname: 'api.ikuncode.cc',
-  apiKey: getApiKey(),
-  model: 'claude-sonnet-4-6'
+  baseUrl: config.ai?.baseUrl || 'https://api.openai.com/v1',
+  apiKey: config.ai?.apiKey || '',
+  model: config.ai?.model || 'gpt-4o-mini'
 };
+
+if (!AI_CONFIG.apiKey) {
+  console.error('❌ 未配置 AI API Key');
+  process.exit(1);
+}
 
 const CASE_TYPES_ZH = [
   '假冒官方客服骗局', '虚假空投授权盗币', '高收益理财骗局',
@@ -52,25 +48,42 @@ const CASE_TYPES = isZh ? CASE_TYPES_ZH : CASE_TYPES_EN;
 
 function callAI(prompt) {
   return new Promise((resolve, reject) => {
-    const env = fs.readFileSync('/root/anluyy-bot/.env', 'utf8');
-    const keyMatch = env.match(/^AI_API_KEY=(.+)$/m);
-    const apiKey = keyMatch ? keyMatch[1].trim() : '';
+    // 判断是 Anthropic Messages API 还是 OpenAI API
+    const isAnthropic = AI_CONFIG.baseUrl.includes('gaoqianba.com') || AI_CONFIG.baseUrl.includes('/messages');
+    
+    const systemPrompt = 'You are a blockchain security educator at a major exchange. Your role is to create educational content that helps users recognize and avoid common crypto risks. Always write from a protective, educational perspective.';
+    
+    // Anthropic 不支持 system 字段，需要转成第一条 message
+    const messages = isAnthropic 
+      ? [{ role: 'user', content: systemPrompt + '\n\n' + prompt }]
+      : [{ role: 'user', content: prompt }];
+    
     const body = JSON.stringify({
-      model: 'claude-sonnet-4-6',
+      model: AI_CONFIG.model,
       max_tokens: 800,
-      system: 'You are a blockchain security educator at a major exchange. Your role is to create educational content that helps users recognize and avoid common crypto risks. Always write from a protective, educational perspective.',
-      messages: [{ role: 'user', content: prompt }]
+      ...(isAnthropic ? {} : { system: systemPrompt }),
+      messages: messages
     });
+
+    const aiUrl = new URL(AI_CONFIG.baseUrl);
+    const headers = {
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(body)
+    };
+
+    if (isAnthropic) {
+      headers['x-api-key'] = AI_CONFIG.apiKey;
+      headers['anthropic-version'] = '2023-06-01';
+    } else {
+      headers['Authorization'] = `Bearer ${AI_CONFIG.apiKey}`;
+    }
+
     const req = require('https').request({
-      hostname: 'api.ikuncode.cc',
+      hostname: aiUrl.hostname,
       port: 443,
-      path: '/v1/chat/completions',
+      path: aiUrl.pathname,
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(body)
-      },
+      headers: headers,
       rejectUnauthorized: false
     }, (res) => {
       let data = '';
@@ -78,7 +91,9 @@ function callAI(prompt) {
       res.on('end', () => {
         try {
           const json = JSON.parse(data);
-          const content = json.choices?.[0]?.message?.content || '';
+          // Anthropic: { content: [{ type: 'text', text: '...' }] }
+          // OpenAI: { choices: [{ message: { content: '...' } }] }
+          const content = json.content?.[0]?.text || json.choices?.[0]?.message?.content || '';
           resolve(content);
         } catch(e) { reject(e); }
       });
