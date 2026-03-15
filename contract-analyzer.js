@@ -300,6 +300,55 @@ class ContractAnalyzer {
     result.advice.push('• 链上数据实时变化，建议多次验证');
     result.advice.push('• 投资有风险，决策需谨慎');
 
+    // 计算安全评分（0-100）
+    let score = 50; // 基础分
+    
+    // 合约验证状态（+30/-30）
+    if (info.verified === true) {
+      score += 30;
+    } else if (info.verified === false) {
+      score -= 30;
+    }
+    
+    // 交易数量（+20/-20）
+    if (info.txCount >= 1000) {
+      score += 20;
+    } else if (info.txCount >= 100) {
+      score += 10;
+    } else if (info.txCount > 0) {
+      score -= 10;
+    } else {
+      score -= 20;
+    }
+    
+    // 确保分数在 0-100 范围内
+    score = Math.max(0, Math.min(100, score));
+    
+    // 根据分数确定风险等级
+    let riskLevelText = '';
+    let riskEmoji = '';
+    if (score >= 80) {
+      result.riskLevel = 'low';
+      riskLevelText = '低风险';
+      riskEmoji = '🟢';
+    } else if (score >= 60) {
+      result.riskLevel = 'medium';
+      riskLevelText = '中等风险';
+      riskEmoji = '🟡';
+    } else if (score >= 40) {
+      result.riskLevel = 'high';
+      riskLevelText = '高风险';
+      riskEmoji = '🟠';
+    } else {
+      result.riskLevel = 'critical';
+      riskLevelText = '极高风险';
+      riskEmoji = '🔴';
+    }
+    
+    result.score = score;
+    result.riskLevelText = riskLevelText;
+    result.riskEmoji = riskEmoji;
+
     return result;
   }
 

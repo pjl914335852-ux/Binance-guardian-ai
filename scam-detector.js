@@ -242,6 +242,13 @@ class ScamDetector {
       // 如果是合约地址，特殊处理
       if (isContractAddress) {
         message += `🔍 *合约安全分析*\n\n`;
+        
+        // 显示安全评分（如果有）
+        if (detection.contractInfo && detection.contractInfo.score !== undefined) {
+          message += `${detection.contractInfo.riskEmoji} *安全评分：${detection.contractInfo.score}/100*\n`;
+          message += `⚠️ *风险等级：${detection.contractInfo.riskLevelText}*\n\n`;
+        }
+        
         message += `合约地址：\`${coinName}\`\n`;
         
         // 显示网络信息
