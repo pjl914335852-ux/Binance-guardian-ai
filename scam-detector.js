@@ -557,11 +557,9 @@ class ScamDetector {
   // 格式化风险评分报告
   formatRiskScoreReport(scoreData, lang = 'zh') {
     if (lang === 'zh') {
-      let message = `📊 *风险评分报告*\n\n`;
-      message += `币种：*${scoreData.coin}*\n`;
-      message += `综合评分：*${scoreData.totalScore}/100*\n\n`;
-
-      // 风险等级
+      let message = '';
+      
+      // 根据风险等级显示不同的标题
       const levelEmoji = {
         safe: '🟢',
         low: '🟡',
@@ -576,6 +574,22 @@ class ScamDetector {
         high: '高风险',
         critical: '极高风险'
       };
+      
+      // 显眼的标题
+      if (scoreData.riskLevel === 'safe') {
+        message += `✅ *${scoreData.coin} 是安全的主流币*\n\n`;
+      } else if (scoreData.riskLevel === 'low') {
+        message += `🟡 *${scoreData.coin} 风险较低*\n\n`;
+      } else if (scoreData.riskLevel === 'medium') {
+        message += `🟠 *${scoreData.coin} 中等风险*\n\n`;
+      } else if (scoreData.riskLevel === 'high') {
+        message += `🔴 *${scoreData.coin} 风险很高！*\n\n`;
+      } else if (scoreData.riskLevel === 'critical') {
+        message += `⛔ *${scoreData.coin} 极高风险！*\n\n`;
+      }
+      
+      message += `📊 *投资分析报告*\n\n`;
+      message += `综合评分：*${scoreData.totalScore}/100*\n`;
       message += `风险等级：${levelEmoji[scoreData.riskLevel]} *${levelText[scoreData.riskLevel]}*\n\n`;
 
       // 各维度评分
@@ -607,17 +621,49 @@ class ScamDetector {
 
       return message;
     } else {
-      // English version (simplified)
-      let message = `📊 *Risk Score Report*\n\n`;
-      message += `Coin: *${scoreData.coin}*\n`;
-      message += `Total Score: *${scoreData.totalScore}/100*\n\n`;
+      // English version
+      let message = '';
+      
+      // Title based on risk level
+      if (scoreData.riskLevel === 'safe') {
+        message += `✅ *${scoreData.coin} is a safe mainstream coin*\n\n`;
+      } else if (scoreData.riskLevel === 'low') {
+        message += `🟡 *${scoreData.coin} is low risk*\n\n`;
+      } else if (scoreData.riskLevel === 'medium') {
+        message += `🟠 *${scoreData.coin} is medium risk*\n\n`;
+      } else if (scoreData.riskLevel === 'high') {
+        message += `🔴 *${scoreData.coin} is HIGH RISK!*\n\n`;
+      } else if (scoreData.riskLevel === 'critical') {
+        message += `⛔ *${scoreData.coin} is EXTREME RISK!*\n\n`;
+      }
+      
+      message += `📊 *Investment Analysis Report*\n\n`;
+      message += `Total Score: *${scoreData.totalScore}/100*\n`;
       message += `Risk Level: *${scoreData.riskLevel.toUpperCase()}*\n\n`;
       
-      message += `📋 *Detailed Scores:*\n`;
-      message += `Security Audit: ${scoreData.dimensions.securityAudit.score}/100\n`;
-      message += `Market Ranking: ${scoreData.dimensions.marketRanking.score}/100\n`;
-      message += `Token Info: ${scoreData.dimensions.tokenInfo.score}/100\n`;
-      message += `Scam Check: ${scoreData.dimensions.scamCheck.score}/100\n`;
+      message += `📋 *Detailed Scores:*\n\n`;
+      message += `🔒 Security Audit (${scoreData.dimensions.securityAudit.weight}%)\n`;
+      message += `   Score: ${scoreData.dimensions.securityAudit.score}/100\n`;
+      message += `   ${scoreData.dimensions.securityAudit.detail}\n\n`;
+      
+      message += `📈 Market Ranking (${scoreData.dimensions.marketRanking.weight}%)\n`;
+      message += `   Score: ${scoreData.dimensions.marketRanking.score}/100\n`;
+      message += `   ${scoreData.dimensions.marketRanking.detail}\n\n`;
+      
+      message += `💎 Token Info (${scoreData.dimensions.tokenInfo.weight}%)\n`;
+      message += `   Score: ${scoreData.dimensions.tokenInfo.score}/100\n`;
+      message += `   ${scoreData.dimensions.tokenInfo.detail}\n\n`;
+      
+      message += `🛡️ Scam Check (${scoreData.dimensions.scamCheck.weight}%)\n`;
+      message += `   Score: ${scoreData.dimensions.scamCheck.score}/100\n`;
+      message += `   ${scoreData.dimensions.scamCheck.detail}\n\n`;
+      
+      if (scoreData.recommendations.length > 0) {
+        message += `💡 *Recommendations:*\n`;
+        scoreData.recommendations.forEach(rec => {
+          message += `${rec}\n`;
+        });
+      }
       
       return message;
     }
