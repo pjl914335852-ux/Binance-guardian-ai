@@ -1223,7 +1223,6 @@ Send /cancel to cancel
         const chain = parts.slice(2).join('_'); // 支持链名称中有下划线
         
         this.bot.answerCallbackQuery(query.id);
-        this.bot.deleteMessage(chatId, messageId).catch(() => {});
         
         // 显示加载消息
         const chainNames = {
@@ -1242,6 +1241,9 @@ Send /cancel to cancel
             `🔍 正在检测 ${chainNames[chain] || chain} 链合约地址...` : 
             `🔍 Checking ${chainNames[chain] || chain} contract address...`
         );
+        
+        // 删除链选择消息
+        this.bot.deleteMessage(chatId, messageId).catch(() => {});
         
         loadingMsg.then(async (msg) => {
           try {
