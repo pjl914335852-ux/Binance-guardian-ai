@@ -3517,37 +3517,8 @@ ${this.guardianMode ? 'I will now communicate in a simpler way!' : 'Switched to 
       if (match) {
         const coinName = (match[1] || match[0]).toUpperCase();
         
-        // 先显示骗局检测
+        // 只显示快速验证（不自动显示投资分析）
         await this.handleCheckCoin(msg, coinName);
-        
-        // 然后显示风险评分
-        setTimeout(async () => {
-          try {
-            const { execSync } = require('child_process');
-            const path = require('path');
-            const scriptPath = path.join(__dirname, 'risk-score.js');
-            const output = execSync(`node ${scriptPath} ${coinName}`, { 
-              encoding: 'utf8',
-              timeout: 10000
-            });
-            
-            const keyboard = {
-              inline_keyboard: [
-                [
-                  { text: this.lang === 'zh' ? '🔙 返回主菜单' : '🔙 Back to Menu', callback_data: 'start' }
-                ]
-              ]
-            };
-            
-            this.bot.sendMessage(chatId, output, { 
-              parse_mode: 'Markdown',
-              reply_markup: keyboard
-            });
-          } catch (error) {
-            console.error('Error calculating risk score:', error);
-            // Don't show error - coin check already provided info
-          }
-        }, 1000);
         
         return;
       }

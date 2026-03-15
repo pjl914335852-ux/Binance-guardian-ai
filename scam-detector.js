@@ -1,7 +1,10 @@
 // scam-detector.js - 骗局识别模块
+const ContractAnalyzer = require('./contract-analyzer');
 
 class ScamDetector {
   constructor() {
+    this.contractAnalyzer = new ContractAnalyzer();
+    
     // 已知诈骗币列表（确认的骗局项目）
     this.scamCoins = new Set([
       'SQUID', 'SQUIDGAME', // Squid Game 骗局
@@ -178,22 +181,22 @@ class ScamDetector {
         return result;
       }
 
-      // 基础风险提示
-      result.warnings.push('这是一个合约地址，不是币安上线的币种');
-      result.warnings.push('链上代币风险极高，可能存在：');
-      result.reasons.push('• 合约漏洞或后门');
-      result.reasons.push('• 无法卖出（蜜罐）');
-      result.reasons.push('• 项目方跑路');
-      result.reasons.push('• 流动性不足');
-
-      // 安全建议
-      result.advice.push('⚠️ 强烈建议：只交易币安已上线的币种');
-      result.advice.push('如果一定要买链上代币：');
-      result.advice.push('1. 在 Etherscan/BSCScan 查看合约是否验证');
-      result.advice.push('2. 检查是否有 CertiK/SlowMist 审计');
-      result.advice.push('3. 查看持币地址分布（避免高度集中）');
-      result.advice.push('4. 测试能否卖出（小额测试）');
-      result.advice.push('5. 只投入你能承受损失的金额');
+      // 调用合约分析器（使用免费 API）
+      const analysis = await this.contractAnalyzer.analyzeContract(contractAddress, context);
+      
+      // 转换分析结果
+      result.contractInfo = {
+        address: analysis.address,
+        network: analysis.network,
+        verified: analysis.verified,
+        contractName: analysis.contractName,
+        txCount: analysis.txCount
+      };
+      
+      result.riskLevel = analysis.riskLevel;
+      result.reasons = analysis.risks;
+      result.warnings = analysis.warnings;
+      result.advice = analysis.advice;
 
       // 检查上下文中的诈骗关键词
       const contextLower = context.toLowerCase();
@@ -204,21 +207,15 @@ class ScamDetector {
       if (foundKeywords.length > 0) {
         result.riskLevel = 'critical';
         result.isScam = true;
-        result.reasons.push(`消息中包含诈骗关键词：${foundKeywords.join(', ')}`);
+        result.reasons.unshift(`⚠️ 消息中包含诈骗关键词：${foundKeywords.join(', ')}`);
       }
-
-      // 存储合约地址信息
-      result.contractInfo = {
-        address: contractAddress,
-        network: 'Unknown',
-        verified: 'Unknown',
-        audit: 'Unknown'
-      };
 
     } catch (error) {
       console.error('合约检测错误:', error);
       result.riskLevel = 'high';
-      result.warnings.push('无法验证合约安全性');
+      result.warnings.push('⚠️ API 查询失败，无法验证合约安全性');
+      result.advice.push('请手动在 Etherscan/BSCScan 查看合约信息');
+      result.advice.push('或稍后重试');
     }
 
     return result;
@@ -235,34 +232,48 @@ class ScamDetector {
       
       // 如果是合约地址，特殊处理
       if (isContractAddress) {
-        message += `⚠️ *这是一个合约地址！*\n\n`;
-        message += `合约地址：\`${coinName}\`\n\n`;
-        message += `🚨 *重要提醒：*\n`;
-        message += `• 这不是币安上线的币种\n`;
-        message += `• 链上代币风险极高！\n`;
-        message += `• 可能是骗局或蜜罐（买得进卖不出）\n\n`;
+        message += `🔍 *合约安全分析*\n\n`;
+        message += `合约地址：\`${coinName}\`\n`;
         
+        // 显示网络信息
+        if (detection.contractInfo.network) {
+          const networkName = detection.contractInfo.network === 'bsc' ? 
+            'BSC (币安智能链)' : 'Ethereum (以太坊)';
+          message += `网络：${networkName}\n`;
+        }
+        
+        // 显示合约名称
+        if (detection.contractInfo.contractName && detection.contractInfo.contractName !== 'Unknown') {
+          message += `合约名称：${detection.contractInfo.contractName}\n`;
+        }
+        
+        message += `\n`;
+        
+        // 显示检测结果
         if (detection.reasons.length > 0) {
-          message += `⚠️ *主要风险：*\n`;
+          message += `📊 *检测结果：*\n`;
           detection.reasons.forEach(reason => {
             message += `${reason}\n`;
           });
           message += `\n`;
         }
         
+        // 显示风险提示
+        if (detection.warnings.length > 0) {
+          message += `⚠️ *风险提示：*\n`;
+          detection.warnings.forEach(warning => {
+            message += `• ${warning}\n`;
+          });
+          message += `\n`;
+        }
+        
+        // 显示安全建议
         if (detection.advice.length > 0) {
           message += `💡 *安全建议：*\n`;
           detection.advice.forEach(advice => {
             message += `${advice}\n`;
           });
-          message += `\n`;
         }
-        
-        message += `\n🛡️ *记住三不原则：*\n`;
-        message += `1. 不相信私聊推荐\n`;
-        message += `2. 不转账到私人账户\n`;
-        message += `3. 优先选择大平台交易\n\n`;
-        message += `有问题随时问我！`;
         
         return message;
       }
