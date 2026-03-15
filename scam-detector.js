@@ -246,8 +246,18 @@ class ScamDetector {
         
         // 显示网络信息
         if (detection.contractInfo.network) {
-          const networkName = detection.contractInfo.network === 'bsc' ? 
-            'BSC (币安智能链)' : 'Ethereum (以太坊)';
+          const networkNames = {
+            ethereum: 'Ethereum (以太坊)',
+            bsc: 'BSC (币安智能链)',
+            polygon: 'Polygon (MATIC)',
+            arbitrum: 'Arbitrum (ARB)',
+            optimism: 'Optimism (OP)',
+            avalanche: 'Avalanche (AVAX)',
+            fantom: 'Fantom (FTM)',
+            base: 'Base',
+            solana: 'Solana (SOL链)'
+          };
+          const networkName = networkNames[detection.contractInfo.network] || detection.contractInfo.network;
           message += `网络：${networkName}\n`;
         }
         
