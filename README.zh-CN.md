@@ -852,8 +852,12 @@ sudo systemctl start binance-guardian
 
 - [OpenClaw](https://openclaw.ai) - 提供强大的 AI 框架和技术支持
 - [Binance](https://www.binance.com) - 提供可靠的 API 和数据支持
+- [SlowMist (慢雾科技)](https://slowmist.com) - 区块链安全研究和案例分享
+- [余弦 (Cos)](https://twitter.com/evilcos) - 安全见解帮助我们塑造风险评估体系
 - [NOFX 社区](https://nofx.io) - 提供专业的市场数据和 AI500 评分系统
 - 所有为加密货币安全教育做出贡献的开发者和用户
+
+详细致谢名单请查看 [ACKNOWLEDGMENTS.md](./ACKNOWLEDGMENTS.md)
 
 ---
 

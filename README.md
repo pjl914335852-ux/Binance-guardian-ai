@@ -1119,8 +1119,12 @@ MIT License - see [LICENSE](LICENSE) file for details
 
 - **OpenClaw** - AI assistant framework
 - **Binance** - API and ecosystem support
+- **SlowMist (慢雾科技)** - Blockchain security research and case studies
+- **余弦 (Cos)** - Security insights that shaped our risk assessment
 - **NOFX Community** - Market data and insights
 - **Open Source Community** - Various tools and libraries
+
+For detailed acknowledgments, see [ACKNOWLEDGMENTS.md](./ACKNOWLEDGMENTS.md)
 
 ---
 
