@@ -129,11 +129,15 @@ class ScamDetector {
       result.reasons.push('该币种在已知诈骗币列表中');
     }
     
-    // 2. 检查是否在币安上线
+    // 2. 检查是否在币安上线（仅作为信息提示，不直接判定为高风险）
     if (!this.binanceCoins.has(coin)) {
-      result.riskLevel = result.riskLevel === 'critical' ? 'critical' : 'high';
-      result.warnings.push('该币种未在币安上线');
-      result.advice.push('只在币安官方 App 交易已上线的币种');
+      // 如果已经是 critical（诈骗币），保持 critical
+      // 否则，只给出提示，不改变风险等级
+      if (result.riskLevel !== 'critical') {
+        result.warnings.push('该币种未在币安上线');
+        result.advice.push('建议优先选择币安已上线的币种');
+        result.advice.push('如需交易，请选择其他大型交易所（OKX、Huobi 等）');
+      }
     }
     
     // 3. 检查上下文中的诈骗关键词
