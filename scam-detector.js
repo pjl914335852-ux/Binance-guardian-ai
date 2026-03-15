@@ -199,7 +199,10 @@ class ScamDetector {
         network: analysis.network,
         verified: analysis.verified,
         contractName: analysis.contractName,
-        txCount: analysis.txCount
+        txCount: analysis.txCount,
+        score: analysis.score,
+        riskLevelText: analysis.riskLevelText,
+        riskEmoji: analysis.riskEmoji
       };
       
       result.riskLevel = analysis.riskLevel;
