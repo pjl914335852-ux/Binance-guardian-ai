@@ -290,6 +290,9 @@ class ScamDetector {
           });
           message += `\n`;
         }
+      } else if (detection.riskLevel === 'critical') {
+        message += `⚠️ *${coin} 是诈骗币！*\n\n`;
+        message += `妈，这个币千万不要买！\n\n`;
       } else if (detection.riskLevel === 'high') {
         message += `⚠️ *${coin} 风险很高！*\n\n`;
         
@@ -309,9 +312,13 @@ class ScamDetector {
         }
       } else if (detection.riskLevel === 'medium') {
         message += `💡 *关于 ${coin}*\n\n`;
+        message += `这个币已在币安上线，但不是主流币种。\n\n`;
+      } else if (detection.riskLevel === 'low') {
+        message += `✅ *${coin} 是安全的主流币*\n\n`;
+        message += `这个币已在币安上线，可以放心交易。\n\n`;
       }
       
-      if (detection.warnings.length > 0) {
+      if (detection.warnings.length > 0 && detection.riskLevel !== 'low') {
         message += `⚠️ *风险提示：*\n`;
         detection.warnings.forEach(warning => {
           message += `• ${warning}\n`;
@@ -327,7 +334,7 @@ class ScamDetector {
         message += `\n`;
       }
       
-      if (detection.advice.length > 0) {
+      if (detection.advice.length > 0 && detection.riskLevel !== 'low') {
         message += `💡 *安全建议：*\n`;
         detection.advice.forEach(advice => {
           message += `• ${advice}\n`;
@@ -335,11 +342,14 @@ class ScamDetector {
         message += `\n`;
       }
       
-      // 通用安全提示
-      message += `\n🛡️ *记住三不原则：*\n`;
-      message += `1. 不相信私聊推荐\n`;
-      message += `2. 不转账到私人账户\n`;
-      message += `3. 优先选择大平台交易\n\n`;
+      // 通用安全提示（只在有风险时显示）
+      if (detection.riskLevel !== 'low') {
+        message += `\n🛡️ *记住三不原则：*\n`;
+        message += `1. 不相信私聊推荐\n`;
+        message += `2. 不转账到私人账户\n`;
+        message += `3. 优先选择大平台交易\n\n`;
+      }
+      
       message += `有问题随时问我！`;
       
       return message;
@@ -358,6 +368,9 @@ class ScamDetector {
           });
           message += `\n`;
         }
+      } else if (detection.riskLevel === 'critical') {
+        message += `⚠️ *${coin} is a SCAM!*\n\n`;
+        message += `DO NOT buy this coin!\n\n`;
       } else if (detection.riskLevel === 'high') {
         message += `⚠️ *${coin} is HIGH RISK!*\n\n`;
         
@@ -375,9 +388,15 @@ class ScamDetector {
         } else {
           message += `This coin is not listed on major platforms yet. Be careful.\n\n`;
         }
+      } else if (detection.riskLevel === 'medium') {
+        message += `💡 *About ${coin}*\n\n`;
+        message += `This coin is listed on Binance, but not a mainstream coin.\n\n`;
+      } else if (detection.riskLevel === 'low') {
+        message += `✅ *${coin} is a safe mainstream coin*\n\n`;
+        message += `This coin is listed on Binance and safe to trade.\n\n`;
       }
       
-      if (detection.warnings.length > 0) {
+      if (detection.warnings.length > 0 && detection.riskLevel !== 'low') {
         message += `⚠️ *Warnings:*\n`;
         detection.warnings.forEach(warning => {
           message += `• ${warning}\n`;
@@ -393,7 +412,7 @@ class ScamDetector {
         message += `\n`;
       }
       
-      if (detection.advice.length > 0) {
+      if (detection.advice.length > 0 && detection.riskLevel !== 'low') {
         message += `💡 *Safety Tips:*\n`;
         detection.advice.forEach(advice => {
           message += `• ${advice}\n`;
@@ -401,10 +420,13 @@ class ScamDetector {
         message += `\n`;
       }
       
-      message += `\n🛡️ *Remember:*\n`;
-      message += `1. Don't trust private messages\n`;
-      message += `2. Don't transfer to personal accounts\n`;
-      message += `3. Prefer major platforms for trading\n\n`;
+      if (detection.riskLevel !== 'low') {
+        message += `\n🛡️ *Remember:*\n`;
+        message += `1. Don't trust private messages\n`;
+        message += `2. Don't transfer to personal accounts\n`;
+        message += `3. Prefer major platforms for trading\n\n`;
+      }
+      
       message += `Ask me if you have questions!`;
       
       return message;
