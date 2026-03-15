@@ -101,14 +101,15 @@ class ScamDetector {
     let coin = coinName.toUpperCase().trim();
     
     // 如果是交易对格式（如 ETHUSDT），提取基础币种
-    if (coin.endsWith('USDT')) {
-      coin = coin.replace('USDT', '');
-    } else if (coin.endsWith('BUSD')) {
-      coin = coin.replace('BUSD', '');
-    } else if (coin.endsWith('USD')) {
-      coin = coin.replace('USD', '');
-    } else if (coin.endsWith('BTC')) {
-      coin = coin.replace('BTC', '');
+    // 但要确保不会把币种本身移除（如 BTC 不应该变成空字符串）
+    if (coin.length > 4 && coin.endsWith('USDT')) {
+      coin = coin.replace(/USDT$/, '');
+    } else if (coin.length > 4 && coin.endsWith('BUSD')) {
+      coin = coin.replace(/BUSD$/, '');
+    } else if (coin.length > 3 && coin.endsWith('USD')) {
+      coin = coin.replace(/USD$/, '');
+    } else if (coin.length > 3 && coin.endsWith('BTC')) {
+      coin = coin.replace(/BTC$/, '');
     }
     
     coin = coin.trim();
@@ -437,17 +438,21 @@ class ScamDetector {
   async calculateRiskScore(coinName) {
     await this.updateBinanceCoins();
     
-    // 提取币种符号
+    // 提取币种符号（使用与 detectScam 相同的逻辑）
     let coin = coinName.toUpperCase().trim();
-    if (coin.endsWith('USDT')) {
-      coin = coin.replace('USDT', '');
-    } else if (coin.endsWith('BUSD')) {
-      coin = coin.replace('BUSD', '');
-    } else if (coin.endsWith('USD')) {
-      coin = coin.replace('USD', '');
-    } else if (coin.endsWith('BTC')) {
-      coin = coin.replace('BTC', '');
+    
+    // 如果是交易对格式（如 ETHUSDT），提取基础币种
+    // 但要确保不会把币种本身移除（如 BTC 不应该变成空字符串）
+    if (coin.length > 4 && coin.endsWith('USDT')) {
+      coin = coin.replace(/USDT$/, '');
+    } else if (coin.length > 4 && coin.endsWith('BUSD')) {
+      coin = coin.replace(/BUSD$/, '');
+    } else if (coin.length > 3 && coin.endsWith('USD')) {
+      coin = coin.replace(/USD$/, '');
+    } else if (coin.length > 3 && coin.endsWith('BTC')) {
+      coin = coin.replace(/BTC$/, '');
     }
+    
     coin = coin.trim();
 
     const result = {
@@ -460,8 +465,19 @@ class ScamDetector {
         scamCheck: { score: 0, weight: 10, detail: '' }
       },
       riskLevel: 'unknown',
-      recommendations: []
+      recommendations: [],
+      notOnBinance: false  // 标记是否不在币安上线
     };
+    
+    // ⚠️ 投资分析只支持币安上线的币种
+    if (!this.binanceCoins.has(coin)) {
+      result.notOnBinance = true;
+      result.riskLevel = 'not_supported';
+      result.recommendations.push('⚠️ 投资分析功能仅支持币安已上线的币种');
+      result.recommendations.push('💡 该币种未在币安上线，无法提供详细评分');
+      result.recommendations.push('🛡️ 如需检查该币种安全性，请使用"快速验证"功能');
+      return result;
+    }
 
     // 1. 骗局检查（10%）- 最重要的否决项
     if (this.scamCoins.has(coin)) {
@@ -556,6 +572,39 @@ class ScamDetector {
 
   // 格式化风险评分报告
   formatRiskScoreReport(scoreData, lang = 'zh') {
+    // 如果币种不在币安上线，返回提示信息
+    if (scoreData.notOnBinance) {
+      if (lang === 'zh') {
+        let message = `⚠️ *${scoreData.coin} 未在币安上线*\n\n`;
+        message += `📊 *投资分析说明*\n\n`;
+        message += `投资分析功能仅支持币安已上线的币种，因为：\n\n`;
+        message += `1️⃣ 币安是全球最大的加密货币交易所\n`;
+        message += `2️⃣ 币安上线的币种经过严格审核\n`;
+        message += `3️⃣ 可以获取准确的市场数据和评分\n\n`;
+        message += `💡 *建议：*\n`;
+        message += `• 如需检查该币种安全性，请使用 *"🛡️ 快速验证"* 功能\n`;
+        message += `• 优先选择币安已上线的币种进行投资\n`;
+        message += `• 谨慎对待未在主流交易所上线的币种\n\n`;
+        message += `🔍 *币安已上线的主流币：*\n`;
+        message += `BTC, ETH, BNB, SOL, XRP, ADA, DOGE, AVAX, DOT, MATIC 等`;
+        return message;
+      } else {
+        let message = `⚠️ *${scoreData.coin} is not listed on Binance*\n\n`;
+        message += `📊 *Investment Analysis Notice*\n\n`;
+        message += `Investment analysis only supports Binance-listed coins because:\n\n`;
+        message += `1️⃣ Binance is the world's largest crypto exchange\n`;
+        message += `2️⃣ Binance-listed coins undergo strict review\n`;
+        message += `3️⃣ Accurate market data and scoring available\n\n`;
+        message += `💡 *Suggestions:*\n`;
+        message += `• Use *"🛡️ Quick Check"* to verify this coin's safety\n`;
+        message += `• Prefer Binance-listed coins for investment\n`;
+        message += `• Be cautious with coins not on major exchanges\n\n`;
+        message += `🔍 *Popular Binance coins:*\n`;
+        message += `BTC, ETH, BNB, SOL, XRP, ADA, DOGE, AVAX, DOT, MATIC, etc.`;
+        return message;
+      }
+    }
+    
     if (lang === 'zh') {
       let message = '';
       
