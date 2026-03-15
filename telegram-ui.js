@@ -257,7 +257,7 @@ class TelegramUI {
         
         // Then try smart message (for coin checks, term translation, etc.)
         // Only if not in a waiting state
-        if (!this.waitingForPassword && !this.waitingForAlert && !this.state.waitingForPair && !this.state.waitingForInterval && !this.state.waitingForThreshold) {
+        if (!this.waitingForPassword && !this.waitingForAlert && !this.waitingForRiskScore && !this.state.waitingForPair && !this.state.waitingForInterval && !this.state.waitingForThreshold) {
           this.handleSmartMessage(msg);
         }
       }
@@ -2654,6 +2654,71 @@ Guardian mode remains enabled
       return;
     }
     
+    // Handle risk score input
+    if (this.waitingForRiskScore === chatId) {
+      delete this.waitingForRiskScore;
+      
+      if (text === '/cancel') {
+        this.bot.sendMessage(chatId, this.lang === 'zh' ? '❌ 已取消' : '❌ Cancelled');
+        return;
+      }
+      
+      // 检查是否为合约地址
+      if (/^0x[a-fA-F0-9]{40}$/.test(text)) {
+        this.bot.sendMessage(chatId, this.lang === 'zh' ? 
+          '⚠️ 风险评分不支持合约地址查询\n\n请使用"🛡️ 查币"功能查询合约地址\n\n或输入币种名称（如：BTC、ETH）' :
+          '⚠️ Risk score does not support contract address\n\nPlease use "🛡️ Check Coin" for contract address\n\nOr enter coin name (e.g., BTC, ETH)'
+        );
+        return;
+      }
+      
+      const coinName = text.toUpperCase().trim();
+      
+      // 显示加载消息
+      const loadingMsg = await this.bot.sendMessage(chatId, 
+        this.lang === 'zh' ? '🔍 正在计算风险评分...' : '🔍 Calculating risk score...'
+      );
+      
+      try {
+        // 计算风险评分
+        const scoreData = await this.scamDetector.calculateRiskScore(coinName);
+        const report = this.scamDetector.formatRiskScoreReport(scoreData, this.lang);
+        
+        // 删除加载消息
+        this.bot.deleteMessage(chatId, loadingMsg.message_id);
+        
+        // 发送评分报告
+        const keyboard = {
+          inline_keyboard: [
+            [
+              { text: this.lang === 'zh' ? '🛡️ 查看安全检查' : '🛡️ View Safety Check', callback_data: `check_coin_${coinName}` }
+            ],
+            [
+              { text: this.lang === 'zh' ? '🔙 返回主菜单' : '🔙 Back to Menu', callback_data: 'start' }
+            ]
+          ]
+        };
+        
+        this.bot.sendMessage(chatId, report, { 
+          parse_mode: 'Markdown',
+          reply_markup: keyboard
+        });
+        
+      } catch (error) {
+        console.error('Risk score calculation error:', error);
+        
+        // 删除加载消息
+        this.bot.deleteMessage(chatId, loadingMsg.message_id);
+        
+        this.bot.sendMessage(chatId, this.lang === 'zh' ? 
+          '❌ 计算风险评分时出错，请稍后重试' :
+          '❌ Error calculating risk score, please try again later'
+        );
+      }
+      
+      return;
+    }
+    
     // Handle add pair
     if (this.state.waitingForPair?.action === 'add' && this.state.waitingForPair.chatId === chatId) {
       if (text === '/cancel') {
@@ -4697,6 +4762,9 @@ Send /cancel to cancel
   handleRiskScore(msg) {
     const chatId = msg.chat.id;
     
+    // 设置等待状态
+    this.waitingForRiskScore = chatId;
+    
     const text = this.lang === 'zh' ? `
 📊 *智能风险评分*
 
@@ -4714,6 +4782,8 @@ Send /cancel to cancel
 • 🟠 中风险（40-59分）
 • 🔴 高风险（20-39分）
 • ⛔ 极高风险（0-19分）
+
+⚠️ *注意：* 不支持合约地址查询，请输入币种名称
 
 请输入币种名称（如：BTC、ETH、DOGE）：
     `.trim() : `
@@ -4733,6 +4803,8 @@ Enter coin name, I'll assess risk from 4 dimensions:
 • 🟠 Medium Risk (40-59)
 • 🔴 High Risk (20-39)
 • ⛔ Extreme Risk (0-19)
+
+⚠️ *Note:* Contract address not supported, please enter coin name
 
 Please enter coin name (e.g., BTC, ETH, DOGE):
     `.trim();

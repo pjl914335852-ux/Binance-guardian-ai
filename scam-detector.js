@@ -399,6 +399,196 @@ class ScamDetector {
       return message;
     }
   }
+
+  // 计算详细的风险评分（0-100分）
+  async calculateRiskScore(coinName) {
+    await this.updateBinanceCoins();
+    
+    // 提取币种符号
+    let coin = coinName.toUpperCase().trim();
+    if (coin.endsWith('USDT')) {
+      coin = coin.replace('USDT', '');
+    } else if (coin.endsWith('BUSD')) {
+      coin = coin.replace('BUSD', '');
+    } else if (coin.endsWith('USD')) {
+      coin = coin.replace('USD', '');
+    } else if (coin.endsWith('BTC')) {
+      coin = coin.replace('BTC', '');
+    }
+    coin = coin.trim();
+
+    const result = {
+      coin: coin,
+      totalScore: 0,
+      dimensions: {
+        securityAudit: { score: 0, weight: 40, detail: '' },
+        marketRanking: { score: 0, weight: 30, detail: '' },
+        tokenInfo: { score: 0, weight: 20, detail: '' },
+        scamCheck: { score: 0, weight: 10, detail: '' }
+      },
+      riskLevel: 'unknown',
+      recommendations: []
+    };
+
+    // 1. 骗局检查（10%）- 最重要的否决项
+    if (this.scamCoins.has(coin)) {
+      result.dimensions.scamCheck.score = 0;
+      result.dimensions.scamCheck.detail = '❌ 已确认骗局项目';
+      result.totalScore = 0;
+      result.riskLevel = 'critical';
+      result.recommendations.push('⛔ 这是已确认的骗局项目，切勿投资！');
+      return result;
+    } else if (this.highRiskCoins.has(coin)) {
+      result.dimensions.scamCheck.score = 30;
+      result.dimensions.scamCheck.detail = '⚠️ 高风险项目（已崩盘或有重大问题）';
+    } else if (coin === 'PI') {
+      result.dimensions.scamCheck.score = 50;
+      result.dimensions.scamCheck.detail = '⚠️ 争议项目（部分交易所上线，主流平台未上线）';
+    } else {
+      result.dimensions.scamCheck.score = 100;
+      result.dimensions.scamCheck.detail = '✅ 未在骗局黑名单';
+    }
+
+    // 2. 币安上线检查（代币信息 20%）
+    if (this.binanceCoins.has(coin)) {
+      result.dimensions.tokenInfo.score = 100;
+      result.dimensions.tokenInfo.detail = '✅ 已在币安上线';
+    } else {
+      result.dimensions.tokenInfo.score = 20;
+      result.dimensions.tokenInfo.detail = '⚠️ 未在币安上线';
+      result.recommendations.push('建议只交易币安已上线的币种');
+    }
+
+    // 3. 市场排名（30%）- 简化版，基于常见币种
+    const topCoins = ['BTC', 'ETH', 'BNB', 'SOL', 'XRP', 'ADA', 'DOGE', 'AVAX', 'DOT', 'MATIC'];
+    const midCoins = ['LINK', 'UNI', 'LTC', 'ATOM', 'XLM', 'ALGO', 'VET', 'FIL', 'SAND', 'MANA'];
+    
+    if (topCoins.includes(coin)) {
+      result.dimensions.marketRanking.score = 100;
+      result.dimensions.marketRanking.detail = '✅ Top 10 主流币';
+    } else if (midCoins.includes(coin)) {
+      result.dimensions.marketRanking.score = 70;
+      result.dimensions.marketRanking.detail = '🟡 Top 50 知名币';
+    } else if (this.binanceCoins.has(coin)) {
+      result.dimensions.marketRanking.score = 50;
+      result.dimensions.marketRanking.detail = '🟠 币安上线币种';
+    } else {
+      result.dimensions.marketRanking.score = 20;
+      result.dimensions.marketRanking.detail = '🔴 小众币种';
+    }
+
+    // 4. 安全审计（40%）- 简化版
+    const auditedCoins = ['BTC', 'ETH', 'BNB', 'SOL', 'XRP', 'ADA', 'DOT', 'AVAX', 'MATIC', 'LINK', 'UNI'];
+    
+    if (auditedCoins.includes(coin)) {
+      result.dimensions.securityAudit.score = 100;
+      result.dimensions.securityAudit.detail = '✅ 主流项目，经过多次审计';
+    } else if (this.binanceCoins.has(coin)) {
+      result.dimensions.securityAudit.score = 60;
+      result.dimensions.securityAudit.detail = '🟡 币安上线需通过基础审核';
+    } else {
+      result.dimensions.securityAudit.score = 30;
+      result.dimensions.securityAudit.detail = '⚠️ 无法确认审计状态';
+      result.recommendations.push('建议查看 CertiK 或 SlowMist 审计报告');
+    }
+
+    // 计算总分
+    result.totalScore = Math.round(
+      (result.dimensions.securityAudit.score * result.dimensions.securityAudit.weight +
+       result.dimensions.marketRanking.score * result.dimensions.marketRanking.weight +
+       result.dimensions.tokenInfo.score * result.dimensions.tokenInfo.weight +
+       result.dimensions.scamCheck.score * result.dimensions.scamCheck.weight) / 100
+    );
+
+    // 确定风险等级
+    if (result.totalScore >= 80) {
+      result.riskLevel = 'safe';
+      result.recommendations.push('✅ 相对安全的投资选择');
+    } else if (result.totalScore >= 60) {
+      result.riskLevel = 'low';
+      result.recommendations.push('🟡 风险较低，但仍需谨慎');
+    } else if (result.totalScore >= 40) {
+      result.riskLevel = 'medium';
+      result.recommendations.push('🟠 中等风险，建议小额投资');
+    } else if (result.totalScore >= 20) {
+      result.riskLevel = 'high';
+      result.recommendations.push('🔴 高风险，不建议新手投资');
+    } else {
+      result.riskLevel = 'critical';
+      result.recommendations.push('⛔ 极高风险，强烈不建议投资');
+    }
+
+    return result;
+  }
+
+  // 格式化风险评分报告
+  formatRiskScoreReport(scoreData, lang = 'zh') {
+    if (lang === 'zh') {
+      let message = `📊 *风险评分报告*\n\n`;
+      message += `币种：*${scoreData.coin}*\n`;
+      message += `综合评分：*${scoreData.totalScore}/100*\n\n`;
+
+      // 风险等级
+      const levelEmoji = {
+        safe: '🟢',
+        low: '🟡',
+        medium: '🟠',
+        high: '🔴',
+        critical: '⛔'
+      };
+      const levelText = {
+        safe: '安全',
+        low: '低风险',
+        medium: '中风险',
+        high: '高风险',
+        critical: '极高风险'
+      };
+      message += `风险等级：${levelEmoji[scoreData.riskLevel]} *${levelText[scoreData.riskLevel]}*\n\n`;
+
+      // 各维度评分
+      message += `📋 *详细评分：*\n\n`;
+      
+      message += `🔒 安全审计（${scoreData.dimensions.securityAudit.weight}%）\n`;
+      message += `   评分：${scoreData.dimensions.securityAudit.score}/100\n`;
+      message += `   ${scoreData.dimensions.securityAudit.detail}\n\n`;
+
+      message += `📈 市场排名（${scoreData.dimensions.marketRanking.weight}%）\n`;
+      message += `   评分：${scoreData.dimensions.marketRanking.score}/100\n`;
+      message += `   ${scoreData.dimensions.marketRanking.detail}\n\n`;
+
+      message += `💎 代币信息（${scoreData.dimensions.tokenInfo.weight}%）\n`;
+      message += `   评分：${scoreData.dimensions.tokenInfo.score}/100\n`;
+      message += `   ${scoreData.dimensions.tokenInfo.detail}\n\n`;
+
+      message += `🛡️ 骗局检查（${scoreData.dimensions.scamCheck.weight}%）\n`;
+      message += `   评分：${scoreData.dimensions.scamCheck.score}/100\n`;
+      message += `   ${scoreData.dimensions.scamCheck.detail}\n\n`;
+
+      // 建议
+      if (scoreData.recommendations.length > 0) {
+        message += `💡 *投资建议：*\n`;
+        scoreData.recommendations.forEach(rec => {
+          message += `${rec}\n`;
+        });
+      }
+
+      return message;
+    } else {
+      // English version (simplified)
+      let message = `📊 *Risk Score Report*\n\n`;
+      message += `Coin: *${scoreData.coin}*\n`;
+      message += `Total Score: *${scoreData.totalScore}/100*\n\n`;
+      message += `Risk Level: *${scoreData.riskLevel.toUpperCase()}*\n\n`;
+      
+      message += `📋 *Detailed Scores:*\n`;
+      message += `Security Audit: ${scoreData.dimensions.securityAudit.score}/100\n`;
+      message += `Market Ranking: ${scoreData.dimensions.marketRanking.score}/100\n`;
+      message += `Token Info: ${scoreData.dimensions.tokenInfo.score}/100\n`;
+      message += `Scam Check: ${scoreData.dimensions.scamCheck.score}/100\n`;
+      
+      return message;
+    }
+  }
 }
 
 module.exports = ScamDetector;
