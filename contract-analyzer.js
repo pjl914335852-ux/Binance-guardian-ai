@@ -3,8 +3,19 @@ const axios = require('axios');
 class ContractAnalyzer {
   constructor() {
     // 使用免费的公开 API（无需 key）
-    this.etherscanApi = 'https://api.etherscan.io/api';
-    this.bscscanApi = 'https://api.bscscan.com/api';
+    this.apiEndpoints = {
+      ethereum: 'https://api.etherscan.io/api',
+      bsc: 'https://api.bscscan.com/api',
+      polygon: 'https://api.polygonscan.com/api',
+      arbitrum: 'https://api.arbiscan.io/api',
+      optimism: 'https://api-optimistic.etherscan.io/api',
+      avalanche: 'https://api.snowtrace.io/api',
+      fantom: 'https://api.ftmscan.com/api',
+      base: 'https://api.basescan.org/api'
+    };
+    
+    // Solana RPC
+    this.solanaRpc = 'https://api.mainnet-beta.solana.com';
   }
 
   // 检测网络类型（基于地址特征和上下文）
@@ -14,12 +25,30 @@ class ContractAnalyzer {
     // Solana 地址特征：32-44 字符，Base58 编码（不含 0OIl）
     const isSolanaAddress = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(contractAddress);
     
-    // 检查上下文关键词
+    // 检查上下文关键词（按优先级）
     if (contextLower.includes('sol') || contextLower.includes('solana') || contextLower.includes('raydium') || contextLower.includes('phantom')) {
       return 'solana';
     }
     if (contextLower.includes('bsc') || contextLower.includes('bnb') || contextLower.includes('pancake')) {
       return 'bsc';
+    }
+    if (contextLower.includes('polygon') || contextLower.includes('matic') || contextLower.includes('quickswap')) {
+      return 'polygon';
+    }
+    if (contextLower.includes('arbitrum') || contextLower.includes('arb')) {
+      return 'arbitrum';
+    }
+    if (contextLower.includes('optimism') || contextLower.includes('op')) {
+      return 'optimism';
+    }
+    if (contextLower.includes('avalanche') || contextLower.includes('avax') || contextLower.includes('traderjoe')) {
+      return 'avalanche';
+    }
+    if (contextLower.includes('fantom') || contextLower.includes('ftm') || contextLower.includes('spookyswap')) {
+      return 'fantom';
+    }
+    if (contextLower.includes('base')) {
+      return 'base';
     }
     if (contextLower.includes('eth') || contextLower.includes('ethereum') || contextLower.includes('uniswap')) {
       return 'ethereum';
@@ -30,7 +59,7 @@ class ContractAnalyzer {
       return 'solana';
     }
     
-    // 默认尝试以太坊（更常见）
+    // 默认尝试以太坊（最常见）
     return 'ethereum';
   }
 
@@ -41,8 +70,19 @@ class ContractAnalyzer {
       return await this.getSolanaTokenInfo(contractAddress);
     }
     
-    // EVM 链处理（Ethereum/BSC）
-    const apiUrl = network === 'bsc' ? this.bscscanApi : this.etherscanApi;
+    // EVM 链处理（Ethereum/BSC/Polygon/Arbitrum/Optimism/Avalanche/Fantom/Base）
+    const apiUrl = this.apiEndpoints[network];
+    
+    if (!apiUrl) {
+      // 不支持的网络，返回基本信息
+      return {
+        verified: null,
+        contractName: 'Unknown',
+        txCount: 0,
+        network: network,
+        error: `Unsupported network: ${network}`
+      };
+    }
     
     try {
       // 1. 检查合约是否验证
@@ -225,8 +265,21 @@ class ContractAnalyzer {
     }
 
     // 安全建议
-    result.advice.push(`🔍 在 ${network === 'bsc' ? 'BSCScan' : 'Etherscan'} 查看详情：`);
-    result.advice.push(`https://${network === 'bsc' ? 'bscscan.com' : 'etherscan.io'}/address/${contractAddress}`);
+    const explorerInfo = {
+      ethereum: { name: 'Etherscan', url: 'etherscan.io' },
+      bsc: { name: 'BSCScan', url: 'bscscan.com' },
+      polygon: { name: 'PolygonScan', url: 'polygonscan.com' },
+      arbitrum: { name: 'Arbiscan', url: 'arbiscan.io' },
+      optimism: { name: 'Optimistic Etherscan', url: 'optimistic.etherscan.io' },
+      avalanche: { name: 'SnowTrace', url: 'snowtrace.io' },
+      fantom: { name: 'FTMScan', url: 'ftmscan.com' },
+      base: { name: 'BaseScan', url: 'basescan.org' }
+    };
+    
+    const explorer = explorerInfo[network] || { name: 'Block Explorer', url: 'etherscan.io' };
+    
+    result.advice.push(`🔍 在 ${explorer.name} 查看详情：`);
+    result.advice.push(`https://${explorer.url}/address/${contractAddress}`);
     result.advice.push('');
     result.advice.push('⚠️ 链上代币风险极高，建议：');
     result.advice.push('1. 查看持币地址分布（避免高度集中）');
@@ -248,7 +301,13 @@ class ContractAnalyzer {
       const networkName = {
         'bsc': 'BSC (币安智能链)',
         'ethereum': 'Ethereum (以太坊)',
-        'solana': 'Solana (SOL链)'
+        'solana': 'Solana (SOL链)',
+        'polygon': 'Polygon (MATIC)',
+        'arbitrum': 'Arbitrum (ARB)',
+        'optimism': 'Optimism (OP)',
+        'avalanche': 'Avalanche (AVAX)',
+        'fantom': 'Fantom (FTM)',
+        'base': 'Base'
       };
       message += `网络：${networkName[analysis.network] || analysis.network}\n\n`;
 
@@ -282,7 +341,13 @@ class ContractAnalyzer {
       const networkName = {
         'bsc': 'BSC',
         'ethereum': 'Ethereum',
-        'solana': 'Solana'
+        'solana': 'Solana',
+        'polygon': 'Polygon',
+        'arbitrum': 'Arbitrum',
+        'optimism': 'Optimism',
+        'avalanche': 'Avalanche',
+        'fantom': 'Fantom',
+        'base': 'Base'
       };
       message += `Network: ${networkName[analysis.network] || analysis.network}\n\n`;
 
