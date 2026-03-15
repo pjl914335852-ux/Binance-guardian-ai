@@ -3500,13 +3500,20 @@ ${this.guardianMode ? 'I will now communicate in a simpler way!' : 'Switched to 
     }
     
     const chatId = msg.chat.id;
-    const text = msg.text.toLowerCase();
+    const text = msg.text; // 保留原始大小写（Solana 地址需要）
+    const textLower = text.toLowerCase(); // 用于关键词检测
     
     // 0. 检测合约地址（优先级最高）
-    const contractPattern = /0x[a-fA-F0-9]{40}/;
-    const contractMatch = text.match(contractPattern);
-    if (contractMatch) {
-      const contractAddress = contractMatch[0];
+    // EVM 地址：0x + 40 个十六进制字符
+    const evmPattern = /0x[a-fA-F0-9]{40}/;
+    // Solana 地址：32-44 个 Base58 字符（不含 0OIl）
+    const solanaPattern = /\b[1-9A-HJ-NP-Za-km-z]{32,44}\b/;
+    
+    const evmMatch = text.match(evmPattern);
+    const solanaMatch = text.match(solanaPattern);
+    
+    if (evmMatch || solanaMatch) {
+      const contractAddress = evmMatch ? evmMatch[0] : solanaMatch[0];
       
       // 显示加载消息
       const loadingMsg = await this.bot.sendMessage(chatId, 
@@ -3514,7 +3521,7 @@ ${this.guardianMode ? 'I will now communicate in a simpler way!' : 'Switched to 
       );
       
       try {
-        // 调用合约检测
+        // 调用合约检测（传递原始文本作为 context）
         const detection = await this.scamDetector.detectScamByContract(contractAddress, text);
         const warning = this.scamDetector.generateElderlyWarning(contractAddress, detection, this.lang);
         
@@ -3559,7 +3566,7 @@ ${this.guardianMode ? 'I will now communicate in a simpler way!' : 'Switched to 
     ];
     
     for (const pattern of coinPatterns) {
-      const match = text.match(pattern);
+      const match = textLower.match(pattern);
       if (match) {
         const coinName = (match[1] || match[0]).toUpperCase();
         
@@ -3571,7 +3578,7 @@ ${this.guardianMode ? 'I will now communicate in a simpler way!' : 'Switched to 
     }
     
     // 2. 检测是否询问术语
-    const detectedTerms = this.plainTranslator.detectTerms(text);
+    const detectedTerms = this.plainTranslator.detectTerms(textLower);
     if (detectedTerms.length > 0) {
       // 如果检测到术语，自动翻译第一个
       this.handleTranslate(msg, detectedTerms[0]);
@@ -3579,15 +3586,15 @@ ${this.guardianMode ? 'I will now communicate in a simpler way!' : 'Switched to 
     }
     
     // 3. 检测是否询问课程
-    if (text.includes('课程') || text.includes('学习') || text.includes('教') || 
-        text.includes('lesson') || text.includes('learn') || text.includes('teach')) {
+    if (textLower.includes('课程') || textLower.includes('学习') || textLower.includes('教') || 
+        textLower.includes('lesson') || textLower.includes('learn') || textLower.includes('teach')) {
       this.handleLesson(msg);
       return;
     }
     
     // 4. 检测是否询问安全
-    if (text.includes('安全') || text.includes('骗') || text.includes('风险') ||
-        text.includes('safe') || text.includes('scam') || text.includes('risk')) {
+    if (textLower.includes('安全') || textLower.includes('骗') || textLower.includes('风险') ||
+        textLower.includes('safe') || textLower.includes('scam') || textLower.includes('risk')) {
       const safetyTip = this.lang === 'zh' ? `
 🛡️ *安全提示*
 
@@ -4857,6 +4864,8 @@ Send /cancel to cancel
     const text = this.lang === 'zh' ? `
 📊 *投资分析*
 
+⚠️ *仅支持币安交易所已上线的币种*
+
 🎯 *只支持币种名称*（不支持合约地址）
 
 📋 *4 维度评分（0-100 分）：*
@@ -4872,9 +4881,14 @@ Send /cancel to cancel
 • 🔴 高风险（20-39）→ 不建议
 • ⛔ 极高风险（0-19）→ 强烈不建议
 
-请输入币种名称（如：BTC、ETH、DOGE）：
+💡 *提示：*
+如需检查其他交易所或链上代币，请使用"🛡️ 快速验证"功能
+
+请输入币安已上线的币种名称（如：BTC、ETH、DOGE）：
     `.trim() : `
 📊 *Investment Analysis*
+
+⚠️ *Only supports Binance-listed coins*
 
 🎯 *Coin name only* (contract not supported)
 
@@ -4891,7 +4905,10 @@ Send /cancel to cancel
 • 🔴 High Risk (20-39) → Not recommended
 • ⛔ Extreme Risk (0-19) → Strongly not recommended
 
-Enter coin name (e.g., BTC, ETH, DOGE):
+💡 *Tip:*
+For other exchanges or on-chain tokens, use "🛡️ Quick Check"
+
+Enter Binance-listed coin name (e.g., BTC, ETH, DOGE):
     `.trim();
     
     const keyboard = {

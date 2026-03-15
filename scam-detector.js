@@ -178,11 +178,15 @@ class ScamDetector {
     };
 
     try {
-      // 检查合约地址格式
-      if (!/^0x[a-fA-F0-9]{40}$/.test(contractAddress)) {
+      // 检查合约地址格式（支持 EVM 和 Solana）
+      const isEvmAddress = /^0x[a-fA-F0-9]{40}$/.test(contractAddress);
+      const isSolanaAddress = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(contractAddress);
+      
+      if (!isEvmAddress && !isSolanaAddress) {
         result.riskLevel = 'high';
         result.warnings.push('合约地址格式不正确');
         result.advice.push('请确认合约地址是否正确复制');
+        result.advice.push('支持 EVM 地址（0x...）和 Solana 地址');
         return result;
       }
 
