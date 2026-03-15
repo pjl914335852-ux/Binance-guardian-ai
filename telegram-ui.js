@@ -1287,10 +1287,14 @@ Send /cancel to cancel
     
     // Handle different callbacks
     if (data === 'start') {
+      console.log('[Callback] start - deleting message:', messageId);
       this.bot.answerCallbackQuery(query.id);
       
       // 删除当前消息，发送新的主菜单（避免编辑导致的界面混乱）
-      this.bot.deleteMessage(chatId, messageId).catch(() => {});
+      this.bot.deleteMessage(chatId, messageId).catch((err) => {
+        console.error('[Callback] Failed to delete message:', err.message);
+      });
+      console.log('[Callback] start - calling handleStart');
       this.handleStart({ chat: { id: chatId } });
     } else if (data === 'status') {
       this.bot.answerCallbackQuery(query.id);
