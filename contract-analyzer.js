@@ -189,7 +189,27 @@ class ContractAnalyzer {
     console.log('[ContractAnalyzer] analyzeContract called with:', { contractAddress, context });
     const network = this.detectNetwork(contractAddress, context);
     console.log('[ContractAnalyzer] Detected network:', network);
-    const info = await this.getContractInfo(contractAddress, network);
+    
+    let info;
+    try {
+      info = await this.getContractInfo(contractAddress, network);
+      console.log('[ContractAnalyzer] getContractInfo result:', {
+        verified: info.verified,
+        contractName: info.contractName,
+        txCount: info.txCount,
+        error: info.error
+      });
+    } catch (error) {
+      console.error('[ContractAnalyzer] getContractInfo failed:', error.message);
+      // 如果 API 调用失败，使用默认值
+      info = {
+        verified: null,
+        contractName: 'Unknown',
+        txCount: 0,
+        network: network,
+        error: error.message
+      };
+    }
 
     const result = {
       address: contractAddress,
