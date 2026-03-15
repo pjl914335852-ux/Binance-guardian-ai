@@ -1200,8 +1200,47 @@ Send /cancel to cancel
     // Handle different callbacks
     if (data === 'start') {
       this.bot.answerCallbackQuery(query.id);
-      this.bot.deleteMessage(chatId, messageId).catch(() => {});
-      this.handleStart({ chat: { id: chatId } });
+      
+      // 编辑当前消息而不是删除+发送新消息（避免出现多个菜单）
+      const welcomeText = this.lang === 'zh' ?
+        `🛡️ *币安守护者 AI*\n\n我是你的加密货币安全助手，帮你识别骗局、分析风险。\n\n请选择功能：` :
+        `🛡️ *Binance Guardian AI*\n\nI'm your crypto security assistant, helping you identify scams and analyze risks.\n\nPlease select a feature:`;
+      
+      const keyboard = {
+        inline_keyboard: [
+          // 第一组：核心安全功能（2个按钮，宽度均匀）
+          [
+            { text: this.lang === 'zh' ? '🛡️ 快速验证（支持合约）' : '🛡️ Quick Check (Contract)', callback_data: 'check_coin' },
+            { text: this.lang === 'zh' ? '📊 投资分析（仅币种）' : '📊 Investment Analysis (Coin)', callback_data: 'risk_score' }
+          ],
+          // 第二组：学习功能（2个按钮）
+          [
+            { text: this.lang === 'zh' ? '📚 今日课程' : '📚 Today\'s Lesson', callback_data: 'today_lesson' },
+            { text: this.lang === 'zh' ? '📖 今日案例' : '📖 Today\'s Case', callback_data: 'scam_case' }
+          ],
+          // 第三组：语音和求助（2个按钮）
+          [
+            { text: this.lang === 'zh' ? '🎤 语音功能' : '🎤 Voice Features', callback_data: 'voice_setup' },
+            { text: this.lang === 'zh' ? '🆘 紧急求助' : '🆘 Emergency Help', callback_data: 'emergency_help' }
+          ],
+          // 第四组：设置和帮助（2个按钮）
+          [
+            { text: this.lang === 'zh' ? '⚙️ 设置' : '⚙️ Settings', callback_data: 'settings' },
+            { text: this.lang === 'zh' ? '❓ 帮助' : '❓ Help', callback_data: 'help' }
+          ]
+        ]
+      };
+      
+      this.bot.editMessageText(welcomeText, {
+        chat_id: chatId,
+        message_id: messageId,
+        parse_mode: 'Markdown',
+        reply_markup: keyboard
+      }).catch(() => {
+        // 如果编辑失败（消息太旧），删除并发送新消息
+        this.bot.deleteMessage(chatId, messageId).catch(() => {});
+        this.handleStart({ chat: { id: chatId } });
+      });
     } else if (data === 'status') {
       this.bot.answerCallbackQuery(query.id);
       this.bot.deleteMessage(chatId, messageId).catch(() => {});
@@ -2711,12 +2750,9 @@ Guardian mode remains enabled
         // 删除加载消息
         this.bot.deleteMessage(chatId, loadingMsg.message_id);
         
-        // 发送评分报告
+        // 发送评分报告（只保留返回按钮）
         const keyboard = {
           inline_keyboard: [
-            [
-              { text: this.lang === 'zh' ? '🛡️ 查看安全检查' : '🛡️ View Safety Check', callback_data: `check_coin_${coinName}` }
-            ],
             [
               { text: this.lang === 'zh' ? '🔙 返回主菜单' : '🔙 Back to Menu', callback_data: 'start' }
             ]

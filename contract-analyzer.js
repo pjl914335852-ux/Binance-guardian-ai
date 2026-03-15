@@ -11,12 +11,23 @@ class ContractAnalyzer {
   detectNetwork(contractAddress, context = '') {
     const contextLower = context.toLowerCase();
     
+    // Solana 地址特征：32-44 字符，Base58 编码（不含 0OIl）
+    const isSolanaAddress = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(contractAddress);
+    
     // 检查上下文关键词
+    if (contextLower.includes('sol') || contextLower.includes('solana') || contextLower.includes('raydium') || contextLower.includes('phantom')) {
+      return 'solana';
+    }
     if (contextLower.includes('bsc') || contextLower.includes('bnb') || contextLower.includes('pancake')) {
       return 'bsc';
     }
     if (contextLower.includes('eth') || contextLower.includes('ethereum') || contextLower.includes('uniswap')) {
       return 'ethereum';
+    }
+    
+    // 基于地址格式判断
+    if (isSolanaAddress && !contractAddress.startsWith('0x')) {
+      return 'solana';
     }
     
     // 默认尝试以太坊（更常见）
@@ -25,6 +36,12 @@ class ContractAnalyzer {
 
   // 获取合约信息（免费 API，无需 key）
   async getContractInfo(contractAddress, network = 'ethereum') {
+    // Solana 链处理
+    if (network === 'solana') {
+      return await this.getSolanaTokenInfo(contractAddress);
+    }
+    
+    // EVM 链处理（Ethereum/BSC）
     const apiUrl = network === 'bsc' ? this.bscscanApi : this.etherscanApi;
     
     try {
@@ -76,6 +93,57 @@ class ContractAnalyzer {
     }
   }
 
+  // 获取 Solana 代币信息（使用公开 RPC）
+  async getSolanaTokenInfo(tokenAddress) {
+    try {
+      // 使用 Solana 公开 RPC（免费，但有速率限制）
+      const rpcUrl = 'https://api.mainnet-beta.solana.com';
+      
+      // 获取账户信息
+      const response = await axios.post(rpcUrl, {
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'getAccountInfo',
+        params: [
+          tokenAddress,
+          { encoding: 'jsonParsed' }
+        ]
+      }, {
+        timeout: 5000
+      });
+
+      const accountInfo = response.data.result?.value;
+      
+      if (!accountInfo) {
+        return {
+          verified: false,
+          contractName: 'Unknown',
+          txCount: 0,
+          network: 'solana',
+          error: 'Token not found'
+        };
+      }
+
+      // Solana 代币存在即可认为是"已验证"（链上可见）
+      return {
+        verified: true,
+        contractName: 'Solana Token',
+        txCount: 0, // Solana RPC 不直接提供交易数
+        network: 'solana'
+      };
+
+    } catch (error) {
+      console.error('Solana RPC error:', error.message);
+      return {
+        verified: null,
+        contractName: 'Unknown',
+        txCount: 0,
+        network: 'solana',
+        error: error.message
+      };
+    }
+  }
+
   // 分析合约风险
   async analyzeContract(contractAddress, context = '') {
     const network = this.detectNetwork(contractAddress, context);
@@ -93,7 +161,36 @@ class ContractAnalyzer {
       advice: []
     };
 
-    // 风险评估
+    // Solana 链特殊处理
+    if (network === 'solana') {
+      if (info.verified === false) {
+        result.riskLevel = 'high';
+        result.risks.push('❌ 代币不存在或地址错误');
+        result.warnings.push('无法在 Solana 链上找到该代币');
+      } else if (info.verified === true) {
+        result.risks.push('✅ 代币存在于 Solana 链上');
+        result.warnings.push('⚠️ Solana 链代币风险极高');
+        result.warnings.push('大部分 Solana 代币是 Meme 币或土狗');
+      } else {
+        result.risks.push('⚠️ 无法确认代币状态');
+        result.warnings.push('Solana RPC 查询失败或网络问题');
+      }
+      
+      // Solana 安全建议
+      result.advice.push(`🔍 在 Solscan 查看详情：`);
+      result.advice.push(`https://solscan.io/token/${contractAddress}`);
+      result.advice.push('');
+      result.advice.push('⚠️ Solana 链代币风险极高，建议：');
+      result.advice.push('1. 查看持币地址分布（避免高度集中）');
+      result.advice.push('2. 检查流动性池是否锁定');
+      result.advice.push('3. 小额测试能否卖出（防止蜜罐）');
+      result.advice.push('4. 只投入能承受损失的金额');
+      result.advice.push('5. 优先选择币安已上线的币种');
+      
+      return result;
+    }
+
+    // EVM 链（Ethereum/BSC）风险评估
     if (info.verified === false) {
       result.riskLevel = 'high';
       result.risks.push('❌ 合约未验证');
@@ -146,7 +243,14 @@ class ContractAnalyzer {
     if (lang === 'zh') {
       let message = `🛡️ *合约安全分析*\n\n`;
       message += `合约地址：\`${analysis.address}\`\n`;
-      message += `网络：${analysis.network === 'bsc' ? 'BSC (币安智能链)' : 'Ethereum (以太坊)'}\n\n`;
+      
+      // 显示网络类型
+      const networkName = {
+        'bsc': 'BSC (币安智能链)',
+        'ethereum': 'Ethereum (以太坊)',
+        'solana': 'Solana (SOL链)'
+      };
+      message += `网络：${networkName[analysis.network] || analysis.network}\n\n`;
 
       message += `📊 *检测结果：*\n`;
       analysis.risks.forEach(risk => {
@@ -173,7 +277,14 @@ class ContractAnalyzer {
     } else {
       let message = `🛡️ *Contract Security Analysis*\n\n`;
       message += `Contract: \`${analysis.address}\`\n`;
-      message += `Network: ${analysis.network === 'bsc' ? 'BSC' : 'Ethereum'}\n\n`;
+      
+      // 显示网络类型
+      const networkName = {
+        'bsc': 'BSC',
+        'ethereum': 'Ethereum',
+        'solana': 'Solana'
+      };
+      message += `Network: ${networkName[analysis.network] || analysis.network}\n\n`;
 
       message += `📊 *Detection Results:*\n`;
       analysis.risks.forEach(risk => {
