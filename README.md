@@ -536,4 +536,4 @@ If this project helps you or your family stay safe in crypto, please give us a �
 
 **Making Crypto Investment Safer, One Family at a Time.** 🛡️
 
-**Participating in Binance AI Hackathon 2026**
+🏆 **Participating in Binance AI Hackathon 2026**
