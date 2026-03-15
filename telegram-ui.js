@@ -140,7 +140,7 @@ class TelegramUI {
     this.bot.onText(/\/adduser (.+)/, (msg, match) => {
       const chatId = msg.chat.id;
       const ownerChatId = this.config.guardian?.ownerChatId;
-      if (chatId !== ownerChatId) {
+      if (String(chatId) !== String(ownerChatId)) {
         this.bot.sendMessage(chatId, '❌ 只有 Bot 主人才能管理白名单。');
         return;
       }
@@ -159,7 +159,7 @@ class TelegramUI {
     this.bot.onText(/\/removeuser (.+)/, (msg, match) => {
       const chatId = msg.chat.id;
       const ownerChatId = this.config.guardian?.ownerChatId;
-      if (chatId !== ownerChatId) {
+      if (String(chatId) !== String(ownerChatId)) {
         this.bot.sendMessage(chatId, '❌ 只有 Bot 主人才能管理白名单。');
         return;
       }
@@ -179,7 +179,7 @@ class TelegramUI {
     this.bot.onText(/\/listusers/, (msg) => {
       const chatId = msg.chat.id;
       const ownerChatId = this.config.guardian?.ownerChatId;
-      if (chatId !== ownerChatId) {
+      if (String(chatId) !== String(ownerChatId)) {
         this.bot.sendMessage(chatId, '❌ 只有 Bot 主人才能查看白名单。');
         return;
       }
@@ -193,7 +193,7 @@ class TelegramUI {
       const ownerChatId = this.config.guardian.ownerChatId;
 
       // 只有主人才能重置密码
-      if (ownerChatId && chatId !== ownerChatId) {
+      if (ownerChatId && String(chatId) !== String(ownerChatId)) {
         this.bot.sendMessage(chatId,
           this.lang === 'zh'
             ? '❌ 无权限。只有 Bot 主人才能重置守护者密码。'
@@ -278,7 +278,7 @@ class TelegramUI {
       this.config.guardian.ownerChatId = chatId;
       this.saveConfig();
       console.log(`[注册] 用户 ${chatId} 已自动注册为 owner`);
-    } else if (chatId !== ownerChatId && !whitelist.includes(chatId)) {
+    } else if (String(chatId) !== String(ownerChatId) && !whitelist.includes(chatId)) {
       this.bot.sendMessage(chatId,
         this.lang === 'zh'
           ? '❌ 你没有权限使用此机器人。'

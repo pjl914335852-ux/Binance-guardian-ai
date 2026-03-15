@@ -86,7 +86,29 @@ class ScamDetector {
   async detectScam(coinName, context = '') {
     await this.updateBinanceCoins();
     
-    const coin = coinName.toUpperCase().replace(/USDT|BUSD|USD|BTC|ETH/g, '').trim();
+    // 检测是否为合约地址
+    const isContractAddress = /^0x[a-fA-F0-9]{40}$/.test(coinName.trim());
+    
+    if (isContractAddress) {
+      // 如果是合约地址，调用合约检测逻辑
+      return await this.detectScamByContract(coinName.trim(), context);
+    }
+    
+    // 提取币种符号（去掉交易对后缀，但保留主流币）
+    let coin = coinName.toUpperCase().trim();
+    
+    // 如果是交易对格式（如 ETHUSDT），提取基础币种
+    if (coin.endsWith('USDT')) {
+      coin = coin.replace('USDT', '');
+    } else if (coin.endsWith('BUSD')) {
+      coin = coin.replace('BUSD', '');
+    } else if (coin.endsWith('USD')) {
+      coin = coin.replace('USD', '');
+    } else if (coin.endsWith('BTC')) {
+      coin = coin.replace('BTC', '');
+    }
+    
+    coin = coin.trim();
     
     const result = {
       isScam: false,
@@ -135,14 +157,117 @@ class ScamDetector {
     
     return result;
   }
+
+  // 通过合约地址检测代币安全性
+  async detectScamByContract(contractAddress, context = '') {
+    const result = {
+      isScam: false,
+      riskLevel: 'medium',
+      reasons: [],
+      warnings: [],
+      advice: [],
+      contractInfo: {}
+    };
+
+    try {
+      // 检查合约地址格式
+      if (!/^0x[a-fA-F0-9]{40}$/.test(contractAddress)) {
+        result.riskLevel = 'high';
+        result.warnings.push('合约地址格式不正确');
+        result.advice.push('请确认合约地址是否正确复制');
+        return result;
+      }
+
+      // 基础风险提示
+      result.warnings.push('这是一个合约地址，不是币安上线的币种');
+      result.warnings.push('链上代币风险极高，可能存在：');
+      result.reasons.push('• 合约漏洞或后门');
+      result.reasons.push('• 无法卖出（蜜罐）');
+      result.reasons.push('• 项目方跑路');
+      result.reasons.push('• 流动性不足');
+
+      // 安全建议
+      result.advice.push('⚠️ 强烈建议：只交易币安已上线的币种');
+      result.advice.push('如果一定要买链上代币：');
+      result.advice.push('1. 在 Etherscan/BSCScan 查看合约是否验证');
+      result.advice.push('2. 检查是否有 CertiK/SlowMist 审计');
+      result.advice.push('3. 查看持币地址分布（避免高度集中）');
+      result.advice.push('4. 测试能否卖出（小额测试）');
+      result.advice.push('5. 只投入你能承受损失的金额');
+
+      // 检查上下文中的诈骗关键词
+      const contextLower = context.toLowerCase();
+      const foundKeywords = this.scamKeywords.filter(keyword => 
+        contextLower.includes(keyword.toLowerCase())
+      );
+
+      if (foundKeywords.length > 0) {
+        result.riskLevel = 'critical';
+        result.isScam = true;
+        result.reasons.push(`消息中包含诈骗关键词：${foundKeywords.join(', ')}`);
+      }
+
+      // 存储合约地址信息
+      result.contractInfo = {
+        address: contractAddress,
+        network: 'Unknown',
+        verified: 'Unknown',
+        audit: 'Unknown'
+      };
+
+    } catch (error) {
+      console.error('合约检测错误:', error);
+      result.riskLevel = 'high';
+      result.warnings.push('无法验证合约安全性');
+    }
+
+    return result;
+  }
   
   // 生成友好的警告消息（长辈模式）
   generateElderlyWarning(coinName, detection, lang = 'zh') {
-    const coin = coinName.toUpperCase();
+    // 检查是否为合约地址
+    const isContractAddress = /^0x[a-fA-F0-9]{40}$/.test(coinName.trim());
+    const coin = isContractAddress ? '合约代币' : coinName.toUpperCase();
     
     if (lang === 'zh') {
       let message = `🛡️ *安全提醒*\n\n`;
       
+      // 如果是合约地址，特殊处理
+      if (isContractAddress) {
+        message += `⚠️ *这是一个合约地址！*\n\n`;
+        message += `合约地址：\`${coinName}\`\n\n`;
+        message += `🚨 *重要提醒：*\n`;
+        message += `• 这不是币安上线的币种\n`;
+        message += `• 链上代币风险极高！\n`;
+        message += `• 可能是骗局或蜜罐（买得进卖不出）\n\n`;
+        
+        if (detection.reasons.length > 0) {
+          message += `⚠️ *主要风险：*\n`;
+          detection.reasons.forEach(reason => {
+            message += `${reason}\n`;
+          });
+          message += `\n`;
+        }
+        
+        if (detection.advice.length > 0) {
+          message += `💡 *安全建议：*\n`;
+          detection.advice.forEach(advice => {
+            message += `${advice}\n`;
+          });
+          message += `\n`;
+        }
+        
+        message += `\n🛡️ *记住三不原则：*\n`;
+        message += `1. 不相信私聊推荐\n`;
+        message += `2. 不转账到私人账户\n`;
+        message += `3. 优先选择大平台交易\n\n`;
+        message += `有问题随时问我！`;
+        
+        return message;
+      }
+      
+      // 原有的币种检测逻辑
       if (detection.isScam) {
         message += `⚠️ *${coin} 是诈骗币！*\n\n`;
         message += `妈，这个币千万不要买！\n\n`;
