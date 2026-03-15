@@ -1289,8 +1289,9 @@ Send /cancel to cancel
     if (data === 'start') {
       this.bot.answerCallbackQuery(query.id);
       
-      // 编辑当前消息而不是删除+发送新消息（避免出现多个菜单）
-      this.handleStart({ chat: { id: chatId } }, messageId);
+      // 删除当前消息，发送新的主菜单（避免编辑导致的界面混乱）
+      this.bot.deleteMessage(chatId, messageId).catch(() => {});
+      this.handleStart({ chat: { id: chatId } });
     } else if (data === 'status') {
       this.bot.answerCallbackQuery(query.id);
       this.bot.deleteMessage(chatId, messageId).catch(() => {});
