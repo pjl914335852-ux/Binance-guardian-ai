@@ -6,8 +6,26 @@
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-Powered-blue.svg)](https://openclaw.ai)
 [![Version](https://img.shields.io/badge/version-2.9.0-brightgreen.svg)](https://github.com/pjl914335852-ux/binance-guardian-ai/releases)
 [![Binance](https://img.shields.io/badge/Binance-Ecosystem-F0B90B.svg)](https://www.binance.com)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-339933.svg?logo=node.js)](https://nodejs.org)
+[![AI Agent](https://img.shields.io/badge/AI-Agent-FF6B6B.svg)](https://openclaw.ai)
+[![Telegram](https://img.shields.io/badge/Telegram-Bot-26A5E4.svg?logo=telegram)](https://telegram.org)
+[![Security](https://img.shields.io/badge/API-Read--Only-green.svg)](https://github.com/pjl914335852-ux/binance-guardian-ai#security-model)
 
 [English](./README.md) | [中文文档](./README.zh-CN.md) | [更新日志](./CHANGELOG.md)
+
+---
+
+## ⚠️ 安全免责声明
+
+**重要提示：本项目仅供教育和演示目的使用。**
+
+- ✅ **安全使用**：只读 API 权限，无法交易或提现
+- ⚠️ **非投资建议**：AI 建议仅供参考，不构成投资建议
+- 🔒 **自行负责**：请务必独立验证所有信息
+- 💡 **教育工具**：旨在帮助用户学习加密货币安全知识
+- 🚫 **无担保**：骗局检测并非 100% 准确，请使用多个信息源
+
+**请勿仅依赖本工具做出投资决策。务必自行研究（DYOR）。**
 
 **📺 视频演示：** https://youtu.be/dqGWWQHO_CQ
 
@@ -224,7 +242,10 @@ node crypto-scout.js
 
 **⚠️ 安全提示：** 只使用**只读** API 权限！
 
-**详细教程：** 查看 [安装指南](./docs/INSTALLATION.md)
+**文档资源：**
+- 📖 [安装指南](./docs/INSTALLATION.md)
+- 🏗️ [系统架构](./docs/architecture.md)
+- 🔒 [安全模型](./docs/security-model.md)
 
 ---
 

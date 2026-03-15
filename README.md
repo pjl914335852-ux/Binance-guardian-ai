@@ -6,8 +6,26 @@
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-Powered-blue.svg)](https://openclaw.ai)
 [![Version](https://img.shields.io/badge/version-2.9.0-brightgreen.svg)](https://github.com/pjl914335852-ux/binance-guardian-ai/releases)
 [![Binance](https://img.shields.io/badge/Binance-Ecosystem-F0B90B.svg)](https://www.binance.com)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-339933.svg?logo=node.js)](https://nodejs.org)
+[![AI Agent](https://img.shields.io/badge/AI-Agent-FF6B6B.svg)](https://openclaw.ai)
+[![Telegram](https://img.shields.io/badge/Telegram-Bot-26A5E4.svg?logo=telegram)](https://telegram.org)
+[![Security](https://img.shields.io/badge/API-Read--Only-green.svg)](https://github.com/pjl914335852-ux/binance-guardian-ai#security-model)
 
 [English](./README.md) | [中文文档](./README.zh-CN.md) | [Changelog](./CHANGELOG.md)
+
+---
+
+## ⚠️ Security Disclaimer
+
+**IMPORTANT: This project is for educational and demonstration purposes only.**
+
+- ✅ **Safe to Use**: Read-only API access, cannot trade or withdraw
+- ⚠️ **Not Financial Advice**: AI suggestions are informational, not investment recommendations
+- 🔒 **Your Responsibility**: Always verify information independently
+- 💡 **Educational Tool**: Designed to help users learn about crypto security
+- 🚫 **No Guarantees**: Scam detection is not 100% accurate, use multiple sources
+
+**Do not rely solely on this tool for investment decisions. Always do your own research (DYOR).**
 
 **📺 Video Demo:** https://youtu.be/dqGWWQHO_CQ
 
@@ -224,7 +242,10 @@ node crypto-scout.js
 
 **⚠️ Security:** Use **Read-Only** API permissions only!
 
-**Detailed Setup:** See [Installation Guide](./docs/INSTALLATION.md)
+**Documentation:**
+- 📖 [Installation Guide](./docs/INSTALLATION.md)
+- 🏗️ [System Architecture](./docs/architecture.md)
+- 🔒 [Security Model](./docs/security-model.md)
 
 ---
 
