@@ -265,7 +265,7 @@ class TelegramUI {
   }
   
   // /start - Welcome message
-  handleStart(msg) {
+  handleStart(msg, editMessageId = null) {
     const chatId = msg.chat.id;
 
     // 权限检查：第一个 /start 自动绑定为 owner，之后只有 owner 或白名单可用
@@ -478,10 +478,28 @@ Click buttons below for quick access 👇
       };
     }
     
-    this.bot.sendMessage(chatId, welcomeText, {
-      parse_mode: 'Markdown',
-      reply_markup: keyboard
-    });
+    // 如果提供了 editMessageId，编辑现有消息；否则发送新消息
+    if (editMessageId) {
+      this.bot.editMessageText(welcomeText, {
+        chat_id: chatId,
+        message_id: editMessageId,
+        parse_mode: 'Markdown',
+        reply_markup: keyboard
+      }).catch((error) => {
+        // 如果编辑失败（消息太旧或已删除），删除并发送新消息
+        console.error('Edit message failed:', error.message);
+        this.bot.deleteMessage(chatId, editMessageId).catch(() => {});
+        this.bot.sendMessage(chatId, welcomeText, {
+          parse_mode: 'Markdown',
+          reply_markup: keyboard
+        });
+      });
+    } else {
+      this.bot.sendMessage(chatId, welcomeText, {
+        parse_mode: 'Markdown',
+        reply_markup: keyboard
+      });
+    }
   }
   
   // /status - Show running status
@@ -1202,45 +1220,7 @@ Send /cancel to cancel
       this.bot.answerCallbackQuery(query.id);
       
       // 编辑当前消息而不是删除+发送新消息（避免出现多个菜单）
-      const welcomeText = this.lang === 'zh' ?
-        `🛡️ *币安守护者 AI*\n\n我是你的加密货币安全助手，帮你识别骗局、分析风险。\n\n请选择功能：` :
-        `🛡️ *Binance Guardian AI*\n\nI'm your crypto security assistant, helping you identify scams and analyze risks.\n\nPlease select a feature:`;
-      
-      const keyboard = {
-        inline_keyboard: [
-          // 第一组：核心安全功能（2个按钮，宽度均匀）
-          [
-            { text: this.lang === 'zh' ? '🛡️ 快速验证（支持合约）' : '🛡️ Quick Check (Contract)', callback_data: 'check_coin' },
-            { text: this.lang === 'zh' ? '📊 投资分析（仅币种）' : '📊 Investment Analysis (Coin)', callback_data: 'risk_score' }
-          ],
-          // 第二组：学习功能（2个按钮）
-          [
-            { text: this.lang === 'zh' ? '📚 今日课程' : '📚 Today\'s Lesson', callback_data: 'today_lesson' },
-            { text: this.lang === 'zh' ? '📖 今日案例' : '📖 Today\'s Case', callback_data: 'scam_case' }
-          ],
-          // 第三组：语音和求助（2个按钮）
-          [
-            { text: this.lang === 'zh' ? '🎤 语音功能' : '🎤 Voice Features', callback_data: 'voice_setup' },
-            { text: this.lang === 'zh' ? '🆘 紧急求助' : '🆘 Emergency Help', callback_data: 'emergency_help' }
-          ],
-          // 第四组：设置和帮助（2个按钮）
-          [
-            { text: this.lang === 'zh' ? '⚙️ 设置' : '⚙️ Settings', callback_data: 'settings' },
-            { text: this.lang === 'zh' ? '❓ 帮助' : '❓ Help', callback_data: 'help' }
-          ]
-        ]
-      };
-      
-      this.bot.editMessageText(welcomeText, {
-        chat_id: chatId,
-        message_id: messageId,
-        parse_mode: 'Markdown',
-        reply_markup: keyboard
-      }).catch(() => {
-        // 如果编辑失败（消息太旧），删除并发送新消息
-        this.bot.deleteMessage(chatId, messageId).catch(() => {});
-        this.handleStart({ chat: { id: chatId } });
-      });
+      this.handleStart({ chat: { id: chatId } }, messageId);
     } else if (data === 'status') {
       this.bot.answerCallbackQuery(query.id);
       this.bot.deleteMessage(chatId, messageId).catch(() => {});
