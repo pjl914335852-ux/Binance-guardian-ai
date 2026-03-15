@@ -61,6 +61,37 @@
 
 ---
 
+## 🏗️ System Architecture
+
+![System Architecture](./docs/images/architecture.png)
+
+**Architecture Overview:**
+
+```
+User
+ │
+ │ Telegram Interface
+ ▼
+AI Guardian Agent
+ │
+ ├─► Risk Detection
+ ├─► AI Analysis
+ └─► Binance API
+      │
+      ▼
+ Security Alert
+```
+
+**Key Components:**
+- **Telegram Interface** - User-friendly chat interface
+- **AI Guardian Agent** - OpenClaw + Claude/Gemini dual-model routing
+- **Risk Detection** - 4-dimension scoring engine + scam database
+- **AI Analysis** - Natural language processing + plain language translation
+- **Binance API** - Real-time market data (read-only)
+- **Security Alert** - 24/7 monitoring + instant notifications
+
+---
+
 ## ✨ Key Features
 
 ### 🛡️ Guardian Mode (Default)
