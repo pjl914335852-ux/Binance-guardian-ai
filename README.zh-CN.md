@@ -4,6 +4,8 @@
 
 旨在保护普通用户免受加密货币生态系统中的骗局、钓鱼攻击和安全风险的侵害。
 
+> **🏆 参与币安 AI 黑客松 2026**
+
 ---
 
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](./LICENSE)
