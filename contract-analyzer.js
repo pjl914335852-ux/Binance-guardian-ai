@@ -228,6 +228,11 @@ class ContractAnalyzer {
       result.advice.push('3. 小额测试能否卖出（防止蜜罐）');
       result.advice.push('4. 只投入能承受损失的金额');
       result.advice.push('5. 优先选择币安已上线的币种');
+      result.advice.push('');
+      result.advice.push('📌 *免责声明：*');
+      result.advice.push('• 检测结果仅供参考，可能存在延迟');
+      result.advice.push('• 链上数据实时变化，建议多次验证');
+      result.advice.push('• 投资有风险，决策需谨慎');
       
       return result;
     }
@@ -289,6 +294,11 @@ class ContractAnalyzer {
     result.advice.push('3. 小额测试能否卖出（防止蜜罐）');
     result.advice.push('4. 只投入能承受损失的金额');
     result.advice.push('5. 优先选择币安已上线的币种');
+    result.advice.push('');
+    result.advice.push('📌 *免责声明：*');
+    result.advice.push('• 检测结果仅供参考，可能存在延迟');
+    result.advice.push('• 链上数据实时变化，建议多次验证');
+    result.advice.push('• 投资有风险，决策需谨慎');
 
     return result;
   }
