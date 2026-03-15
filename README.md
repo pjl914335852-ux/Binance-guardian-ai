@@ -1,6 +1,10 @@
 # 🛡️ Binance Guardian AI
 
-> **AI-powered crypto security assistant for everyday users**
+**AI-powered crypto security assistant built with OpenClaw + Binance API + Claude.**
+
+Designed to protect everyday users from scams, phishing attacks, and security risks in the crypto ecosystem.
+
+---
 
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](./LICENSE)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-Powered-blue.svg)](https://openclaw.ai)
@@ -104,6 +108,22 @@ Built on OpenClaw framework, powered by Claude/Gemini, designed for:
 └─────────────────────────────────────┘
 ```
 
+### Architecture Overview
+
+The system consists of four layers:
+
+**User Layer**  
+Telegram bot interface for everyday users. Mobile-friendly chat UI with simplified controls for elderly users and advanced features for traders.
+
+**AI Agent Layer**  
+OpenClaw agent powered by Claude/Gemini. Performs risk detection, natural language processing, and intelligent decision-making.
+
+**Integration Layer**  
+Binance API for market data, 9 blockchain explorers for contract verification, NOFX for AI500 ranking, and public scam databases.
+
+**Infrastructure Layer**  
+Lightweight VPS deployment with pm2 process management, logging, monitoring, and configuration management.
+
 **Key Components:**
 - **User Layer** - Telegram interface (mobile-friendly)
 - **AI Agent** - OpenClaw orchestration + dual-model routing
@@ -119,6 +139,49 @@ Built on OpenClaw framework, powered by Claude/Gemini, designed for:
 [![Binance Guardian AI Demo](https://img.youtube.com/vi/dqGWWQHO_CQ/maxresdefault.jpg)](https://youtu.be/dqGWWQHO_CQ)
 
 *Click to watch on YouTube (2 minutes)*
+
+---
+
+### Example Scenario: Airdrop Phishing Detection
+
+<table>
+<tr>
+<td width="50%">
+
+**User Question:**
+```
+I received an airdrop link. 
+Is it safe?
+
+Link: https://fake-binance-airdrop.com
+```
+
+</td>
+<td width="50%">
+
+**Guardian AI Response:**
+```
+⚠️ Potential Phishing Risk Detected
+
+This link is NOT from Binance official.
+
+🚨 Warning Signs:
+• Domain is not binance.com
+• Suspicious URL pattern
+• Not in our verified list
+
+💡 Recommendation:
+DO NOT connect your wallet to this site.
+DO NOT enter your private keys.
+
+✅ Safe Alternative:
+Only use official Binance website:
+https://www.binance.com
+```
+
+</td>
+</tr>
+</table>
 
 ---
 

@@ -1,6 +1,10 @@
 # 🛡️ Binance Guardian AI
 
-> **AI 驱动的加密资产安全助手，为普通用户而生**
+**基于 OpenClaw + 币安 API + Claude 构建的 AI 加密资产安全助手。**
+
+旨在保护普通用户免受加密货币生态系统中的骗局、钓鱼攻击和安全风险的侵害。
+
+---
 
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](./LICENSE)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-Powered-blue.svg)](https://openclaw.ai)
@@ -104,6 +108,22 @@
 └─────────────────────────────────────┘
 ```
 
+### 架构概览
+
+系统由四层组成：
+
+**用户层**  
+Telegram 机器人界面，面向普通用户。移动端友好的聊天界面，为长辈用户提供简化控制，为交易者提供高级功能。
+
+**AI 代理层**  
+由 Claude/Gemini 驱动的 OpenClaw 代理。执行风险检测、自然语言处理和智能决策。
+
+**集成层**  
+币安 API 提供市场数据，9 条区块链浏览器用于合约验证，NOFX 提供 AI500 排名，以及公共骗局数据库。
+
+**基础设施层**  
+轻量级 VPS 部署，配备 pm2 进程管理、日志记录、监控和配置管理。
+
 **核心组件：**
 - **用户层** - Telegram 接口（移动端友好）
 - **AI 代理** - OpenClaw 编排 + 双模型路由
@@ -119,6 +139,49 @@
 [![Binance Guardian AI 演示](https://img.youtube.com/vi/dqGWWQHO_CQ/maxresdefault.jpg)](https://youtu.be/dqGWWQHO_CQ)
 
 *点击观看 YouTube 视频（2 分钟）*
+
+---
+
+### 示例场景：空投钓鱼检测
+
+<table>
+<tr>
+<td width="50%">
+
+**用户提问：**
+```
+我收到了一个空投链接。
+安全吗？
+
+链接：https://fake-binance-airdrop.com
+```
+
+</td>
+<td width="50%">
+
+**Guardian AI 回复：**
+```
+⚠️ 检测到潜在钓鱼风险
+
+这个链接不是币安官方的。
+
+🚨 警告信号：
+• 域名不是 binance.com
+• 可疑的 URL 模式
+• 不在我们的验证列表中
+
+💡 建议：
+不要连接你的钱包到这个网站。
+不要输入你的私钥。
+
+✅ 安全替代方案：
+只使用币安官方网站：
+https://www.binance.com
+```
+
+</td>
+</tr>
+</table>
 
 ---
 
