@@ -3460,6 +3460,54 @@ ${this.guardianMode ? 'I will now communicate in a simpler way!' : 'Switched to 
     const chatId = msg.chat.id;
     const text = msg.text.toLowerCase();
     
+    // 0. 检测合约地址（优先级最高）
+    const contractPattern = /0x[a-fA-F0-9]{40}/;
+    const contractMatch = text.match(contractPattern);
+    if (contractMatch) {
+      const contractAddress = contractMatch[0];
+      
+      // 显示加载消息
+      const loadingMsg = await this.bot.sendMessage(chatId, 
+        this.lang === 'zh' ? '🔍 正在检测合约地址...' : '🔍 Checking contract address...'
+      );
+      
+      try {
+        // 调用合约检测
+        const detection = await this.scamDetector.detectScamByContract(contractAddress, text);
+        const warning = this.scamDetector.generateElderlyWarning(contractAddress, detection, this.lang);
+        
+        // 删除加载消息
+        this.bot.deleteMessage(chatId, loadingMsg.message_id);
+        
+        // 发送检测结果
+        const keyboard = {
+          inline_keyboard: [
+            [
+              { text: this.lang === 'zh' ? '🔙 返回主菜单' : '🔙 Back to Menu', callback_data: 'start' }
+            ]
+          ]
+        };
+        
+        this.bot.sendMessage(chatId, warning, { 
+          parse_mode: 'Markdown',
+          reply_markup: keyboard
+        });
+        
+      } catch (error) {
+        console.error('Contract detection error:', error);
+        
+        // 删除加载消息
+        this.bot.deleteMessage(chatId, loadingMsg.message_id);
+        
+        this.bot.sendMessage(chatId, this.lang === 'zh' ? 
+          '❌ 检测合约地址时出错，请稍后重试' :
+          '❌ Error checking contract address, please try again later'
+        );
+      }
+      
+      return;
+    }
+    
     // 1. 检测是否询问币种
     const coinPatterns = [
       /^([A-Z]{2,10})$/i,  // 直接输入币种名称（如 BTC）
