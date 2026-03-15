@@ -1215,6 +1215,74 @@ Send /cancel to cancel
     const messageId = query.message.message_id;
     const data = query.data;
     
+    // Handle contract chain selection (contract_<address>_<chain>)
+    if (data.startsWith('contract_')) {
+      const parts = data.split('_');
+      if (parts.length >= 3) {
+        const contractAddress = parts[1];
+        const chain = parts.slice(2).join('_'); // 支持链名称中有下划线
+        
+        this.bot.answerCallbackQuery(query.id);
+        this.bot.deleteMessage(chatId, messageId).catch(() => {});
+        
+        // 显示加载消息
+        const chainNames = {
+          ethereum: 'Ethereum',
+          bsc: 'BSC',
+          polygon: 'Polygon',
+          arbitrum: 'Arbitrum',
+          optimism: 'Optimism',
+          base: 'Base',
+          avalanche: 'Avalanche',
+          fantom: 'Fantom'
+        };
+        
+        const loadingMsg = this.bot.sendMessage(chatId, 
+          this.lang === 'zh' ? 
+            `🔍 正在检测 ${chainNames[chain] || chain} 链合约地址...` : 
+            `🔍 Checking ${chainNames[chain] || chain} contract address...`
+        );
+        
+        loadingMsg.then(async (msg) => {
+          try {
+            // 调用合约检测（传递链名称作为 context）
+            const detection = await this.scamDetector.detectScamByContract(contractAddress, chain);
+            const warning = this.scamDetector.generateElderlyWarning(contractAddress, detection, this.lang);
+            
+            // 删除加载消息
+            this.bot.deleteMessage(chatId, msg.message_id);
+            
+            // 发送检测结果
+            const keyboard = {
+              inline_keyboard: [
+                [
+                  { text: this.lang === 'zh' ? '🔙 返回主菜单' : '🔙 Back to Menu', callback_data: 'start' }
+                ]
+              ]
+            };
+            
+            this.bot.sendMessage(chatId, warning, { 
+              parse_mode: 'Markdown',
+              reply_markup: keyboard
+            });
+            
+          } catch (error) {
+            console.error('Contract detection error:', error);
+            
+            // 删除加载消息
+            this.bot.deleteMessage(chatId, msg.message_id);
+            
+            this.bot.sendMessage(chatId, this.lang === 'zh' ? 
+              '❌ 检测合约地址时出错，请稍后重试' :
+              '❌ Error checking contract address, please try again later'
+            );
+          }
+        });
+        
+        return;
+      }
+    }
+    
     // Handle different callbacks
     if (data === 'start') {
       this.bot.answerCallbackQuery(query.id);
@@ -3515,46 +3583,87 @@ ${this.guardianMode ? 'I will now communicate in a simpler way!' : 'Switched to 
     if (evmMatch || solanaMatch) {
       const contractAddress = evmMatch ? evmMatch[0] : solanaMatch[0];
       
-      // 显示加载消息
-      const loadingMsg = await this.bot.sendMessage(chatId, 
-        this.lang === 'zh' ? '🔍 正在检测合约地址...' : '🔍 Checking contract address...'
-      );
+      // 如果是 Solana 地址，直接检测（不需要选择链）
+      if (solanaMatch && !evmMatch) {
+        // 显示加载消息
+        const loadingMsg = await this.bot.sendMessage(chatId, 
+          this.lang === 'zh' ? '🔍 正在检测 Solana 合约地址...' : '🔍 Checking Solana contract address...'
+        );
+        
+        try {
+          // 调用合约检测（传递 "solana" 作为 context）
+          const detection = await this.scamDetector.detectScamByContract(contractAddress, 'solana');
+          const warning = this.scamDetector.generateElderlyWarning(contractAddress, detection, this.lang);
+          
+          // 删除加载消息
+          this.bot.deleteMessage(chatId, loadingMsg.message_id);
+          
+          // 发送检测结果
+          const keyboard = {
+            inline_keyboard: [
+              [
+                { text: this.lang === 'zh' ? '🔙 返回主菜单' : '🔙 Back to Menu', callback_data: 'start' }
+              ]
+            ]
+          };
+          
+          this.bot.sendMessage(chatId, warning, { 
+            parse_mode: 'Markdown',
+            reply_markup: keyboard
+          });
+          
+        } catch (error) {
+          console.error('Contract detection error:', error);
+          
+          // 删除加载消息
+          this.bot.deleteMessage(chatId, loadingMsg.message_id);
+          
+          this.bot.sendMessage(chatId, this.lang === 'zh' ? 
+            '❌ 检测合约地址时出错，请稍后重试' :
+            '❌ Error checking contract address, please try again later'
+          );
+        }
+        
+        return;
+      }
       
-      try {
-        // 调用合约检测（传递原始文本作为 context）
-        const detection = await this.scamDetector.detectScamByContract(contractAddress, text);
-        const warning = this.scamDetector.generateElderlyWarning(contractAddress, detection, this.lang);
+      // 如果是 EVM 地址，显示链选择按钮
+      if (evmMatch) {
+        const promptText = this.lang === 'zh' ? 
+          `🔗 *请选择区块链网络*\n\n合约地址：\`${contractAddress}\`\n\n请选择该合约所在的区块链：` :
+          `🔗 *Select Blockchain Network*\n\nContract: \`${contractAddress}\`\n\nPlease select the blockchain:`;
         
-        // 删除加载消息
-        this.bot.deleteMessage(chatId, loadingMsg.message_id);
-        
-        // 发送检测结果
         const keyboard = {
           inline_keyboard: [
             [
-              { text: this.lang === 'zh' ? '🔙 返回主菜单' : '🔙 Back to Menu', callback_data: 'start' }
+              { text: 'Ethereum (ETH)', callback_data: `contract_${contractAddress}_ethereum` },
+              { text: 'BSC (BNB)', callback_data: `contract_${contractAddress}_bsc` }
+            ],
+            [
+              { text: 'Polygon (MATIC)', callback_data: `contract_${contractAddress}_polygon` },
+              { text: 'Arbitrum (ARB)', callback_data: `contract_${contractAddress}_arbitrum` }
+            ],
+            [
+              { text: 'Optimism (OP)', callback_data: `contract_${contractAddress}_optimism` },
+              { text: 'Base', callback_data: `contract_${contractAddress}_base` }
+            ],
+            [
+              { text: 'Avalanche (AVAX)', callback_data: `contract_${contractAddress}_avalanche` },
+              { text: 'Fantom (FTM)', callback_data: `contract_${contractAddress}_fantom` }
+            ],
+            [
+              { text: this.lang === 'zh' ? '🔙 返回' : '🔙 Back', callback_data: 'check_coin' }
             ]
           ]
         };
         
-        this.bot.sendMessage(chatId, warning, { 
+        this.bot.sendMessage(chatId, promptText, {
           parse_mode: 'Markdown',
           reply_markup: keyboard
         });
         
-      } catch (error) {
-        console.error('Contract detection error:', error);
-        
-        // 删除加载消息
-        this.bot.deleteMessage(chatId, loadingMsg.message_id);
-        
-        this.bot.sendMessage(chatId, this.lang === 'zh' ? 
-          '❌ 检测合约地址时出错，请稍后重试' :
-          '❌ Error checking contract address, please try again later'
-        );
+        return;
       }
-      
-      return;
     }
     
     // 1. 检测是否询问币种
