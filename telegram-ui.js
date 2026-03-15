@@ -1287,8 +1287,23 @@ Send /cancel to cancel
 🛡️ *快速验证*
 
 ✅ *支持两种输入：*
-• 币种名称（BTC、ETH、DOGE）
-• 合约地址（0x1234...）
+• 币种名称（BTC、ETH、DOGE 等）
+• 合约地址（0x1234... 或 Solana 地址）
+
+🔗 *支持的区块链：*
+• Ethereum (ETH)
+• BSC (BNB)
+• Polygon (MATIC)
+• Arbitrum (ARB)
+• Optimism (OP)
+• Avalanche (AVAX)
+• Fantom (FTM)
+• Base
+• Solana (SOL)
+
+💡 *提示：*
+输入合约地址时，可以加上链名称以提高准确度
+例如：0x1234... polygon
 
 ⚡ *秒出结果：*
 • ✅ 安全 - 可以买
@@ -1300,8 +1315,23 @@ Send /cancel to cancel
 🛡️ *Quick Check*
 
 ✅ *Supports:*
-• Coin name (BTC, ETH, DOGE)
-• Contract address (0x1234...)
+• Coin name (BTC, ETH, DOGE, etc.)
+• Contract address (0x1234... or Solana address)
+
+🔗 *Supported Blockchains:*
+• Ethereum (ETH)
+• BSC (BNB)
+• Polygon (MATIC)
+• Arbitrum (ARB)
+• Optimism (OP)
+• Avalanche (AVAX)
+• Fantom (FTM)
+• Base
+• Solana (SOL)
+
+💡 *Tip:*
+Add chain name for better accuracy
+Example: 0x1234... polygon
 
 ⚡ *Instant result:*
 • ✅ Safe - Can buy
