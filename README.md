@@ -114,21 +114,40 @@ Built on OpenClaw framework, powered by Claude/Gemini, designed for:
 
 ## 🎬 Demo
 
-### Quick Safety Check
+**📺 Watch Full Demo Video:**
 
+[![Binance Guardian AI Demo](https://img.youtube.com/vi/dqGWWQHO_CQ/maxresdefault.jpg)](https://youtu.be/dqGWWQHO_CQ)
+
+*Click to watch on YouTube (2 minutes)*
+
+---
+
+### Scenario 1: Pi Coin Safety Check
+
+<table>
+<tr>
+<td width="50%">
+
+**User Question:**
 ```
-User: "Can I buy Pi coin?"
+Can I buy Pi coin?
+```
 
-Guardian AI:
+</td>
+<td width="50%">
+
+**Guardian AI Response:**
+```
 ⚠️ Pi Coin Risk Warning
 
-Mom, Pi coin hasn't listed on Binance yet. 
-Some exchanges have trading, but those are IOUs.
+Mom, Pi coin hasn't listed on 
+Binance yet. Some exchanges 
+have trading, but those are IOUs.
 
 🚨 Main Risks:
-1. Exchange Difficulty - May not be convertible
-2. High Scam Rate - Many fake officials
-3. Compliance Gap - Not on major platforms
+1. Exchange Difficulty
+2. High Scam Rate
+3. Compliance Gap
 
 💡 Safety Tips:
 • Prioritize Binance/Coinbase
@@ -136,12 +155,29 @@ Some exchanges have trading, but those are IOUs.
 • Don't click unknown links
 ```
 
-### Contract Address Check
+</td>
+</tr>
+</table>
 
+---
+
+### Scenario 2: Contract Address Check
+
+<table>
+<tr>
+<td width="50%">
+
+**User Input:**
 ```
-User: 0x1234567890abcdef... (paste address)
+0x1234567890abcdef...
+(paste contract address)
+```
 
-Guardian AI:
+</td>
+<td width="50%">
+
+**Guardian AI Analysis:**
+```
 🔍 Contract Security Analysis
 
 🛡️ Security Score: 45/100
@@ -160,6 +196,49 @@ Contract: Unknown Token
 3. Test selling first
 4. Only invest what you can lose
 ```
+
+</td>
+</tr>
+</table>
+
+---
+
+### Scenario 3: Daily Safety Lesson
+
+<table>
+<tr>
+<td width="50%">
+
+**User Action:**
+```
+Click "📚 Today's Lesson"
+```
+
+</td>
+<td width="50%">
+
+**Guardian AI Teaches:**
+```
+📚 Day 1: What is Cryptocurrency?
+
+Cryptocurrency is digital money 
+that uses encryption for security.
+
+Key Points:
+• Decentralized (no bank control)
+• Blockchain technology
+• Cannot be counterfeited
+
+💡 Remember:
+Only invest what you can afford 
+to lose!
+
+Progress: 1/30 lessons
+```
+
+</td>
+</tr>
+</table>
 
 ---
 
