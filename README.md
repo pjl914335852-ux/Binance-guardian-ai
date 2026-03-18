@@ -39,9 +39,11 @@ Designed to protect everyday users from scams, phishing attacks, and security ri
 
 ## 🎯 Vision
 
-**Making crypto investment accessible and safe for everyone — not just tech-savvy traders.**
+**While everyone else built trading bots, we built a guardian.**
 
-Every family deserves an AI crypto security advisor.
+Most crypto AI tools help you make money. Binance Guardian AI helps you keep it.
+
+Every day, thousands of ordinary users lose their savings to scams, phishing, and manipulation — not because they're careless, but because they're outgunned. We built an AI that fights back on their behalf.
 
 ---
 
